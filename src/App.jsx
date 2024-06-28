@@ -22,8 +22,7 @@ import PerfumeNotes from "./pages/PerfumeNotes/PerfumeNotes";
 import AddPerfumeNotes from "./pages/PerfumeNotes/AddPerfumeNotes";
 import UpdatePerfumeNotes from "./pages/PerfumeNotes/UpdatePerfumeNotes";
 
-// const isUserLoggedIn = localStorage.getItem('userAuth')
-const isUserLoggedIn=true
+const isUserLoggedIn = localStorage.getItem('isusrlgd')
 
 const App = () => {
 

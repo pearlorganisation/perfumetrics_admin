@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Toaster, toast } from "sonner";
 
@@ -6,10 +6,13 @@ const AddPerfume = () => {
   const [banner, setBanner] = useState(null);
   const [gallery, setGallery] = useState([]);
   const [accords, setAccords] = useState([]);
-  const [maxPercentage, setMaxPercentage] = useState(100);
   const [pyramidTop, setPyramidTop] = useState([]);
   const [pyramidMid, setPyramidMid] = useState([]);
   const [pyramidBase, setPyramidBase] = useState([]);
+
+
+  const accordsRef = useRef(null)
+
 
   const {
     register,
@@ -17,11 +20,6 @@ const AddPerfume = () => {
     watch,
     formState: { errors },
   } = useForm();
-
-  const onSubmit = (data) => {
-    console.log(data);
-    toast("saving");
-  };
 
   const addAccord = () => {
     setAccords((prev) => {
@@ -89,19 +87,27 @@ const AddPerfume = () => {
     });
   };
 
-  // useEffect(() => {
-  //   if(accords.length <= 0 ) return
-  //   let totalPercentage = 0
-  //   for(let i= 0; i < accords.length; i++){
-  //     totalPercentage += accords[i].percentage
-  //   }
-  //   console.log(totalPercentage)
-  //   if(totalPercentage === 100) return
-  //   setMaxPercentage(() => {
-  //     return 100 - Number(totalPercentage)
-  //   })
 
-  // }, [accords])
+  
+  const onSubmit = (data) => {
+    
+    let tempAccords = [...accords]
+    let totalPercentage = 0
+     tempAccords.forEach((e) => totalPercentage += e.percentage )
+    
+    if(totalPercentage !== 100) {
+      
+      toast.error('Total Accords percentage must be equal to 100',{
+        style: {
+          background: 'red',
+          color: 'white'
+        },
+      })
+      return
+    }
+    toast("saving");
+  };
+
 
   return (
     <div>
@@ -109,7 +115,6 @@ const AddPerfume = () => {
         <div className="max-w-2xl px-4 py-8 mx-auto lg:py-16">
           <h2 className="mb-4 text-xl font-bold text-gray-900 ">Add Perfume</h2>
           <Toaster />
-
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="grid gap-4 mb-4 sm:grid-cols-2 sm:gap-6 sm:mb-5">
               <div className="sm:col-span-2">
@@ -136,6 +141,7 @@ const AddPerfume = () => {
                     onChange={(e) => {
                       setBanner(e.target.files[0]);
                     }}
+                    accept=".jpg, .jpeg, .png, .webp"
                     required
                   />
                 </div>
@@ -158,6 +164,7 @@ const AddPerfume = () => {
                         return [...prev, ...e.target.files];
                       });
                     }}
+                    accept=".jpg, .jpeg, .png, .webp"
                     required
                   />
                 </div>
@@ -204,7 +211,7 @@ const AddPerfume = () => {
                   {...register("perfume", { required: true })}
                 />
               </div>
-              <div className="sm:col-span-2">
+              <div className="sm:col-span-2" ref={accordsRef}>
                 <div className="w-full flex justify-between pb-1">
                   <label
                     for="name"
@@ -223,7 +230,7 @@ const AddPerfume = () => {
                   </button>
                 </div>
                 {accords && accords?.length > 0 && (
-                  <div className="relative overflow-x-auto">
+                  <div className="relative overflow-x-auto"  >
                     <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
                       <thead className="text-xs text-gray-700 bg-gray-50 ">
                         <tr>
@@ -243,6 +250,7 @@ const AddPerfume = () => {
                         </tr>
                       </thead>
                       <tbody>
+                        
                         {accords.map((item, idx) => (
                           <tr className="bg-white border-b " key={item?.id}>
                             <td className="px-1 py-4">{idx + 1}</td>
@@ -275,7 +283,7 @@ const AddPerfume = () => {
                               <input
                                 type="number"
                                 min={0}
-                                max={maxPercentage}
+                                max={100}
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                 placeholder="0"
                                 onChange={(e) => {
@@ -417,6 +425,7 @@ const AddPerfume = () => {
                                     return tempArr;
                                   });
                                 }}
+                                accept=".jpg, .jpeg, .png, .webp"
                                 required
                               />
                             </td>
@@ -524,6 +533,7 @@ const AddPerfume = () => {
                                     return tempArr;
                                   });
                                 }}
+                                accept=".jpg, .jpeg, .png, .webp"
                                 required
                               />
                             </td>
@@ -631,6 +641,7 @@ const AddPerfume = () => {
                                     return tempArr;
                                   });
                                 }}
+                                accept=".jpg, .jpeg, .png, .webp"
                                 required
                               />
                             </td>

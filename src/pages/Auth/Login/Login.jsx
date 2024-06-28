@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
-  const Navigate = useNavigate()
   const [errorMsg, setErrorMsg] = useState(null);
 
   const {
@@ -12,21 +11,17 @@ function Login() {
     formState: { errors },
   } = useForm();
 
-  const myEmail = "admin@saas.com";
+  const myUserName = "admin";
   const myPass = "admin@123";
 
-
   useEffect(() => {
-    if(localStorage.getItem('userAuth')) localStorage.clear()
-    
+    if(localStorage.getItem('isusrlgd')) localStorage.clear()
   }, [])
   
-
   const onSubmit = (data) => {
     // Handle form submission here
-
-    if (data.email === myEmail && data.password === myPass) {
-      localStorage.setItem("userAuth", true);
+    if (data.userName === myUserName && data.password === myPass) {
+      localStorage.setItem("isusrlgd", true);
       setErrorMsg(null);
       window.location.href = "/"
     } else {
@@ -82,19 +77,19 @@ function Login() {
                       >
                         <div>
                           <label
-                            for="email"
+                            for="username"
                             class="block mb-2 text-sm font-medium text-gray-900 "
                           >
                             {" "}
-                            Email
+                            User Name
                           </label>
                           <input
-                            type="email"
-                            name="email"
-                            id="email"
+                            type="text"
+                            name="username"
+                            id="username"
                             class="bg-gray-50 border  text-gray-900 sm:text-sm rounded-lg ring-primary-600   block w-full p-2.5  "
-                            placeholder="name@xyz.com"
-                            {...register("email", { required: true })}
+                            placeholder="User Name"
+                            {...register("userName", { required: true })}
                             required
                           />
                         </div>
@@ -115,45 +110,20 @@ function Login() {
                             required
                           />
                         </div>
-                        <div class="flex items-center justify-between">
-                          <div class="flex items-start">
-                            <div class="flex items-center h-5">
-                              <input
-                                id="remember"
-                                aria-describedby="remember"
-                                type="checkbox"
-                                class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300  dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
-                                {...register("remember", { required: false })}
-                              />
-                            </div>
-                            <div class="ml-3 text-sm">
-                              <label for="remember" class="text-gray-500 ">
-                                Remember me
-                              </label>
-                            </div>
-                          </div>
+                        {/* <div class="flex items-center justify-between">
                           <a
                             href="#"
                             class="text-sm font-medium text-blue-600 hover:underline dark:text-primary-500"
                           >
                             Forgot password?
                           </a>
-                        </div>
+                        </div> */}
                         <button
                           type="submit"
                           class="w-full text-white bg-[#2563eb] hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                         >
                           Sign in to your account
                         </button>
-                        <p class="text-sm font-light text-gray-500 ">
-                          Don’t have an account yet?{" "}
-                          <a
-                            href="#"
-                            class="font-medium text-primary-600 hover:underline dark:text-primary-500"
-                          >
-                            Sign up
-                          </a>
-                        </p>
                       </form>
                     </div>
                   </div>
