@@ -1,20 +1,24 @@
+import Select from "react-select";
+import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { Toaster, toast } from "sonner";
 
 const AddPerfume = () => {
   const [banner, setBanner] = useState(null);
+  const [logo, setLogo] = useState(null);
   const [gallery, setGallery] = useState([]);
   const [accords, setAccords] = useState([]);
   const [pyramidTop, setPyramidTop] = useState([]);
   const [pyramidMid, setPyramidMid] = useState([]);
   const [pyramidBase, setPyramidBase] = useState([]);
 
+  const [noteData, setNoteData] = useState([]);
 
-  const accordsRef = useRef(null)
-
+  const accordsRef = useRef(null);
 
   const {
+    control,
     register,
     handleSubmit,
     watch,
@@ -87,27 +91,34 @@ const AddPerfume = () => {
     });
   };
 
-
-  
-  const onSubmit = (data) => {
-    
-    let tempAccords = [...accords]
-    let totalPercentage = 0
-     tempAccords.forEach((e) => totalPercentage += e.percentage )
-    
-    if(totalPercentage !== 100) {
-      
-      toast.error('Total Accords percentage must be equal to 100',{
-        style: {
-          background: 'red',
-          color: 'white'
-        },
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_URL}/note`)
+      .then((res) => {
+        setNoteData(res?.data?.data);
       })
-      return
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  const onSubmit = (data) => {
+    let tempAccords = [...accords];
+    let totalPercentage = 0;
+    tempAccords.forEach((e) => (totalPercentage += e.percentage));
+
+    if (totalPercentage !== 100) {
+      toast.error("Total Accords percentage must be equal to 100", {
+        style: {
+          background: "red",
+          color: "white",
+        },
+      });
+      return;
     }
+    console.log(data)
     toast("saving");
   };
-
 
   return (
     <div>
@@ -117,20 +128,17 @@ const AddPerfume = () => {
           <Toaster />
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="grid gap-4 mb-4 sm:grid-cols-2 sm:gap-6 sm:mb-5">
-              <div className="sm:col-span-2">
+              <div className="col-span-2 sm:col-span-1">
                 {banner && (
-                  <div className="w-[250px] h-[250px] border">
-                    <img
-                      src={URL.createObjectURL(banner)}
-                      className="w-full h-auto"
-                    />
+                  <div className="flex justify-center items-centerw-[250px] h-[250px] border border-gray-300">
+                    <img src={URL.createObjectURL(banner)} className="h-full" />
                   </div>
                 )}
 
                 <div>
                   <label
                     className="block mb-2 text-sm font-medium text-gray-900 "
-                    for="file_input"
+                    htmlFor="file_input"
                   >
                     Upload Main Pic
                   </label>
@@ -146,11 +154,37 @@ const AddPerfume = () => {
                   />
                 </div>
               </div>
+              <div className="col-span-2 sm:col-span-1">
+                {logo && (
+                  <div className="w-[250px] h-[250px] border border-red-300">
+                    <img src={URL.createObjectURL(logo)} className="h-full" />
+                  </div>
+                )}
+
+                <div>
+                  <label
+                    className="block mb-2 text-sm font-medium text-gray-900 "
+                    htmlFor="file_input"
+                  >
+                    Upload Brand Logo
+                  </label>
+                  <input
+                    className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none "
+                    id="file_input"
+                    type="file"
+                    onChange={(e) => {
+                      setLogo(e.target.files[0]);
+                    }}
+                    accept=".jpg, .jpeg, .png, .webp"
+                    required
+                  />
+                </div>
+              </div>
               <div className="sm:col-span-2">
                 <div>
                   <label
                     className="block mb-2 text-sm font-medium text-gray-900 "
-                    for="file_input"
+                    htmlFor="file_input"
                   >
                     Upload Gallery Pics
                   </label>
@@ -169,13 +203,13 @@ const AddPerfume = () => {
                   />
                 </div>
                 {gallery && gallery?.length > 0 && (
-                  <div className="w-full flex flex-wrap gap-2">
-                    {gallery?.map((item) => (
-                      <div>
-                        <div className="h-[200px] w-[200px] border rounded-sm flex flex-col justify-center">
+                  <div className="w-full flex flex-wrap gap-2 py-2">
+                    {gallery?.map((item, idx) => (
+                      <div key={`gallery${idx}`}>
+                        <div className="h-[200px] border rounded-sm flex items-center justify-center box-border">
                           <img
                             src={URL.createObjectURL(item)}
-                            className="w-full"
+                            className="h-full"
                           />
                         </div>
                         <button
@@ -197,7 +231,7 @@ const AddPerfume = () => {
               </div>
               <div className="sm:col-span-2">
                 <label
-                  for="name"
+                  htmlFor="name"
                   className="block mb-2 text-sm font-medium text-gray-900 "
                 >
                   Perfume Name
@@ -214,7 +248,7 @@ const AddPerfume = () => {
               <div className="sm:col-span-2" ref={accordsRef}>
                 <div className="w-full flex justify-between pb-1">
                   <label
-                    for="name"
+                    htmlFor="name"
                     className="block mb-2 text-sm font-medium text-gray-900 "
                   >
                     Main Accords
@@ -230,7 +264,7 @@ const AddPerfume = () => {
                   </button>
                 </div>
                 {accords && accords?.length > 0 && (
-                  <div className="relative overflow-x-auto"  >
+                  <div className="relative overflow-x-auto">
                     <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
                       <thead className="text-xs text-gray-700 bg-gray-50 ">
                         <tr>
@@ -250,7 +284,6 @@ const AddPerfume = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        
                         {accords.map((item, idx) => (
                           <tr className="bg-white border-b " key={item?.id}>
                             <td className="px-1 py-4">{idx + 1}</td>
@@ -334,7 +367,7 @@ const AddPerfume = () => {
               <div className="sm:col-span-2">
                 <div className="w-full border border-b border-x-0 border-t-0 mb-2">
                   <label
-                    for="name"
+                    htmlFor="name"
                     className="block mb-2 text-base font-medium text-gray-900 "
                   >
                     Perfume Notes:
@@ -342,332 +375,80 @@ const AddPerfume = () => {
                 </div>
                 <div className="w-full flex justify-between py-2">
                   <label
-                    for="name"
+                    htmlFor="name"
                     className="block mb-2 text-sm font-medium text-gray-900 "
                   >
                     Top Note
                   </label>
-                  <button
-                    type="button"
-                    className="bg-blue-500 hover:bg-blue-700 rounded-sm p-1 px-2 text-white"
-                    onClick={() => {
-                      addPyramidTop();
-                    }}
-                  >
-                    Add Top Note
-                  </button>
                 </div>
-                {pyramidTop && pyramidTop?.length > 0 && (
-                  <div className="relative overflow-x-auto">
-                    <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
-                      <thead className="text-xs text-gray-700 bg-gray-50 ">
-                        <tr>
-                          <th scope="col" className="px-1 pt-2 pb-1">
-                            S.No.
-                          </th>
-                          <th scope="col" className="px-1 pt-2 pb-1">
-                            Note Name
-                          </th>
-                          <th scope="col" className="px-1 pt-2 pb-1">
-                            Img
-                          </th>
-
-                          <th scope="col" className="px-1 pt-2 pb-1"></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {pyramidTop.map((item, idx) => (
-                          <tr className="bg-white border-b " key={item?.id}>
-                            <td className="px-1 py-4">{idx + 1}</td>
-                            <td
-                              scope="row"
-                              className="px-1 py-4 font-medium text-gray-900 whitespace-nowrap "
-                            >
-                              <input
-                                type="text"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                placeholder="E.g, Wood, lavender etc"
-                                onChange={(e) => {
-                                  setPyramidTop((prev) => {
-                                    let tempArr = [...prev];
-                                    let idx = tempArr.findIndex((ele) => {
-                                      return ele.id === item.id;
-                                    });
-
-                                    let row = tempArr[idx];
-                                    tempArr.slice(idx, 1);
-                                    row.name = e.target.value;
-                                    tempArr[idx] = row;
-                                    return tempArr;
-                                  });
-                                }}
-                                required
-                              />
-                            </td>
-                            <td className="px-1 py-4">
-                              <input
-                                type="file"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                placeholder="0"
-                                onChange={(e) => {
-                                  setPyramidTop((prev) => {
-                                    let tempArr = [...prev];
-                                    let idx = tempArr.findIndex((ele) => {
-                                      return ele.id === item.id;
-                                    });
-
-                                    let row = tempArr[idx];
-                                    tempArr.slice(idx, 1);
-
-                                    row.photo = e.target.files[0];
-                                    tempArr[idx] = row;
-                                    console.log(tempArr);
-                                    return tempArr;
-                                  });
-                                }}
-                                accept=".jpg, .jpeg, .png, .webp"
-                                required
-                              />
-                            </td>
-
-                            <td className="px-1 py-4">
-                              <button
-                                type="button"
-                                className="bg-red-500 hover:bg-white hover:text-black hover:shadow-[0_0_0_2px#ff0000] text-white rounded-sm p-2.5 px-2 transition duration-300"
-                                onClick={() => {
-                                  removePyramidTop(item?.id);
-                                }}
-                              >
-                                Remove
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
+                <Controller
+                  name="topNote"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      options={noteData.map((note) => ({
+                        value: note._id,
+                        label: note.name,
+                      }))}
+                      isMulti
+                    />
+                  )}
+                />
 
                 <div className="w-full flex justify-between py-2">
                   <label
-                    for="name"
+                    htmlFor="name"
                     className="block mb-2 text-sm font-medium text-gray-900 "
                   >
                     Mid Note
                   </label>
-                  <button
-                    type="button"
-                    className="bg-blue-500 hover:bg-blue-700 rounded-sm p-1 px-2 text-white"
-                    onClick={() => {
-                      addPyramidMid();
-                    }}
-                  >
-                    Add Mid Note
-                  </button>
+                 
                 </div>
-                {pyramidMid && pyramidMid?.length > 0 && (
-                  <div className="relative overflow-x-auto">
-                    <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
-                      <thead className="text-xs text-gray-700 bg-gray-50 ">
-                        <tr>
-                          <th scope="col" className="px-1 pt-2 pb-1">
-                            S.No.
-                          </th>
-                          <th scope="col" className="px-1 pt-2 pb-1">
-                            Note Name
-                          </th>
-                          <th scope="col" className="px-1 pt-2 pb-1">
-                            Img
-                          </th>
-
-                          <th scope="col" className="px-1 pt-2 py-2"></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {pyramidMid.map((item, idx) => (
-                          <tr className="bg-white border-b " key={item?.id}>
-                            <td className="px-1 py-4">{idx + 1}</td>
-                            <td
-                              scope="row"
-                              className="px-1 py-4 font-medium text-gray-900 whitespace-nowrap "
-                            >
-                              <input
-                                type="text"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                placeholder="E.g, Wood, lavender etc"
-                                onChange={(e) => {
-                                  setPyramidTop((prev) => {
-                                    let tempArr = [...prev];
-                                    let idx = tempArr.findIndex((ele) => {
-                                      return ele.id === item.id;
-                                    });
-
-                                    let row = tempArr[idx];
-                                    tempArr.slice(idx, 1);
-                                    row.name = e.target.value;
-                                    tempArr[idx] = row;
-                                    return tempArr;
-                                  });
-                                }}
-                                required
-                              />
-                            </td>
-                            <td className="px-1 py-4">
-                              <input
-                                type="file"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                placeholder="0"
-                                onChange={(e) => {
-                                  setPyramidMid((prev) => {
-                                    let tempArr = [...prev];
-                                    let idx = tempArr.findIndex((ele) => {
-                                      return ele.id === item.id;
-                                    });
-
-                                    let row = tempArr[idx];
-                                    tempArr.slice(idx, 1);
-
-                                    row.photo = e.target.files[0];
-                                    tempArr[idx] = row;
-                                    console.log(tempArr);
-                                    return tempArr;
-                                  });
-                                }}
-                                accept=".jpg, .jpeg, .png, .webp"
-                                required
-                              />
-                            </td>
-
-                            <td className="px-1 py-4">
-                              <button
-                                type="button"
-                                className="bg-red-500 hover:bg-white hover:text-black hover:shadow-[0_0_0_2px#ff0000] text-white rounded-sm p-2.5 px-2 transition duration-300"
-                                onClick={() => {
-                                  removePyramidMid(item?.id);
-                                }}
-                              >
-                                Remove
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
+                <Controller
+                  name="midNote"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      options={noteData.map((note) => ({
+                        value: note._id,
+                        label: note.name,
+                      }))}
+                      isMulti
+                    />
+                  )}
+                />
 
                 <div className="w-full flex justify-between py-2">
                   <label
-                    for="name"
+                    htmlFor="name"
                     className="block mb-2 text-sm font-medium text-gray-900 "
                   >
                     Base Note
                   </label>
-                  <button
-                    type="button"
-                    className="bg-blue-500 hover:bg-blue-700 rounded-sm p-1 px-2 text-white"
-                    onClick={() => {
-                      addPyramidBase();
-                    }}
-                  >
-                    Add Base Note
-                  </button>
+                 
+                   
                 </div>
-                {pyramidBase && pyramidBase?.length > 0 && (
-                  <div className="relative overflow-x-auto">
-                    <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
-                      <thead className="text-xs text-gray-700 bg-gray-50 ">
-                        <tr>
-                          <th scope="col" className="px-1 pt-2 pb-1">
-                            S.No.
-                          </th>
-                          <th scope="col" className="px-1 pt-2 pb-1">
-                            Note Name
-                          </th>
-                          <th scope="col" className="px-1 pt-2 pb-1">
-                            Img
-                          </th>
-
-                          <th scope="col" className="px-1 pt-2 pb-1"></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {pyramidBase.map((item, idx) => (
-                          <tr className="bg-white border-b " key={item?.id}>
-                            <td className="px-1 py-4">{idx + 1}</td>
-                            <td
-                              scope="row"
-                              className="px-1 py-4 font-medium text-gray-900 whitespace-nowrap "
-                            >
-                              <input
-                                type="text"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                placeholder="E.g, Wood, lavender etc"
-                                onChange={(e) => {
-                                  setPyramidBase((prev) => {
-                                    let tempArr = [...prev];
-                                    let idx = tempArr.findIndex((ele) => {
-                                      return ele.id === item.id;
-                                    });
-
-                                    let row = tempArr[idx];
-                                    tempArr.slice(idx, 1);
-                                    row.name = e.target.value;
-                                    tempArr[idx] = row;
-                                    return tempArr;
-                                  });
-                                }}
-                                required
-                              />
-                            </td>
-                            <td className="px-1 py-4">
-                              <input
-                                type="file"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                placeholder="0"
-                                onChange={(e) => {
-                                  setPyramidBase((prev) => {
-                                    let tempArr = [...prev];
-                                    let idx = tempArr.findIndex((ele) => {
-                                      return ele.id === item.id;
-                                    });
-
-                                    let row = tempArr[idx];
-                                    tempArr.slice(idx, 1);
-
-                                    row.photo = e.target.files[0];
-                                    tempArr[idx] = row;
-                                    console.log(tempArr);
-                                    return tempArr;
-                                  });
-                                }}
-                                accept=".jpg, .jpeg, .png, .webp"
-                                required
-                              />
-                            </td>
-
-                            <td className="px-1 py-4">
-                              <button
-                                type="button"
-                                className="bg-red-500 hover:bg-white hover:text-black hover:shadow-[0_0_0_2px#ff0000] text-white rounded-sm p-2.5 px-2 transition duration-300"
-                                onClick={() => {
-                                  removePyramidBase(item?.id);
-                                }}
-                              >
-                                Remove
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
+                <Controller
+                  name="baseNote"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      options={noteData.map((note) => ({
+                        value: note._id,
+                        label: note.name,
+                      }))}
+                      isMulti
+                    />
+                  )}
+                />
               </div>
 
               <div className="sm:col-span-2">
                 <label
-                  for="description"
+                  htmlFor="description"
                   className="block mb-2 text-sm font-medium text-gray-900 "
                 >
                   Description
@@ -683,7 +464,7 @@ const AddPerfume = () => {
 
               <div className="sm:col-span-2">
                 <label
-                  for="description"
+                  htmlFor="description"
                   className="block mb-2 text-sm font-medium text-gray-900 "
                 >
                   Details

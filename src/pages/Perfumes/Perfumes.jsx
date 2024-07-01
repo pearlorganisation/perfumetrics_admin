@@ -1,16 +1,30 @@
-import React, { useState } from "react";
+import { Skeleton } from "@mui/material";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-const Perfumes = () => {
-  const [showFilters, setShowFilters] = useState(false);
+const PerfumeNotes = () => {
+  const [perfumeData, setPerfumeData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_URL}/perfume`)
+      .then((res) => {
+        console.log(res)
+        setPerfumeData(res?.data?.data);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
+  }, []);
 
   return (
     <div>
       <div class="p-10 ">
-        <div class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-8 bg-white ">
-          <div className="text-2xl font-semibold">
-            Perfume Reviews:
-          </div>
+        <div class="flex items-center justify-end flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-8 bg-white ">
           <Link
             to="/perfume/add"
             className="bg-blue-600 rounded-md text-white px-3 py-1 font-semibold "
@@ -19,142 +33,68 @@ const Perfumes = () => {
           </Link>
         </div>
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-          <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50  ">
-              <tr>
-                {/* <th scope="col" className="p-4">
-                    <div className="flex items-center">
-                        <input id="checkbox-all-search" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500   focus:ring-2  "/>
-                        <label for="checkbox-all-search" className="sr-only">checkbox</label>
-                    </div>
-                </th> */}
-                <th scope="col" className="px-6 py-3">
-                  Name
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Price
-                </th>
-                {/* <th scope="col" className="px-6 py-3">
-                    Status
-                </th> */}
-                <th scope="col" className="px-6 py-3">
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="bg-white border-b   hover:bg-gray-50 ">
-                {/* <td className="w-4 p-4">
-                    <div className="flex items-center">
-                        <input id="checkbox-table-search-1" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500   focus:ring-2  "/>
-                        <label for="checkbox-table-search-1" className="sr-only">checkbox</label>
-                    </div>
-                </td> */}
-                <th
-                  scope="row"
-                  className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap "
-                >
-                  <div className="ps-3">
-                    <div className="text-base font-semibold">
-                      Hair Conditioner
-                    </div>
-                  </div>
-                </th>
-                <td className="px-6 py-4">Rs 450</td>
+          {isLoading && (
+           <>
+           <Skeleton animation="wave" height={50} />
+           <Skeleton animation="wave" height={50} />
+           <Skeleton animation="wave" height={50} />
+           <Skeleton animation="wave" height={50} />
+         </>
+          )}
+          {perfumeData && (
+            <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-50  ">
+                <tr>
+                  <th scope="col" className="px-6 py-3">
+                    Img
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Name
+                  </th>
+                  <th scope="col" className="col-span-2 px-6 py-3">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {perfumeData.map((item, idx) => (
+                  <tr className="bg-white border-b   hover:bg-gray-50 ">
+                    <th
+                      scope="row"
+                      className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap "
+                    >
+                      <div className="ps-3">
+                        <img src={item.banner} width={"100px"} />
+                      </div>
+                    </th>
+                    <td className="px-6 py-4">{item.perfume}</td>
 
-                <td className="px-6 py-4">
-                  <a
-                    href="#"
-                    className="font-medium text-blue-600  hover:underline"
-                  >
-                    View Details
-                  </a>
-                </td>
-              </tr>
-              <tr className="bg-white border-b   hover:bg-gray-50 ">
-                {/* <td className="w-4 p-4">
-                    <div className="flex items-center">
-                        <input id="checkbox-table-search-1" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500   focus:ring-2  "/>
-                        <label for="checkbox-table-search-1" className="sr-only">checkbox</label>
-                    </div>
-                </td> */}
-                <th
-                  scope="row"
-                  className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap "
-                >
-                  <div className="ps-3">
-                    <div className="text-base font-semibold">Shampoo</div>
-                  </div>
-                </th>
-                <td className="px-6 py-4">Rs 750</td>
-
-                <td className="px-6 py-4">
-                  <a
-                    href="#"
-                    className="font-medium text-blue-600  hover:underline"
-                  >
-                    View Details
-                  </a>
-                </td>
-              </tr>
-              <tr className="bg-white border-b   hover:bg-gray-50 ">
-                {/* <td className="w-4 p-4">
-                    <div className="flex items-center">
-                        <input id="checkbox-table-search-1" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500   focus:ring-2  "/>
-                        <label for="checkbox-table-search-1" className="sr-only">checkbox</label>
-                    </div>
-                </td> */}
-                <th
-                  scope="row"
-                  className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap "
-                >
-                  <div className="ps-3">
-                    <div className="text-base font-semibold">Face Scrub</div>
-                  </div>
-                </th>
-                <td className="px-6 py-4">Rs 400</td>
-
-                <td className="px-6 py-4">
-                  <a
-                    href="#"
-                    className="font-medium text-blue-600  hover:underline"
-                  >
-                    View Details
-                  </a>
-                </td>
-              </tr>
-              <tr className="bg-white border-b   hover:bg-gray-50 ">
-                {/* <td className="w-4 p-4">
-                    <div className="flex items-center">
-                        <input id="checkbox-table-search-1" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500   focus:ring-2  "/>
-                        <label for="checkbox-table-search-1" className="sr-only">checkbox</label>
-                    </div>
-                </td> */}
-                <th
-                  scope="row"
-                  className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap "
-                >
-                  <div className="ps-3">
-                    <div className="text-base font-semibold">Facewash</div>
-                  </div>
-                </th>
-                <td className="px-6 py-4">Rs 300</td>
-
-                <td className="px-6 py-4">
-                  <a
-                    href="#"
-                    className="font-medium text-blue-600  hover:underline"
-                  >
-                    View Details
-                  </a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                    <td className="px-6 py-4">
+                      <Link
+                        to={`/perfume/update/${item?._id}`}
+                        className="font-medium text-blue-600  hover:underline"
+                      >
+                        View/edit
+                      </Link>
+                    </td>
+                    <td className="px-6 py-4">
+                      <Link
+                        to={`/perfume/update/${item?._id}`}
+                        state={{ data: item }}
+                        className="font-medium text-red-600  hover:underline"
+                      >
+                        Delete
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
     </div>
   );
 };
 
-export default Perfumes;
+export default PerfumeNotes;

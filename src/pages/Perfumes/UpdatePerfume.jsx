@@ -1,6 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 const UpdatePerfume = () => {
+  const { state } = useLocation();
+
+  useEffect(() => {
+    console.log(state);
+  }, [state]);
+  
   return (
     <div>
       <section class="bg-white dark:bg-gray-900">
