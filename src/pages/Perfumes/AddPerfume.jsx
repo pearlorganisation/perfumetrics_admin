@@ -9,12 +9,8 @@ const AddPerfume = () => {
   const [logo, setLogo] = useState(null);
   const [gallery, setGallery] = useState([]);
   const [accords, setAccords] = useState([]);
-  const [pyramidTop, setPyramidTop] = useState([]);
-  const [pyramidMid, setPyramidMid] = useState([]);
-  const [pyramidBase, setPyramidBase] = useState([]);
-
   const [noteData, setNoteData] = useState([]);
-
+  const [purchaseLinks, setPurchaseLinks] = useState([]);
   const accordsRef = useRef(null);
 
   const {
@@ -43,54 +39,6 @@ const AddPerfume = () => {
     });
   };
 
-  const addPyramidTop = () => {
-    setPyramidTop((prev) => {
-      let id = (prev[prev?.length - 1]?.id || 0) + 1;
-      let newTopNote = { id: id, name: "", photo: null };
-      return [...prev, newTopNote];
-    });
-  };
-
-  const removePyramidTop = (id) => {
-    setPyramidTop((prev) => {
-      let pyramidTop = [...prev];
-      let res = pyramidTop?.filter((e) => e.id !== id);
-      return res;
-    });
-  };
-
-  const addPyramidMid = () => {
-    setPyramidMid((prev) => {
-      let id = (prev[prev?.length - 1]?.id || 0) + 1;
-      let newMidNote = { id: id, name: "", photo: null };
-      return [...prev, newMidNote];
-    });
-  };
-
-  const removePyramidMid = (id) => {
-    setPyramidMid((prev) => {
-      let pyramidMid = [...prev];
-      let res = pyramidMid?.filter((e) => e.id !== id);
-      return res;
-    });
-  };
-
-  const addPyramidBase = () => {
-    setPyramidBase((prev) => {
-      let id = (prev[prev?.length - 1]?.id || 0) + 1;
-      let newBaseNote = { id: id, name: "", photo: null };
-      return [...prev, newBaseNote];
-    });
-  };
-
-  const removePyramidBase = (id) => {
-    setPyramidBase((prev) => {
-      let pyramidBase = [...prev];
-      let res = pyramidBase?.filter((e) => e.id !== id);
-      return res;
-    });
-  };
-
   useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_API_URL}/note`)
@@ -102,11 +50,35 @@ const AddPerfume = () => {
       });
   }, []);
 
+  const filterData = (data) => {
+    let formData = new FormData();
+
+    let topNote = data?.topNote.map((item) => item.value);
+    let midNote = data?.midNote.map((item) => item.value);
+    let baseNote = data?.baseNote.map((item) => item.value);
+
+    formData.append("topNote", JSON.stringify(topNote));
+    formData.append("middleNote", JSON.stringify(midNote));
+    formData.append("baseNote", JSON.stringify(baseNote));
+    formData.append("perfume", data.perfume);
+    formData.append("description", data.description);
+    formData.append("details", data.details);
+    formData.append("mainAccords", JSON.stringify(accords));
+    formData.append("purchaseLinks", JSON.stringify(purchaseLinks));
+    formData.append("banner", banner);
+    formData.append("logo", logo);
+
+    for (let i = 0; i < gallery.length; i++) {
+      formData.append("gallery",  gallery[i]);
+    }
+
+    return formData;
+  };
+
   const onSubmit = (data) => {
     let tempAccords = [...accords];
     let totalPercentage = 0;
     tempAccords.forEach((e) => (totalPercentage += e.percentage));
-
     if (totalPercentage !== 100) {
       toast.error("Total Accords percentage must be equal to 100", {
         style: {
@@ -116,8 +88,20 @@ const AddPerfume = () => {
       });
       return;
     }
-    console.log(data)
-    toast("saving");
+
+    console.log(data);
+    let formData = filterData(data);
+
+    // console.log(formData);
+
+    axios
+      .post(`${import.meta.env.VITE_API_URL}/perfume`, formData)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => console.err(err));
+
+    toast("saving filtered data");
   };
 
   return (
@@ -403,7 +387,6 @@ const AddPerfume = () => {
                   >
                     Mid Note
                   </label>
-                 
                 </div>
                 <Controller
                   name="midNote"
@@ -427,8 +410,6 @@ const AddPerfume = () => {
                   >
                     Base Note
                   </label>
-                 
-                   
                 </div>
                 <Controller
                   name="baseNote"
