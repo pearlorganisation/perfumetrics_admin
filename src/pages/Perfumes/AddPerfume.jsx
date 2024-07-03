@@ -3,14 +3,18 @@ import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Toaster, toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const AddPerfume = () => {
+
   const [banner, setBanner] = useState(null);
   const [logo, setLogo] = useState(null);
   const [gallery, setGallery] = useState([]);
   const [accords, setAccords] = useState([]);
   const [noteData, setNoteData] = useState([]);
   const [purchaseLinks, setPurchaseLinks] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
   const accordsRef = useRef(null);
 
   const {
@@ -19,6 +23,7 @@ const AddPerfume = () => {
     handleSubmit,
     watch,
     formState: { errors },
+    reset
   } = useForm();
 
   const addAccord = () => {
@@ -69,13 +74,14 @@ const AddPerfume = () => {
     formData.append("logo", logo);
 
     for (let i = 0; i < gallery.length; i++) {
-      formData.append("gallery",  gallery[i]);
+      formData.append("gallery", gallery[i]);
     }
 
     return formData;
   };
 
   const onSubmit = (data) => {
+    toast("saving");
     let tempAccords = [...accords];
     let totalPercentage = 0;
     tempAccords.forEach((e) => (totalPercentage += e.percentage));
@@ -89,19 +95,28 @@ const AddPerfume = () => {
       return;
     }
 
-    console.log(data);
     let formData = filterData(data);
-
-    // console.log(formData);
 
     axios
       .post(`${import.meta.env.VITE_API_URL}/perfume`, formData)
       .then((res) => {
-        console.log(res);
+        reset()
+        toast.error("Saved successfully", {
+          style: {
+            background: "green",
+            color: "white",
+          },
+        });
       })
-      .catch((err) => console.err(err));
-
-    toast("saving filtered data");
+      .catch((err) => {
+        console.err(err);
+        toast.error("Server down, please try again later", {
+          style: {
+            background: "red",
+            color: "white",
+          },
+        });
+      });
   };
 
   return (

@@ -14,26 +14,33 @@ const AddPerfumeNotes = () => {
   } = useForm();
 
   const onSubmit = (data) => {
+    let tempAccords = [...accords];
+    let totalPercentage = 0;
+    tempAccords.forEach((e) => (totalPercentage += e.percentage));
+    if (totalPercentage !== 100) {
+      toast.error("Total Accords percentage must be equal to 100", {
+        style: {
+          background: "red",
+          color: "white",
+        },
+      });
+      return;
+    }
+
     console.log(data);
+    let formData = filterData(data);
 
-    toast("saving");
+    // console.log(formData);
+
+    axios
+      .post(`${import.meta.env.VITE_API_URL}/perfume`, formData)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => console.err(err));
+
+    toast("saving filtered data");
   };
-
-  // const addNotesRow = () => {
-  //   setNotesRow((prev) => {
-  //     let id = (prev[prev?.length - 1]?.id || 0) + 1;
-  //     let newTopNote = { id: `top${id}`, name: "", photo: null };
-  //     return [...prev, newTopNote];
-  //   });
-  // };
-
-  // const removeNotesRow = (id) => {
-  //   setNotesRow((prev) => {
-  //     let notesRow = [...prev];
-  //     let res = notesRow?.filter((e) => e.id !== id);
-  //     return res;
-  //   });
-  // };
 
   return (
     <div>
@@ -88,12 +95,19 @@ const AddPerfumeNotes = () => {
                             onChange={(e) => {
                               setPhoto(e.target.files[0])
                             }}
-                            required
+                            accept=".jpg, .jpeg, .png, .webp"
+                            {...register("image", {required: true})}
                           />
                         </td>
                         <td className="px-1 py-4">
                           {photo && (
-                            <img src={URL.createObjectURL(photo)} width={"100px"} height={"auto"} accept=".jpg, .jpeg, .png, .webp"/>
+                            <img 
+                            src={URL.createObjectURL(photo)} 
+                            width={"100px"} 
+                            height={"auto"} 
+                            
+                            
+                            />
                           )}
                         </td>
                       </tr>
