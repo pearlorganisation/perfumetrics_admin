@@ -2,6 +2,8 @@ import { Skeleton } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Toaster, toast } from "sonner";
+
 
 const PerfumeNotes = () => {
   const [noteData, setNoteData] = useState(null);
@@ -21,8 +23,31 @@ const PerfumeNotes = () => {
       });
   }, []);
 
+  const deleteItem = (item) => {
+    if(window.confirm(`Are you sure you want to delete perfume:- ${item.name}`)){
+      axios.delete(`${import.meta.env.VITE_API_URL}/note/${item._id}`).then((res) => {
+        toast.success(res.data.message, {
+          style: {
+            background: "green",
+            color: "white",
+          },
+        });
+        setNoteData(res.data.data)
+      }).catch(err => {
+        toast.error("There was some issue deleting the perfume", {
+          style: {
+            background: "red",
+            color: "white",
+          },
+        });
+        
+      })
+    }
+  }
+
   return (
     <div>
+      <Toaster />
       <div class="p-10 ">
         <div class="flex items-center justify-end flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-8 bg-white ">
           <Link
@@ -77,6 +102,16 @@ const PerfumeNotes = () => {
                       >
                         View/edit
                       </Link>
+                    </td>
+                    <td className="px-6 py-4">
+                      <button
+                        className="font-medium text-red-600  hover:underline"
+                        onClick={() => {
+                          deleteItem(item)
+                        }}
+                      >
+                        Delete
+                      </button>
                     </td>
                   </tr>
                 ))}

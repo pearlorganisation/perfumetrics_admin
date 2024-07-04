@@ -6,13 +6,14 @@ import { Toaster, toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
 const AddPerfume = () => {
-
   const [banner, setBanner] = useState(null);
   const [logo, setLogo] = useState(null);
   const [gallery, setGallery] = useState([]);
   const [accords, setAccords] = useState([]);
   const [noteData, setNoteData] = useState([]);
   const [purchaseLinks, setPurchaseLinks] = useState([]);
+  const [pros, setPros] = useState([]);
+  const [cons, setCons] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const accordsRef = useRef(null);
@@ -23,13 +24,13 @@ const AddPerfume = () => {
     handleSubmit,
     watch,
     formState: { errors },
-    reset
+    reset,
   } = useForm();
 
   const addAccord = () => {
     setAccords((prev) => {
       let id = (prev[prev?.length - 1]?.id || 0) + 1;
-      let newAccord = { id: id, name: "", percentage: 0 };
+      let newAccord = { id: id, name: "", percentage: 0, color: '#000000' };
       return [...prev, newAccord];
     });
   };
@@ -37,9 +38,56 @@ const AddPerfume = () => {
   const removeAccord = (id) => {
     setAccords((prev) => {
       let accords = [...prev];
-      console.log(accords);
       let res = accords?.filter((e) => e.id !== id);
+      return res;
+    });
+  };
+
+  const addPurchaseLink = () => {
+    setPurchaseLinks((prev) => {
+      let id = (prev[prev?.length - 1]?.id || 0) + 1;
+      let purchaseLink = { id: id, link: "", company: "" };
+      return [...prev, purchaseLink];
+    });
+  };
+
+  const removePurchaseLink = (id) => {
+    setPurchaseLinks((prev) => {
+      let purchaseLinks = [...prev];
+      let res = purchaseLinks?.filter((e) => e.id !== id);
+      return res;
+    });
+  };
+
+  const addPros = () => {
+    setPros((prev) => {
+      let id = (prev[prev?.length - 1]?.id || 0) + 1;
+      let newPro = { id: id, pros: "" };
+      return [...prev, newPro];
+    });
+  };
+
+  const removePros = (id) => {
+    setPros((prev) => {
+      let pros = [...prev];
+      let res = pros?.filter((e) => e.id !== id);
       console.log(res);
+      return res;
+    });
+  };
+
+  const addCons = () => {
+    setCons((prev) => {
+      let id = (prev[prev?.length - 1]?.id || 0) + 1;
+      let newCon = { id: id, cons: "" };
+      return [...prev, newCon];
+    });
+  };
+
+  const removeCons = (id) => {
+    setCons((prev) => {
+      let cons = [...prev];
+      let res = cons?.filter((e) => e.id !== id);
       return res;
     });
   };
@@ -62,13 +110,30 @@ const AddPerfume = () => {
     let midNote = data?.midNote.map((item) => item.value);
     let baseNote = data?.baseNote.map((item) => item.value);
 
+    let filteredAccords = accords.map((item) => {
+      delete item.id;
+      return item;
+    });
+
+    let filteredPros = pros.map((item) => {
+      delete item.id;
+      return item;
+    });
+    
+    let filteredCons = cons.map((item) => {
+      delete item.id;
+      return item;
+    });
+
     formData.append("topNote", JSON.stringify(topNote));
     formData.append("middleNote", JSON.stringify(midNote));
     formData.append("baseNote", JSON.stringify(baseNote));
     formData.append("perfume", data.perfume);
     formData.append("description", data.description);
     formData.append("details", data.details);
-    formData.append("mainAccords", JSON.stringify(accords));
+    formData.append("mainAccords", JSON.stringify(filteredAccords));
+    formData.append("pros", JSON.stringify(filteredPros));
+    formData.append("cons", JSON.stringify(filteredCons));
     formData.append("purchaseLinks", JSON.stringify(purchaseLinks));
     formData.append("banner", banner);
     formData.append("logo", logo);
@@ -81,6 +146,7 @@ const AddPerfume = () => {
   };
 
   const onSubmit = (data) => {
+    if(isLoading) return
     toast("saving");
     let tempAccords = [...accords];
     let totalPercentage = 0;
@@ -96,20 +162,22 @@ const AddPerfume = () => {
     }
 
     let formData = filterData(data);
-
+    setIsLoading(true)
     axios
       .post(`${import.meta.env.VITE_API_URL}/perfume`, formData)
       .then((res) => {
-        reset()
-        toast.error("Saved successfully", {
+        setIsLoading(false)
+        toast.success("Saved successfully", {
           style: {
             background: "green",
             color: "white",
           },
         });
+        // window.location.href = '/perfumes'
       })
       .catch((err) => {
         console.err(err);
+        setIsLoading(false)
         toast.error("Server down, please try again later", {
           style: {
             background: "red",
@@ -120,7 +188,7 @@ const AddPerfume = () => {
   };
 
   return (
-    <div>
+    <>
       <section className="bg-white ">
         <div className="max-w-2xl px-4 py-8 mx-auto lg:py-16">
           <h2 className="mb-4 text-xl font-bold text-gray-900 ">Add Perfume</h2>
@@ -244,7 +312,7 @@ const AddPerfume = () => {
                   {...register("perfume", { required: true })}
                 />
               </div>
-              <div className="sm:col-span-2" ref={accordsRef}>
+              <div className="col-span-2" ref={accordsRef}>
                 <div className="w-full flex justify-between pb-1">
                   <label
                     htmlFor="name"
@@ -314,6 +382,7 @@ const AddPerfume = () => {
                             <td className="px-1 py-4">
                               <input
                                 type="number"
+                                onWheel={ event => event.currentTarget.blur()}
                                 min={0}
                                 max={100}
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
@@ -341,6 +410,20 @@ const AddPerfume = () => {
                                 type="color"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  block w-full h-[42px]"
                                 placeholder="John"
+                                onChange={(e) => {
+                                  setAccords((prev) => {
+                                    let tempArr = [...prev];
+                                    let idx = tempArr.findIndex((ele) => {
+                                      return ele.id === item.id;
+                                    });
+
+                                    let row = tempArr[idx];
+                                    tempArr.slice(idx, 1);
+                                    row.color = e.target.value;
+                                    tempArr[idx] = row;
+                                    return tempArr;
+                                  });
+                                }}
                                 required
                               />
                             </td>
@@ -363,7 +446,287 @@ const AddPerfume = () => {
                 )}
               </div>
 
-              <div className="sm:col-span-2">
+              <div className="col-span-2">
+                <div className="w-full flex justify-between pb-1">
+                  <label
+                    htmlFor="name"
+                    className="block mb-2 text-sm font-medium text-gray-900 "
+                  >
+                    Purchase Links
+                  </label>
+                  <button
+                    type="button"
+                    className="bg-blue-500 hover:bg-blue-700 rounded-sm p-1 px-2 text-white"
+                    onClick={() => {
+                      addPurchaseLink();
+                    }}
+                  >
+                    Add Link
+                  </button>
+                </div>
+                {purchaseLinks && purchaseLinks?.length > 0 && (
+                  <div className="relative overflow-x-auto">
+                    <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
+                      <thead className="text-xs text-gray-700 bg-gray-50 ">
+                        <tr>
+                          <th scope="col" className="px-1 pt-2 pb-1">
+                            S.No.
+                          </th>
+                          <th scope="col" className="px-1 pt-2 pb-1">
+                            Link
+                          </th>
+                          <th scope="col" className="px-1 pt-2 pb-1">
+                            Company
+                          </th>
+                          <th scope="col" className="px-1 pt-2 pb-1"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {purchaseLinks.map((item, idx) => (
+                          <tr className="bg-white border-b " key={item?.id}>
+                            <td className="px-1 py-4">{idx + 1}</td>
+                            <td
+                              scope="row"
+                              className="px-1 py-4 font-medium text-gray-900 whitespace-nowrap "
+                            >
+                              <input
+                                type="text"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                placeholder="https://xyz.xyz/xyzzz"
+                                onChange={(e) => {
+                                  setPurchaseLinks((prev) => {
+                                    let tempArr = [...prev];
+                                    let idx = tempArr.findIndex((ele) => {
+                                      return ele.id === item.id;
+                                    });
+
+                                    let row = tempArr[idx];
+                                    tempArr.slice(idx, 1);
+                                    row.link = e.target.value;
+                                    tempArr[idx] = row;
+                                    return tempArr;
+                                  });
+                                }}
+                                required
+                              />
+                            </td>
+                            <td className="px-1 py-4">
+                              <input
+                                type="text"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                placeholder="Company Name"
+                                onChange={(e) => {
+                                  setPurchaseLinks((prev) => {
+                                    let tempArr = [...prev];
+                                    let idx = tempArr.findIndex((ele) => {
+                                      return ele.id === item.id;
+                                    });
+
+                                    let row = tempArr[idx];
+                                    tempArr.slice(idx, 1);
+
+                                    row.company = e.target.value;
+                                    tempArr[idx] = row;
+                                    return tempArr;
+                                  });
+                                }}
+                                required
+                              />
+                            </td>
+
+                            <td className="px-1 py-4">
+                              <button
+                                type="button"
+                                className="bg-red-500 hover:bg-white hover:text-black hover:shadow-[0_0_0_2px#ff0000] text-white rounded-sm p-2.5 px-2 transition duration-300"
+                                onClick={() => {
+                                  removePurchaseLink(item?.id);
+                                }}
+                              >
+                                Remove
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+
+              {/* pros */}
+              <div className="col-span-2">
+                <div className="col-span-2 md:col-span-1">
+                  <div className="w-full flex justify-between pb-1">
+                    <label
+                      htmlFor="name"
+                      className="block mb-2 text-base font-medium text-gray-900 "
+                    >
+                      Pros
+                    </label>
+                    <button
+                      type="button"
+                      className="bg-blue-500 hover:bg-blue-700 rounded-sm p-1 px-2 text-white"
+                      onClick={() => {
+                        addPros();
+                      }}
+                    >
+                      Add Pro
+                    </button>
+                  </div>
+                  {pros && pros?.length > 0 && (
+                    <div className="relative overflow-x-auto">
+                      <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
+                        <thead className="text-xs text-gray-700 bg-gray-50 ">
+                          <tr>
+                            <th scope="col" className="px-1 pt-2 pb-1">
+                              S.No.
+                            </th>
+                            <th scope="col" className="px-1 pt-2 pb-1">
+                              Content
+                            </th>
+
+                            <th scope="col" className="px-1 pt-2 pb-1"></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {pros.map((item, idx) => (
+                            <tr
+                              className="bg-white border-b "
+                              key={`pro${item?.id}`}
+                            >
+                              <td className="px-1 py-4">{idx + 1}</td>
+                              <td
+                                scope="row"
+                                className="px-1 py-4 font-medium text-gray-900 whitespace-nowrap "
+                              >
+                                <input
+                                  type="text"
+                                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                  placeholder="A Pro of this perfume"
+                                  onChange={(e) => {
+                                    setPros((prev) => {
+                                      let tempArr = [...prev];
+                                      let idx = tempArr.findIndex((ele) => {
+                                        return ele.id === item.id;
+                                      });
+
+                                      let row = tempArr[idx];
+                                      tempArr.slice(idx, 1);
+                                      row.pros = e.target.value;
+                                      tempArr[idx] = row;
+                                      return tempArr;
+                                    });
+                                  }}
+                                  required
+                                />
+                              </td>
+
+                              <td className="px-1 py-4">
+                                <button
+                                  type="button"
+                                  className="bg-red-500 hover:bg-white hover:text-black hover:shadow-[0_0_0_2px#ff0000] text-white rounded-sm p-2.5 px-2 transition duration-300"
+                                  onClick={() => {
+                                    removePros(item?.id);
+                                  }}
+                                >
+                                  Remove
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+
+                <div className="col-span-2 md:col-span-1">
+                  <div className="w-full flex justify-between pb-1">
+                    <label
+                      htmlFor="name"
+                      className="block mb-2 text-base font-medium text-gray-900 "
+                    >
+                      Cons
+                    </label>
+                    <button
+                      type="button"
+                      className="bg-blue-500 hover:bg-blue-700 rounded-sm p-1 px-2 text-white"
+                      onClick={() => {
+                        addCons();
+                      }}
+                    >
+                      Add Con
+                    </button>
+                  </div>
+                  {cons && cons?.length > 0 && (
+                    <div className="relative overflow-x-auto">
+                      <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
+                        <thead className="text-xs text-gray-700 bg-gray-50 ">
+                          <tr>
+                            <th scope="col" className="px-1 pt-2 pb-1">
+                              S.No.
+                            </th>
+                            <th scope="col" className="px-1 pt-2 pb-1">
+                              Content
+                            </th>
+
+                            <th scope="col" className="px-1 pt-2 pb-1"></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {cons.map((item, idx) => (
+                            <tr
+                              className="bg-white border-b "
+                              key={`pro${item?.id}`}
+                            >
+                              <td className="px-1 py-4">{idx + 1}</td>
+                              <td
+                                scope="row"
+                                className="px-1 py-4 font-medium text-gray-900 whitespace-nowrap "
+                              >
+                                <input
+                                  type="text"
+                                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                  placeholder="A Con of this perfume"
+                                  onChange={(e) => {
+                                    setCons((prev) => {
+                                      let tempArr = [...prev];
+                                      let idx = tempArr.findIndex((ele) => {
+                                        return ele.id === item.id;
+                                      });
+
+                                      let row = tempArr[idx];
+                                      tempArr.slice(idx, 1);
+                                      row.cons = e.target.value;
+                                      tempArr[idx] = row;
+                                      return tempArr;
+                                    });
+                                  }}
+                                  required
+                                />
+                              </td>
+
+                              <td className="px-1 py-4">
+                                <button
+                                  type="button"
+                                  className="bg-red-500 hover:bg-white hover:text-black hover:shadow-[0_0_0_2px#ff0000] text-white rounded-sm p-2.5 px-2 transition duration-300"
+                                  onClick={() => {
+                                    removeCons(item?.id);
+                                  }}
+                                >
+                                  Remove
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="col-span-2">
                 <div className="w-full border border-b border-x-0 border-t-0 mb-2">
                   <label
                     htmlFor="name"
@@ -479,13 +842,13 @@ const AddPerfume = () => {
                 type="submit"
                 className="w-1/3 text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-base px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
               >
-                Save
+                {isLoading ? 'Saving...' : 'Save'}
               </button>
             </div>
           </form>
         </div>
       </section>
-    </div>
+    </>
   );
 };
 

@@ -25,7 +25,7 @@ function Login() {
       setErrorMsg(null);
       window.location.href = "/"
     } else {
-      setErrorMsg("Invalid E-Mail/Password");
+      setErrorMsg("Invalid UserName/Password");
     }
   };
 

@@ -2,11 +2,12 @@ import { Skeleton } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Toaster, toast } from "sonner";
 
 const PerfumeNotes = () => {
   const [perfumeData, setPerfumeData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-
+  
   useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_API_URL}/perfume`)
@@ -21,8 +22,34 @@ const PerfumeNotes = () => {
       });
   }, []);
 
+  const deleteItem = (item) => {
+    if(window.confirm(`Are you sure you want to delete perfume:- ${item.perfume}`)){
+      axios.delete(`${import.meta.env.VITE_API_URL}/perfume/${item._id}`).then((res) => {
+
+        setPerfumeData(res.data.perfumeData)
+        toast.success(res.data.message, {
+          style: {
+            background: "green",
+            color: "white",
+          },
+        });
+      }).catch(err => {
+        toast.error("There was some issue deleting the perfume", {
+          style: {
+            background: "red",
+            color: "white",
+          },
+        });
+        
+      })
+    }
+  }
+
+
   return (
     <div>
+      <Toaster />
+
       <div class="p-10 ">
         <div class="flex items-center justify-end flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-8 bg-white ">
           <Link
@@ -78,13 +105,14 @@ const PerfumeNotes = () => {
                       </Link>
                     </td>
                     <td className="px-6 py-4">
-                      <Link
-                        to={`/perfume/update/${item?._id}`}
-                        state={{ data: item }}
+                      <button
                         className="font-medium text-red-600  hover:underline"
+                        onClick={() => {
+                          deleteItem(item)
+                        }}
                       >
                         Delete
-                      </Link>
+                      </button>
                     </td>
                   </tr>
                 ))}

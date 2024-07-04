@@ -1,10 +1,11 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { IoIosAdd } from "react-icons/io";
 import { Toaster, toast } from "sonner";
 
 const AddPerfumeNotes = () => {
-  const [photo, setPhoto] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
@@ -13,31 +14,46 @@ const AddPerfumeNotes = () => {
     formState: { errors },
   } = useForm();
 
+  const filterData = (data) => {
+    let formData = new FormData();
+
+    formData.append("name", data.name);
+    formData.append("image", data.image[0]);
+
+    return formData;
+  };
+
+
+
+
   const onSubmit = (data) => {
-    let tempAccords = [...accords];
-    let totalPercentage = 0;
-    tempAccords.forEach((e) => (totalPercentage += e.percentage));
-    if (totalPercentage !== 100) {
-      toast.error("Total Accords percentage must be equal to 100", {
-        style: {
-          background: "red",
-          color: "white",
-        },
-      });
-      return;
-    }
-
-    console.log(data);
+    toast('saving')
     let formData = filterData(data);
-
-    // console.log(formData);
-
+    setIsLoading(true)
     axios
-      .post(`${import.meta.env.VITE_API_URL}/perfume`, formData)
+      .post(`${import.meta.env.VITE_API_URL}/note`, formData)
       .then((res) => {
-        console.log(res);
+        setIsLoading(false)
+        toast.success("Saved successfully", {
+          style: {
+            background: "green",
+            color: "white",
+          },
+        });
+        window.location.href = '/perfumenotes'
       })
-      .catch((err) => console.err(err));
+      .catch((err) => {
+        console.error(err)
+        setIsLoading(false)
+        toast.error("Server Issue, Try again later", {
+          style: {
+            background: "red",
+            color: "white",
+          },
+        });
+
+      }
+    );
 
     toast("saving filtered data");
   };
@@ -62,9 +78,7 @@ const AddPerfumeNotes = () => {
                   <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
                     <thead className="text-xs text-gray-700 bg-gray-50 ">
                       <tr>
-                        <th scope="col" className="px-1 pt-2 pb-1">
-                          S.No.
-                        </th>
+                       
                         <th scope="col" className="px-1 pt-2 pb-1">
                           Note Name
                         </th>
@@ -92,24 +106,12 @@ const AddPerfumeNotes = () => {
                             type="file"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                             placeholder="0"
-                            onChange={(e) => {
-                              setPhoto(e.target.files[0])
-                            }}
+                            
                             accept=".jpg, .jpeg, .png, .webp"
                             {...register("image", {required: true})}
                           />
                         </td>
-                        <td className="px-1 py-4">
-                          {photo && (
-                            <img 
-                            src={URL.createObjectURL(photo)} 
-                            width={"100px"} 
-                            height={"auto"} 
-                            
-                            
-                            />
-                          )}
-                        </td>
+                      
                       </tr>
                     </tbody>
                   </table>
@@ -121,7 +123,8 @@ const AddPerfumeNotes = () => {
                 type="submit"
                 className="w-1/3 text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text- px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
               >
-                Save
+                {isLoading ? 'Saving...' : 'Save'}
+
               </button>
             </div>
           </form>
