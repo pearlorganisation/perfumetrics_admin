@@ -53,7 +53,7 @@ const AddPerfumeNotes = () => {
         });
 
       }
-    );
+      );
 
     toast("saving filtered data");
   };
@@ -78,7 +78,7 @@ const AddPerfumeNotes = () => {
                   <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
                     <thead className="text-xs text-gray-700 bg-gray-50 ">
                       <tr>
-                       
+
                         <th scope="col" className="px-1 pt-2 pb-1">
                           Note Name
                         </th>
@@ -106,12 +106,12 @@ const AddPerfumeNotes = () => {
                             type="file"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                             placeholder="0"
-                            
+
                             accept=".jpg, .jpeg, .png, .webp"
-                            {...register("image", {required: true})}
+                            {...register("image", { required: true })}
                           />
                         </td>
-                      
+
                       </tr>
                     </tbody>
                   </table>

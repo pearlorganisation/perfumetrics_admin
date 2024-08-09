@@ -13,7 +13,7 @@ const PerfumeNotes = () => {
     axios
       .get(`${import.meta.env.VITE_API_URL}/note`)
       .then((res) => {
-        
+
         setNoteData(res?.data?.data);
         setIsLoading(false);
       })
@@ -24,7 +24,7 @@ const PerfumeNotes = () => {
   }, []);
 
   const deleteItem = (item) => {
-    if(window.confirm(`Are you sure you want to delete perfume:- ${item.name}`)){
+    if (window.confirm(`Are you sure you want to delete perfume:- ${item.name}`)) {
       axios.delete(`${import.meta.env.VITE_API_URL}/note/${item._id}`).then((res) => {
         toast.success(res.data.message, {
           style: {
@@ -40,7 +40,7 @@ const PerfumeNotes = () => {
             color: "white",
           },
         });
-        
+
       })
     }
   }
@@ -94,7 +94,7 @@ const PerfumeNotes = () => {
                     </th>
                     <td className="px-6 py-4">{item.name}</td>
 
-                    
+
                     <td className="px-6 py-4">
                       <Link
                         to={`/perfumenotes/update/${item?._id}`}

@@ -21,6 +21,10 @@ import UpdatePerfume from "./pages/Perfumes/UpdatePerfume";
 import PerfumeNotes from "./pages/PerfumeNotes/PerfumeNotes";
 import AddPerfumeNotes from "./pages/PerfumeNotes/AddPerfumeNotes";
 import UpdatePerfumeNotes from "./pages/PerfumeNotes/UpdatePerfumeNotes";
+import PerfumeBrands from "./pages/PerfumeBrands/PerfumeBrands";
+import { Provider } from "react-redux";
+import store from "./features/store";
+import AddBrand from "./pages/PerfumeBrands/AddBrand";
 
 const isUserLoggedIn = localStorage.getItem('isusrlgd')
 
@@ -37,7 +41,7 @@ const App = () => {
           element: <Dashboard />,
         },
 
-      
+
         {
           path: "/*",
           element: <NotFound />,
@@ -45,7 +49,7 @@ const App = () => {
         {
           path: "/perfumes",
           element: <Perfumes />,
-        }, 
+        },
         {
           path: "/perfume/add",
           element: <AddPerfume />,
@@ -58,7 +62,7 @@ const App = () => {
         {
           path: "/perfumenotes",
           element: <PerfumeNotes />,
-        }, 
+        },
         {
           path: "/perfumenotes/add",
           element: <AddPerfumeNotes />,
@@ -66,6 +70,16 @@ const App = () => {
         {
           path: "/perfumenotes/update/:id",
           element: <UpdatePerfumeNotes />,
+        },
+
+        //perfume brands
+        {
+          path: "/perfumeBrands",
+          element: <PerfumeBrands />,
+        },
+        {
+          path: "/addBrand",
+          element: <AddBrand />,
         },
       ],
     },
@@ -81,10 +95,12 @@ const App = () => {
   ]);
 
   return (
-  <div className=''><Toaster richColors
-  containerClassName="overflow-auto"/>
-  <RouterProvider router={router} />;
-  </div>
+    <Provider store={store}>
+      <div className=''>
+        <Toaster richColors containerClassName="overflow-auto" />
+        <RouterProvider router={router} />;
+      </div>
+    </Provider>
   )
 };
 

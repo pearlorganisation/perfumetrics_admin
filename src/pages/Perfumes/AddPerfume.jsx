@@ -4,10 +4,20 @@ import React, { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Toaster, toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchBrands } from "../../features/actions/brandsAction";
 
 const AddPerfume = () => {
+
+  const { brands } = useSelector(state => state.brand)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const [brandsData, setBrandsData] = useState([])
+
   const [banner, setBanner] = useState(null);
   const [logo, setLogo] = useState(null);
+  const [brandId, setBrandId] = useState(null);
+
   const [gallery, setGallery] = useState([]);
   const [accords, setAccords] = useState([]);
   const [noteData, setNoteData] = useState([]);
@@ -119,7 +129,7 @@ const AddPerfume = () => {
       delete item.id;
       return item;
     });
-    
+
     let filteredCons = cons.map((item) => {
       delete item.id;
       return item;
@@ -137,6 +147,7 @@ const AddPerfume = () => {
     formData.append("purchaseLinks", JSON.stringify(purchaseLinks));
     formData.append("banner", banner);
     formData.append("logo", logo);
+    formData.append('brand', brandId)
 
     for (let i = 0; i < gallery.length; i++) {
       formData.append("gallery", gallery[i]);
@@ -146,10 +157,11 @@ const AddPerfume = () => {
   };
 
   const onSubmit = (data) => {
-    if(isLoading) return
+    if (isLoading) return
     toast("saving");
     let tempAccords = [...accords];
     let totalPercentage = 0;
+    console.log(tempAccords)
     tempAccords.forEach((e) => (totalPercentage += e.percentage));
     if (totalPercentage !== 100) {
       toast.error("Total Accords percentage must be equal to 100", {
@@ -167,6 +179,7 @@ const AddPerfume = () => {
       .post(`${import.meta.env.VITE_API_URL}/perfume`, formData)
       .then((res) => {
         setIsLoading(false)
+        navigate('/perfumes')
         toast.success("Saved successfully", {
           style: {
             background: "green",
@@ -186,6 +199,27 @@ const AddPerfume = () => {
         });
       });
   };
+
+  useEffect(() => {
+    dispatch(fetchBrands())
+    addAccord()
+    addPurchaseLink()
+    addCons();
+    addPros();
+  }, [])
+
+  useEffect(() => {
+    if (brands.length > 0) {
+      const temp = brands?.map(item => {
+        return {
+          value: item?._id,
+          label: item?.brand
+        }
+      })
+      setBrandsData(temp)
+    }
+  }, [brands])
+
 
   return (
     <>
@@ -221,6 +255,7 @@ const AddPerfume = () => {
                   />
                 </div>
               </div>
+
               <div className="col-span-2 sm:col-span-1">
                 {logo && (
                   <div className="w-[250px] h-[250px] border border-red-300">
@@ -246,6 +281,24 @@ const AddPerfume = () => {
                     required
                   />
                 </div>
+              </div>
+              <div className="sm:col-span-2">
+                <label
+                  className="block mb-2 text-sm font-medium text-gray-900 "
+                  htmlFor="file_input"
+                >
+                  Brand Name
+                </label>
+                <Select
+                  options={brandsData}
+
+                  onChange={(val) => {
+                    setBrandId(val?.value)
+                  }}
+
+                // closeMenuOnSelect={true}
+                />
+
               </div>
               <div className="sm:col-span-2">
                 <div>
@@ -382,7 +435,7 @@ const AddPerfume = () => {
                             <td className="px-1 py-4">
                               <input
                                 type="number"
-                                onWheel={ event => event.currentTarget.blur()}
+                                onWheel={event => event.currentTarget.blur()}
                                 min={0}
                                 max={100}
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
