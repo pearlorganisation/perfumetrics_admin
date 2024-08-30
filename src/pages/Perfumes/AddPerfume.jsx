@@ -134,7 +134,7 @@ const AddPerfume = () => {
       delete item.id;
       return item;
     });
-
+    console.log("puschase links", purchaseLinks)
     formData.append("topNote", JSON.stringify(topNote));
     formData.append("middleNote", JSON.stringify(midNote));
     formData.append("baseNote", JSON.stringify(baseNote));
@@ -148,10 +148,25 @@ const AddPerfume = () => {
     formData.append("banner", banner);
     formData.append("logo", logo);
     formData.append('brand', brandId)
+    formData.append('ratingFragrams', JSON.stringify({
+      longitivity: Number(data.longitivity),
+      gender: data?.gender,
+      sillage: Number(data?.sillage),
+      pricing: Number(data?.pricing),
+      overall: Number(data?.overall),
+      compliment: Number(data?.compliment)
+    }))
 
     for (let i = 0; i < gallery.length; i++) {
       formData.append("gallery", gallery[i]);
     }
+
+
+
+    // Do a bit of work to convert the entries to a plain JS object
+    const value = Object.fromEntries(formData.entries());
+
+    console.log({ value });
 
     return formData;
   };
@@ -175,11 +190,14 @@ const AddPerfume = () => {
 
     let formData = filterData(data);
     setIsLoading(true)
+    // .post(" http://localhost:8001/api/v1/perfume", formData)
     axios
+
       .post(`${import.meta.env.VITE_API_URL}/perfume`, formData)
       .then((res) => {
         setIsLoading(false)
-        navigate('/perfumes')
+        navigate(
+          '/perfumes')
         toast.success("Saved successfully", {
           style: {
             background: "green",
@@ -224,7 +242,7 @@ const AddPerfume = () => {
   return (
     <>
       <section className="bg-white ">
-        <div className="max-w-2xl px-4 py-8 mx-auto lg:py-16">
+        <div className="max-w-4xl px-4 py-8 mx-auto lg:py-16">
           <h2 className="mb-4 text-xl font-bold text-gray-900 ">Add Perfume</h2>
           <Toaster />
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -531,6 +549,9 @@ const AddPerfume = () => {
                           <th scope="col" className="px-1 pt-2 pb-1">
                             Company
                           </th>
+                          <th scope="col" className="px-1 pt-2 pb-1">
+                            Logo Link
+                          </th>
                           <th scope="col" className="px-1 pt-2 pb-1"></th>
                         </tr>
                       </thead>
@@ -579,6 +600,30 @@ const AddPerfume = () => {
                                     tempArr.slice(idx, 1);
 
                                     row.company = e.target.value;
+                                    tempArr[idx] = row;
+                                    return tempArr;
+                                  });
+                                }}
+                                required
+                              />
+                            </td>
+
+                            <td className="px-1 py-4">
+                              <input
+                                type="text"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                placeholder="Company Name"
+                                onChange={(e) => {
+                                  setPurchaseLinks((prev) => {
+                                    let tempArr = [...prev];
+                                    let idx = tempArr.findIndex((ele) => {
+                                      return ele.id === item.id;
+                                    });
+
+                                    let row = tempArr[idx];
+                                    tempArr.slice(idx, 1);
+
+                                    row.logo = e.target.value;
                                     tempArr[idx] = row;
                                     return tempArr;
                                   });
@@ -888,6 +933,101 @@ const AddPerfume = () => {
                   placeholder="Write a product details here..."
                   {...register("details", { required: true })}
                 ></textarea>
+              </div>
+            </div>
+            <div>
+              <div className="text-2xl font-medium">Fragram Ratings</div>
+              <div className="grid md:grid-cols-2 gap-3 pb-4">
+                <div className="">
+                  <label
+                    htmlFor="name"
+                    className="block mb-2 text-sm font-medium text-gray-900 "
+                  >
+                    Longitivity
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5      "
+                    placeholder="Longitivity"
+                    {...register("longitivity", { required: true })}
+                  />
+                </div>
+                <div className="">
+                  <label
+                    htmlFor="name"
+                    className="block mb-2 text-sm font-medium text-gray-900 "
+                  >
+                    Sillage
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5      "
+                    placeholder="Sillage"
+                    {...register("sillage", { required: true })}
+                  />
+                </div>
+                <div className="">
+                  <label
+                    htmlFor="name"
+                    className="block mb-2 text-sm font-medium text-gray-900 "
+                  >
+                    Pricing
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5      "
+                    placeholder="Pricing"
+                    {...register("pricing", { required: true })}
+                  />
+                </div>
+                <div className="">
+                  <label
+                    htmlFor="name"
+                    className="block mb-2 text-sm font-medium text-gray-900 "
+                  >
+                    Gender
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5      "
+                    placeholder="Gender"
+                    {...register("gender", { required: true })}
+                  />
+                </div>
+                <div className="">
+                  <label
+                    htmlFor="name"
+                    className="block mb-2 text-sm font-medium text-gray-900 "
+                  >
+                    Compliment
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5      "
+                    placeholder="Compliment"
+                    {...register("compliment", { required: true })}
+                  />
+                </div>
+                <div className="">
+                  <label
+                    htmlFor="name"
+                    className="block mb-2 text-sm font-medium text-gray-900 "
+                  >
+                    Overall
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5      "
+                    placeholder="Overall"
+                    {...register("overall", { required: true })}
+                  />
+                </div>
               </div>
             </div>
             <div className="flex justify-center items-center space-x-4 w-full">

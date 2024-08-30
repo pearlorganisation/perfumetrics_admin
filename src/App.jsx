@@ -25,6 +25,11 @@ import PerfumeBrands from "./pages/PerfumeBrands/PerfumeBrands";
 import { Provider } from "react-redux";
 import store from "./features/store";
 import AddBrand from "./pages/PerfumeBrands/AddBrand";
+import Users from "./pages/Users/Users";
+import TopRatedPerfumes from "./pages/TopRatedPerfume/TopRatedPerfumes";
+import AddTopRatedPerfume from "./pages/TopRatedPerfume/AddTopRatedPerfume";
+import RelatedFragram from "./pages/RelatedFragram/RelatedFragram";
+import AddRelatedFragram from "./pages/RelatedFragram/AddRelatedFragram";
 
 const isUserLoggedIn = localStorage.getItem('isusrlgd')
 
@@ -39,6 +44,11 @@ const App = () => {
         {
           path: "/",
           element: <Dashboard />,
+        },
+
+        {
+          path: "/users",
+          element: <Users />,
         },
 
 
@@ -80,6 +90,22 @@ const App = () => {
         {
           path: "/addBrand",
           element: <AddBrand />,
+        },
+        {
+          path: "/topRatedPerfume",
+          element: <TopRatedPerfumes />,
+        },
+        {
+          path: "/addTopRatedPerfume",
+          element: <AddTopRatedPerfume />,
+        },
+        {
+          path: "/relatedFragram",
+          element: <RelatedFragram />,
+        },
+        {
+          path: "/addRelatedFragram",
+          element: <AddRelatedFragram />,
         },
       ],
     },

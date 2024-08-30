@@ -21,7 +21,15 @@ const Sidebar = () => {
               <span className="ms-3">Dashboard</span>
             </Link>
           </li>
-
+          <li>
+            <Link
+              to="/users"
+              className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
+            >
+              <CategoryIcon />
+              <span className="flex-1 ms-3 whitespace-nowrap">Users</span>
+            </Link>
+          </li>
 
           <li>
             <Link
@@ -30,6 +38,15 @@ const Sidebar = () => {
             >
               <CategoryIcon />
               <span className="flex-1 ms-3 whitespace-nowrap">Perfumes</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/topRatedPerfume"
+              className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
+            >
+              <CategoryIcon />
+              <span className="flex-1 ms-3 whitespace-nowrap">Top Rated Perfumes</span>
             </Link>
           </li>
 
@@ -52,6 +69,16 @@ const Sidebar = () => {
             >
               <CategoryIcon />
               <span className="flex-1 ms-3 whitespace-nowrap">Perfume Notes</span>
+            </Link>
+          </li>
+
+          <li>
+            <Link
+              to="/relatedFragram"
+              className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
+            >
+              <CategoryIcon />
+              <span className="flex-1 ms-3 whitespace-nowrap">Related Fragram</span>
             </Link>
           </li>
 
