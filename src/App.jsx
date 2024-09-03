@@ -30,6 +30,15 @@ import TopRatedPerfumes from "./pages/TopRatedPerfume/TopRatedPerfumes";
 import AddTopRatedPerfume from "./pages/TopRatedPerfume/AddTopRatedPerfume";
 import RelatedFragram from "./pages/RelatedFragram/RelatedFragram";
 import AddRelatedFragram from "./pages/RelatedFragram/AddRelatedFragram";
+import AddNewArrival from "./pages/NewArrivalPerfume/AddNewArrival";
+import UpdateNewArrival from "./pages/NewArrivalPerfume/UpdateNewArrival";
+import NewArrival from "./pages/NewArrivalPerfume/NewArrival";
+import MenPerfume from "./pages/MenPerfume/MenPerfume";
+import AddMenPerfume from "./pages/MenPerfume/AddMenPerfume";
+import UpdateMenPerfume from "./pages/MenPerfume/UpdateMenPerfume";
+import WomenPerfume from "./pages/WomenPerfume.jsx/WomenPerfume";
+import AddWomenPerfume from "./pages/WomenPerfume.jsx/AddWomenPerfume";
+import UpdateWomenPerfume from "./pages/WomenPerfume.jsx/UpdateWomenPerfume";
 
 const isUserLoggedIn = localStorage.getItem('isusrlgd')
 
@@ -68,6 +77,18 @@ const App = () => {
           path: "/perfume/update/:id",
           element: <UpdatePerfume />,
         },
+        {
+          path: "/newArrival",
+          element: <NewArrival />,
+        },
+        {
+          path: "/newArrival/add",
+          element: <AddNewArrival />,
+        },
+        {
+          path: "/newArrival/update/:id",
+          element: <UpdateNewArrival />,
+        },
 
         {
           path: "/perfumenotes",
@@ -80,6 +101,30 @@ const App = () => {
         {
           path: "/perfumenotes/update/:id",
           element: <UpdatePerfumeNotes />,
+        },
+        {
+          path: "/menPerfume",
+          element: <MenPerfume />,
+        },
+        {
+          path: "/menPerfume/addMenPerfume",
+          element: <AddMenPerfume />,
+        },
+        {
+          path: "/menPerfume/editMenPerfume/:id",
+          element: <UpdateMenPerfume />,
+        },
+        {
+          path: "/womenPerfume",
+          element: <WomenPerfume/>,
+        },
+        {
+          path: "/womenPerfume/addWomenPerfume",
+          element: <AddWomenPerfume />,
+        },
+        {
+          path: "/menPerfume/editMenPerfume/:id",
+          element: <UpdateWomenPerfume />,
         },
 
         //perfume brands

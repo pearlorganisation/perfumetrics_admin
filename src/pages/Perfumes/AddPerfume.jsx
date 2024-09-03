@@ -120,6 +120,8 @@ const AddPerfume = () => {
     let midNote = data?.midNote.map((item) => item.value);
     let baseNote = data?.baseNote.map((item) => item.value);
 
+
+
     let filteredAccords = accords.map((item) => {
       delete item.id;
       return item;
@@ -127,12 +129,12 @@ const AddPerfume = () => {
 
     let filteredPros = pros.map((item) => {
       delete item.id;
-      return item;
+      return {title : item.pros};
     });
 
     let filteredCons = cons.map((item) => {
       delete item.id;
-      return item;
+      return {title:item.cons};
     });
     console.log("puschase links", purchaseLinks)
     formData.append("topNote", JSON.stringify(topNote));

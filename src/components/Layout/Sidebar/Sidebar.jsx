@@ -18,7 +18,7 @@ const Sidebar = () => {
               className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
             >
               <SpaceDashboardIcon />
-              <span className="ms-3">Dashboard</span>
+              <span className="ms-3" >Dashboard</span>
             </Link>
           </li>
           <li>
@@ -42,11 +42,38 @@ const Sidebar = () => {
           </li>
           <li>
             <Link
+              to="/menPerfume"
+              className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
+            >
+              <CategoryIcon />
+              <span className="flex-1 ms-3 whitespace-nowrap">Men Perfumes</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/womenPerfume"
+              className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
+            >
+              <CategoryIcon />
+              <span className="flex-1 ms-3 whitespace-nowrap">Women Perfumes</span>
+            </Link>
+          </li>
+          <li>
+            <Link
               to="/topRatedPerfume"
               className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
             >
               <CategoryIcon />
               <span className="flex-1 ms-3 whitespace-nowrap">Top Rated Perfumes</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/newArrival"
+              className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
+            >
+              <CategoryIcon />
+              <span className="flex-1 ms-3 whitespace-nowrap">New Arrival  Perfumes</span>
             </Link>
           </li>
 
