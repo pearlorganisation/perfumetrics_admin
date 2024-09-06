@@ -39,11 +39,14 @@ import UpdateMenPerfume from "./pages/MenPerfume/UpdateMenPerfume";
 import WomenPerfume from "./pages/WomenPerfume.jsx/WomenPerfume";
 import AddWomenPerfume from "./pages/WomenPerfume.jsx/AddWomenPerfume";
 import UpdateWomenPerfume from "./pages/WomenPerfume.jsx/UpdateWomenPerfume";
+import YeahFragram from "./pages/YeahFragram/YeahFragram";
+import AddYeahFragram from "./pages/YeahFragram/AddYeahFragram";
+import Fragrams from "./pages/Fragrams/Fragrams";
+import AddFragrams from "./pages/Fragrams/AddFragrams";
 
-const isUserLoggedIn = localStorage.getItem('isusrlgd')
+const isUserLoggedIn = localStorage.getItem("isusrlgd");
 
 const App = () => {
-
   const router = createBrowserRouter([
     {
       path: "/",
@@ -59,7 +62,6 @@ const App = () => {
           path: "/users",
           element: <Users />,
         },
-
 
         {
           path: "/*",
@@ -116,7 +118,7 @@ const App = () => {
         },
         {
           path: "/womenPerfume",
-          element: <WomenPerfume/>,
+          element: <WomenPerfume />,
         },
         {
           path: "/womenPerfume/addWomenPerfume",
@@ -152,6 +154,22 @@ const App = () => {
           path: "/addRelatedFragram",
           element: <AddRelatedFragram />,
         },
+        {
+          path: "/yeahFragram",
+          element: <YeahFragram />,
+        },
+        {
+          path: "/addYeahFragram",
+          element: <AddYeahFragram />,
+        },
+        {
+          path: "/fragrams",
+          element: <Fragrams />,
+        },
+        {
+          path: "/addFragrams",
+          element: <AddFragrams />,
+        },
       ],
     },
     {
@@ -167,12 +185,12 @@ const App = () => {
 
   return (
     <Provider store={store}>
-      <div className=''>
+      <div className="">
         <Toaster richColors containerClassName="overflow-auto" />
         <RouterProvider router={router} />;
       </div>
     </Provider>
-  )
+  );
 };
 
 export default App;

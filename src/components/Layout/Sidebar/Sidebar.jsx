@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard';
-import CategoryIcon from '@mui/icons-material/Category';
+import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
+import CategoryIcon from "@mui/icons-material/Category";
 
 const Sidebar = () => {
   return (
@@ -18,7 +18,7 @@ const Sidebar = () => {
               className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
             >
               <SpaceDashboardIcon />
-              <span className="ms-3" >Dashboard</span>
+              <span className="ms-3">Dashboard</span>
             </Link>
           </li>
           <li>
@@ -46,7 +46,9 @@ const Sidebar = () => {
               className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
             >
               <CategoryIcon />
-              <span className="flex-1 ms-3 whitespace-nowrap">Men Perfumes</span>
+              <span className="flex-1 ms-3 whitespace-nowrap">
+                Men Perfumes
+              </span>
             </Link>
           </li>
           <li>
@@ -55,7 +57,9 @@ const Sidebar = () => {
               className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
             >
               <CategoryIcon />
-              <span className="flex-1 ms-3 whitespace-nowrap">Women Perfumes</span>
+              <span className="flex-1 ms-3 whitespace-nowrap">
+                Women Perfumes
+              </span>
             </Link>
           </li>
           <li>
@@ -64,7 +68,9 @@ const Sidebar = () => {
               className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
             >
               <CategoryIcon />
-              <span className="flex-1 ms-3 whitespace-nowrap">Top Rated Perfumes</span>
+              <span className="flex-1 ms-3 whitespace-nowrap">
+                Top Rated Perfumes
+              </span>
             </Link>
           </li>
           <li>
@@ -73,7 +79,9 @@ const Sidebar = () => {
               className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
             >
               <CategoryIcon />
-              <span className="flex-1 ms-3 whitespace-nowrap">New Arrival  Perfumes</span>
+              <span className="flex-1 ms-3 whitespace-nowrap">
+                New Arrival Perfumes
+              </span>
             </Link>
           </li>
 
@@ -83,11 +91,11 @@ const Sidebar = () => {
               className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
             >
               <CategoryIcon />
-              <span className="flex-1 ms-3 whitespace-nowrap">Perfume Brands</span>
+              <span className="flex-1 ms-3 whitespace-nowrap">
+                Perfume Brands
+              </span>
             </Link>
           </li>
-
-
 
           <li>
             <Link
@@ -95,7 +103,9 @@ const Sidebar = () => {
               className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
             >
               <CategoryIcon />
-              <span className="flex-1 ms-3 whitespace-nowrap">Perfume Notes</span>
+              <span className="flex-1 ms-3 whitespace-nowrap">
+                Perfume Notes
+              </span>
             </Link>
           </li>
 
@@ -105,7 +115,30 @@ const Sidebar = () => {
               className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
             >
               <CategoryIcon />
-              <span className="flex-1 ms-3 whitespace-nowrap">Related Fragram</span>
+              <span className="flex-1 ms-3 whitespace-nowrap">
+                Related Fragram
+              </span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/addYeahFragram"
+              className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
+            >
+              <CategoryIcon />
+              <span className="flex-1 ms-3 whitespace-nowrap">
+                Yeah Fragram
+              </span>
+            </Link>
+          </li>
+
+          <li>
+            <Link
+              to="/addFragrams"
+              className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
+            >
+              <CategoryIcon />
+              <span className="flex-1 ms-3 whitespace-nowrap">Fragrams</span>
             </Link>
           </li>
 
