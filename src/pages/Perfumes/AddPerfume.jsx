@@ -129,12 +129,12 @@ const AddPerfume = () => {
 
     let filteredPros = pros.map((item) => {
       delete item.id;
-      return {title : item.pros};
+      return { title: item.pros };
     });
 
     let filteredCons = cons.map((item) => {
       delete item.id;
-      return {title:item.cons};
+      return { title: item.cons };
     });
     console.log("puschase links", purchaseLinks)
     formData.append("topNote", JSON.stringify(topNote));
@@ -239,6 +239,12 @@ const AddPerfume = () => {
       setBrandsData(temp)
     }
   }, [brands])
+
+  const gender = [
+    { value: 'M', label: 'Male' },
+    { value: 'F', label: 'Female' },
+
+  ]
 
 
   return (
@@ -992,13 +998,7 @@ const AddPerfume = () => {
                   >
                     Gender
                   </label>
-                  <input
-                    type="text"
-                    id="name"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5      "
-                    placeholder="Gender"
-                    {...register("gender", { required: true })}
-                  />
+                  <Select options={gender} />
                 </div>
                 <div className="">
                   <label
@@ -1032,6 +1032,8 @@ const AddPerfume = () => {
                 </div>
               </div>
             </div>
+
+
             <div className="flex justify-center items-center space-x-4 w-full">
               <button
                 type="submit"
