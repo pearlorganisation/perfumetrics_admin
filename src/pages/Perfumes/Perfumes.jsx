@@ -7,8 +7,7 @@ import { Toaster, toast } from "sonner";
 const PerfumeNotes = () => {
   const [perfumeData, setPerfumeData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  
-  useEffect(() => {
+  const getPerfumes = () => {
     axios
       .get(`${import.meta.env.VITE_API_URL}/perfume`)
       .then((res) => {
@@ -20,10 +19,13 @@ const PerfumeNotes = () => {
         console.log(err);
         setIsLoading(false);
       });
+  }
+  useEffect(() => {
+    getPerfumes()
   }, []);
 
   const deleteItem = (item) => {
-    if(window.confirm(`Are you sure you want to delete perfume:- ${item.perfume}`)){
+    if (window.confirm(`Are you sure you want to delete perfume:- ${item.perfume}`)) {
       axios.delete(`${import.meta.env.VITE_API_URL}/perfume/${item._id}`).then((res) => {
 
         setPerfumeData(res.data.perfumeData)
@@ -33,6 +35,8 @@ const PerfumeNotes = () => {
             color: "white",
           },
         });
+        getPerfumes()
+
       }).catch(err => {
         toast.error("There was some issue deleting the perfume", {
           style: {
@@ -40,7 +44,7 @@ const PerfumeNotes = () => {
             color: "white",
           },
         });
-        
+
       })
     }
   }
@@ -61,12 +65,12 @@ const PerfumeNotes = () => {
         </div>
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
           {isLoading && (
-           <>
-           <Skeleton animation="wave" height={50} />
-           <Skeleton animation="wave" height={50} />
-           <Skeleton animation="wave" height={50} />
-           <Skeleton animation="wave" height={50} />
-         </>
+            <>
+              <Skeleton animation="wave" height={50} />
+              <Skeleton animation="wave" height={50} />
+              <Skeleton animation="wave" height={50} />
+              <Skeleton animation="wave" height={50} />
+            </>
           )}
           {perfumeData && (
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">

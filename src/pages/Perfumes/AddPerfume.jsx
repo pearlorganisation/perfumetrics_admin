@@ -56,7 +56,7 @@ const AddPerfume = () => {
   const addPurchaseLink = () => {
     setPurchaseLinks((prev) => {
       let id = (prev[prev?.length - 1]?.id || 0) + 1;
-      let purchaseLink = { id: id, link: "", company: "" };
+      let purchaseLink = { id: id, link: "", company: "", logo: null };
       return [...prev, purchaseLink];
     });
   };
@@ -152,7 +152,7 @@ const AddPerfume = () => {
     formData.append('brand', brandId)
     formData.append('ratingFragrams', JSON.stringify({
       longitivity: Number(data.longitivity),
-      gender: data?.gender,
+      gender: data?.gender?.value,
       sillage: Number(data?.sillage),
       pricing: Number(data?.pricing),
       overall: Number(data?.overall),
@@ -178,7 +178,7 @@ const AddPerfume = () => {
     toast("saving");
     let tempAccords = [...accords];
     let totalPercentage = 0;
-    console.log(tempAccords)
+
     tempAccords.forEach((e) => (totalPercentage += e.percentage));
     if (totalPercentage !== 100) {
       toast.error("Total Accords percentage must be equal to 100", {
@@ -192,9 +192,8 @@ const AddPerfume = () => {
 
     let formData = filterData(data);
     setIsLoading(true)
-    // .post(" http://localhost:8001/api/v1/perfume", formData)
+    console.log(formData)
     axios
-
       .post(`${import.meta.env.VITE_API_URL}/perfume`, formData)
       .then((res) => {
         setIsLoading(false)
@@ -321,7 +320,7 @@ const AddPerfume = () => {
                   onChange={(val) => {
                     setBrandId(val?.value)
                   }}
-
+                  required
                 // closeMenuOnSelect={true}
                 />
 
@@ -345,7 +344,7 @@ const AddPerfume = () => {
                       });
                     }}
                     accept=".jpg, .jpeg, .png, .webp"
-                    required
+
                   />
                 </div>
                 {gallery && gallery?.length > 0 && (
@@ -558,7 +557,7 @@ const AddPerfume = () => {
                             Company
                           </th>
                           <th scope="col" className="px-1 pt-2 pb-1">
-                            Logo Link
+                            Logo
                           </th>
                           <th scope="col" className="px-1 pt-2 pb-1"></th>
                         </tr>
@@ -618,7 +617,7 @@ const AddPerfume = () => {
 
                             <td className="px-1 py-4">
                               <input
-                                type="text"
+                                type="file"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                 placeholder="Company Name"
                                 onChange={(e) => {
@@ -954,10 +953,12 @@ const AddPerfume = () => {
                     Longitivity
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     id="name"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5      "
                     placeholder="Longitivity"
+                    min={"0"}
+                    max={"10"}
                     {...register("longitivity", { required: true })}
                   />
                 </div>
@@ -969,10 +970,12 @@ const AddPerfume = () => {
                     Sillage
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     id="name"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5      "
                     placeholder="Sillage"
+                    min={"0"}
+                    max={"10"}
                     {...register("sillage", { required: true })}
                   />
                 </div>
@@ -984,10 +987,12 @@ const AddPerfume = () => {
                     Pricing
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     id="name"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5      "
                     placeholder="Pricing"
+                    min={"0"}
+                    max={"10"}
                     {...register("pricing", { required: true })}
                   />
                 </div>
@@ -998,7 +1003,17 @@ const AddPerfume = () => {
                   >
                     Gender
                   </label>
-                  <Select options={gender} />
+                  <Controller
+                    name="gender"
+                    control={control}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        options={gender}
+                        required
+                      />
+                    )}
+                  />
                 </div>
                 <div className="">
                   <label
@@ -1009,10 +1024,12 @@ const AddPerfume = () => {
                   </label>
                   <input
                     type="text"
-                    id="name"
+                    id="number"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5      "
                     placeholder="Compliment"
                     {...register("compliment", { required: true })}
+                    min={"0"}
+                    max={"10"}
                   />
                 </div>
                 <div className="">
@@ -1023,10 +1040,12 @@ const AddPerfume = () => {
                     Overall
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     id="name"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5      "
                     placeholder="Overall"
+                    min={"0"}
+                    max={"10"}
                     {...register("overall", { required: true })}
                   />
                 </div>
