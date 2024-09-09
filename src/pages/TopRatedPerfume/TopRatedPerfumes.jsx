@@ -8,18 +8,22 @@ const TopRatedPerfumes = () => {
   const [perfumeData, setPerfumeData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
+  const getPerfumes = () => {
     axios
-      .get(`${import.meta.env.VITE_API_URL}/topRatedPerfume`)
-      .then((res) => {
-        console.log(res)
-        setPerfumeData(res?.data);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setIsLoading(false);
-      });
+    .get(`${import.meta.env.VITE_API_URL}/topRatedPerfume`)
+    .then((res) => {
+      console.log(res)
+      setPerfumeData(res?.data);
+      setIsLoading(false);
+    })
+    .catch((err) => {
+      console.log(err);
+      setIsLoading(false);
+    });
+  }
+
+  useEffect(() => {
+   getPerfumes()
   }, []);
 
   const deleteItem = (item) => {
@@ -34,6 +38,7 @@ const TopRatedPerfumes = () => {
             color: "white",
           },
         });
+        getPerfumes()
       }).catch(err => {
         toast.error("There was some issue deleting the perfume", {
           style: {
