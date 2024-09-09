@@ -1,13 +1,34 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchBrands } from "../../features/actions/brandsAction";
+import Select from "react-select";
 
 const AddFragrams = () => {
+  const dispatch = useDispatch()
+  const [brandsData, setBrandsData] = useState([])
+  const { brands, isLoading, isDeleted, isUpdated } = useSelector(state => state.brand)
+
+  useEffect(() => {
+    dispatch(fetchBrands())
+  }, [])
+  useEffect(() => {
+    if (brands.length > 0) {
+      const temp = brands?.map(item => {
+        return {
+          value: item?._id,
+          label: item?.brand
+        }
+      })
+      setBrandsData(temp)
+    }
+  }, [brands])
   return (
-    <div className="w-full mt-12 text-center  bg-white  shadow overflow-hidden sm:rounded-md">
+    <div className="w-full mt-12 text-center space-y-5  bg-white  shadow overflow-hidden sm:rounded-md">
       <h1 className="text-3xl">Add Yeah Fragram Form</h1>
 
       <form>
-        <div className="flex flex-col items-center justify-center">
-          <div className=" p-4 border border-grey-lighter w-1/2">
+        <div className="flex flex-col items-center justify-center max-w-4xl mx-auto">
+          <div className=" p-4 border border-grey-lighter w-full">
             <div className="flex flex-wrap items-stretch w-full mb-4 relative">
               <input
                 type="text"
@@ -32,27 +53,28 @@ const AddFragrams = () => {
               />
             </div>
 
-            <div className="col-span-6 sm:col-span-3">
+            <div className="sm:col-span-2">
               <label
-                htmlFor="brands"
-                className="block text-sm font-medium text-gray-700"
+                className="block mb-2 text-sm text-left font-medium text-gray-900 "
+                htmlFor="file_input"
               >
                 Brands
               </label>
-              <select
-                id="brands"
-                name="brands"
-                className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              >
-                <option> Brand 1 </option>
-                <option> Brand 2 </option>
-                <option> Brand 3 </option>
-              </select>
+              <Select
+                options={brandsData}
+
+                onChange={(val) => {
+                  setBrandId(val?.value)
+                }}
+
+              // closeMenuOnSelect={true}
+              />
+
             </div>
           </div>
         </div>
 
-        <div className="mb-6 pt-4 bg-white">
+        <div className="mb-6 pt-4 bg-white max-w-4xl mx-auto">
           <label className="mb-5 block text-xl font-semibold text-[#07074D]">
             Upload Image File
           </label>
@@ -61,7 +83,7 @@ const AddFragrams = () => {
             <input type="file" name="file" id="file" className="sr-only" />
             <label
               htmlFor="file"
-              className="relative flex min-h-[200px] items-center justify-center rounded-md border border-dashed border-[#419A62] p-12 text-center"
+              className="relative flex min-h-[200px]  items-center justify-center rounded-md border border-dashed border-[#419A62] p-12 text-center"
             >
               <div>
                 <span className="mb-2 block text-xl font-semibold text-[#07074D]">

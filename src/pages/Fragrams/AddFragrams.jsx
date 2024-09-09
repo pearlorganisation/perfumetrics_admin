@@ -1,13 +1,16 @@
+
 import React from "react";
 
+
 const AddYeahFragram = () => {
+
   return (
     <div className="w-full mt-12 text-center  bg-white  shadow overflow-hidden sm:rounded-md">
       <h1 className="text-3xl">Add Fragrams Form</h1>
 
-      <form>
+      <form className="max-w-4xl mx-auto">
         <div className="flex flex-col items-center justify-center mt-8">
-          <div className=" p-4 border border-grey-lighter w-1/2">
+          <div className=" p-4 border border-grey-lighter w-full">
             <div className="flex flex-wrap items-stretch w-full mb-4 relative">
               <input
                 type="text"

@@ -24,6 +24,7 @@ const AddPerfume = () => {
   const [purchaseLinks, setPurchaseLinks] = useState([]);
   const [pros, setPros] = useState([]);
   const [cons, setCons] = useState([]);
+  const [gendeR, setGender] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const accordsRef = useRef(null);
@@ -152,7 +153,7 @@ const AddPerfume = () => {
     formData.append('brand', brandId)
     formData.append('ratingFragrams', JSON.stringify({
       longitivity: Number(data.longitivity),
-      gender: data?.gender,
+      gender: gendeR,
       sillage: Number(data?.sillage),
       pricing: Number(data?.pricing),
       overall: Number(data?.overall),
@@ -998,7 +999,12 @@ const AddPerfume = () => {
                   >
                     Gender
                   </label>
-                  <Select options={gender} />
+                  <Select
+                    onChange={(e) => {
+                      console.log(e)
+                      setGender(e.value)
+                    }}
+                    options={gender} />
                 </div>
                 <div className="">
                   <label
