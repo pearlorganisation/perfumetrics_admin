@@ -109,38 +109,10 @@ const Sidebar = () => {
             </Link>
           </li>
 
-          <li>
-            <Link
-              to="/relatedFragram"
-              className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
-            >
-              <CategoryIcon />
-              <span className="flex-1 ms-3 whitespace-nowrap">
-                Related Fragram
-              </span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/addYeahFragram"
-              className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
-            >
-              <CategoryIcon />
-              <span className="flex-1 ms-3 whitespace-nowrap">
-                Yeah Fragram
-              </span>
-            </Link>
-          </li>
 
-          <li>
-            <Link
-              to="/addFragrams"
-              className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
-            >
-              <CategoryIcon />
-              <span className="flex-1 ms-3 whitespace-nowrap">Fragrams</span>
-            </Link>
-          </li>
+
+
+
 
           <li>
             <Link

@@ -1,15 +1,22 @@
 import { Skeleton } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Toaster, toast } from "sonner";
+import ModalWrapper from "../../components/Modal/ModalWrapper";
+import AddBrandsFragram from "./AddPerfumeCategory";
+import AddPerfumeCategory from "./AddPerfumeCategory";
 
-const PerfumeNotes = () => {
+const PerfumeCategory = () => {
   const [perfumeData, setPerfumeData] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const getPerfumes = () => {
+  const { perfumeId } = useSearchParams()
+  console.log(perfumeId)
+  const [isLoading, setIsLoading] = useState(false);
+  const [isShowing, setIsShowing] = useState(false)
+
+  const getPerfumeCategory = () => {
     axios
-      .get(`${import.meta.env.VITE_API_URL}/perfume`)
+      .get(`${import.meta.env.VITE_API_URL}/api/v1/relatedFragrams?perfumeId=${perfumeId}`)
       .then((res) => {
         console.log(res)
         setPerfumeData(res?.data?.data);
@@ -20,34 +27,12 @@ const PerfumeNotes = () => {
         setIsLoading(false);
       });
   }
+
   useEffect(() => {
-    getPerfumes()
+
   }, []);
 
-  const deleteItem = (item) => {
-    if (window.confirm(`Are you sure you want to delete perfume:- ${item.perfume}`)) {
-      axios.delete(`${import.meta.env.VITE_API_URL}/perfume/${item._id}`).then((res) => {
 
-        setPerfumeData(res.data.perfumeData)
-        toast.success(res.data.message, {
-          style: {
-            background: "green",
-            color: "white",
-          },
-        });
-        getPerfumes()
-
-      }).catch(err => {
-        toast.error("There was some issue deleting the perfume", {
-          style: {
-            background: "red",
-            color: "white",
-          },
-        });
-
-      })
-    }
-  }
 
 
   return (
@@ -55,13 +40,14 @@ const PerfumeNotes = () => {
       <Toaster />
 
       <div class="p-10 ">
-        <div class="flex items-center justify-end flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-8 bg-white ">
-          <Link
-            to="/perfume/add"
+        <div class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-8 bg-white ">
+          <div className="text-3xl">Perfume Category</div>
+          <button
+            onClick={() => setIsShowing(true)}
             className="bg-blue-600 rounded-md text-white px-3 py-1 font-semibold "
           >
             Add
-          </Link>
+          </button>
         </div>
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
           {isLoading && (
@@ -72,7 +58,7 @@ const PerfumeNotes = () => {
               <Skeleton animation="wave" height={50} />
             </>
           )}
-          {perfumeData && (
+          {perfumeData ? (
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50  ">
                 <tr>
@@ -82,8 +68,10 @@ const PerfumeNotes = () => {
                   <th scope="col" className="px-6 py-3">
                     Name
                   </th>
-
-                  <th scope="col" className="col-span-2 px-6 py-3 text-center">
+                  <th scope="col" className="px-6 py-3">
+                    Brand
+                  </th>
+                  <th scope="col" className="col-span-2 px-6 py-3">
                     Actions
                   </th>
                 </tr>
@@ -100,37 +88,38 @@ const PerfumeNotes = () => {
                       </div>
                     </th>
                     <td className="px-6 py-4">{item.perfume}</td>
+                    <td className="px-6 py-4">{item.perfume}</td>
 
-
-                    <td className="px-6 py-4 space-x-3 flex justify-center items-center">
-                      <Link to={`/perfume/relatedFragram/${item?._id}`} className="px-6 py-4 font-medium text-blue-600 hover:underline">Related Fragram</Link>
-                      <Link to={`/perfume/perfumeCategory/${item?._id}`} className="px-6 py-4 font-medium text-blue-600 hover:underline">Perfume Category</Link>
-                      <Link to={`/perfume/fragram/${item?._id}`} className="px-6 py-4 font-medium text-blue-600 hover:underline">Fragram</Link>
+                    <td className="px-6 py-4">
                       <Link
                         to={`/perfume/update/${item?._id}`}
                         className="font-medium text-blue-600  hover:underline"
                       >
                         View/edit
                       </Link>
+                    </td>
+                    <td className="px-6 py-4">
                       <button
                         className="font-medium text-red-600  hover:underline"
                         onClick={() => {
-                          deleteItem(item)
                         }}
                       >
                         Delete
                       </button>
                     </td>
-
                   </tr>
                 ))}
               </tbody>
             </table>
-          )}
+          ) : <div className="text-center h-[30rem] grid place-items-center">No Data Found</div>}
         </div>
       </div>
+
+      {isShowing && <ModalWrapper isShowing={isShowing} setIsShowing={setIsShowing}> <AddPerfumeCategory /> </ModalWrapper>}
     </div>
   );
 };
 
-export default PerfumeNotes;
+
+
+export default PerfumeCategory

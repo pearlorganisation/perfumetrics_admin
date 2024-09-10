@@ -5,9 +5,8 @@ import { fetchBrands } from "../../features/actions/brandsAction";
 import Select from "react-select";
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { toast } from 'sonner';
 
-const AddRelatedFragram = ({ setIsShowing }) => {
+const AddFragram = () => {
     const dispatch = useDispatch()
     const { perfumeId } = useParams()
     const [brandsData, setBrandsData] = useState([])
@@ -42,17 +41,12 @@ const AddRelatedFragram = ({ setIsShowing }) => {
             setBrandsData(temp)
         }
     }, [brands])
-    const postRelatedFragram = async (formData) => {
+    const postRelatedFragram = async () => {
 
         try {
             setIsLoading(true)
-            const result = await axios.post(`${import.meta.env.VITE_API_URL}/relatedFragrams`, formData)
-
+            const result = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/relatedFragrams?perfumeId=${perfumeId}`)
             setIsLoading(false)
-            if (result?.data?.status) {
-                toast.success("Submitted!!", { position: 'top-center' })
-                setIsShowing(false)
-            }
 
             console.log(result, "relatedFragrams")
         } catch (error) {
@@ -64,18 +58,11 @@ const AddRelatedFragram = ({ setIsShowing }) => {
     }
 
     const onSubmit = (data) => {
-        const formData = new FormData()
-        formData.append('perfumeName', data.perfumeName)
-        formData.append('perfumeId', perfumeId)
-        formData.append('brand', data?.brand?.value)
-        formData.append('link', data?.link)
-        formData.append('banner', data.banner[0])
-        postRelatedFragram(formData)
         console.log(data, perfumeId); // Handle form submission
     };
     return (
         <div className="w-full text-center space-y-5  bg-white  shadow overflow-hidden sm:rounded-md">
-            <h1 className="text-3xl">Add Related Fragram </h1>
+            <h1 className="text-3xl">Add  Fragram </h1>
 
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex flex-col items-center justify-center max-w-4xl mx-auto">
@@ -136,9 +123,10 @@ const AddRelatedFragram = ({ setIsShowing }) => {
                     <div className="mb-8">
                         <input
                             type="file"
+                            name="file"
                             id="file"
                             className="sr-only"
-                            {...register('banner', { required: 'File is required' })}
+                            {...register('file', { required: 'File is required' })}
                             onChange={handleFileChange} // Handle file change to update preview
                         />
                         <label
@@ -157,7 +145,7 @@ const AddRelatedFragram = ({ setIsShowing }) => {
                                 </span>
                             </div>
                         </label>
-                        {errors.banner && <p className="text-red-500">{errors.banner.message}</p>}
+                        {errors.file && <p className="text-red-500">{errors.file.message}</p>}
                     </div>
 
                     {/* Image Preview */}
@@ -178,4 +166,4 @@ const AddRelatedFragram = ({ setIsShowing }) => {
     );
 };
 
-export default AddRelatedFragram;
+export default AddFragram;

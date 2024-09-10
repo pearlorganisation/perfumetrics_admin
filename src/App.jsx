@@ -29,7 +29,6 @@ import Users from "./pages/Users/Users";
 import TopRatedPerfumes from "./pages/TopRatedPerfume/TopRatedPerfumes";
 import AddTopRatedPerfume from "./pages/TopRatedPerfume/AddTopRatedPerfume";
 import RelatedFragram from "./pages/RelatedFragram/RelatedFragram";
-import AddRelatedFragram from "./pages/RelatedFragram/AddRelatedFragram";
 import AddNewArrival from "./pages/NewArrivalPerfume/AddNewArrival";
 import UpdateNewArrival from "./pages/NewArrivalPerfume/UpdateNewArrival";
 import NewArrival from "./pages/NewArrivalPerfume/NewArrival";
@@ -39,10 +38,8 @@ import UpdateMenPerfume from "./pages/MenPerfume/UpdateMenPerfume";
 import WomenPerfume from "./pages/WomenPerfume.jsx/WomenPerfume";
 import AddWomenPerfume from "./pages/WomenPerfume.jsx/AddWomenPerfume";
 import UpdateWomenPerfume from "./pages/WomenPerfume.jsx/UpdateWomenPerfume";
-import YeahFragram from "./pages/YeahFragram/YeahFragram";
-import AddYeahFragram from "./pages/YeahFragram/AddYeahFragram";
-import Fragrams from "./pages/Fragrams/Fragrams";
-import AddFragrams from "./pages/Fragrams/AddFragrams";
+import PerfumeCategory from "./pages/PerfumeCategory/PerfumeCategory";
+import Fragram from "./pages/Fragrams/Fragram";
 
 const isUserLoggedIn = localStorage.getItem("isusrlgd");
 
@@ -79,6 +76,34 @@ const App = () => {
           path: "/perfume/update/:id",
           element: <UpdatePerfume />,
         },
+        // Related Fragram
+        {
+          path: "perfume/relatedFragram/:perfumeId",
+          element: <RelatedFragram
+
+          />,
+        },
+        // Related Fragram
+
+        // Perfume Category
+        {
+          path: "perfume/perfumeCategory/:perfumeId",
+          element: <PerfumeCategory
+
+          />,
+        },
+        // Perfume Category
+        // fragram
+        {
+          path: "perfume/fragram/:perfumeId",
+          element: <Fragram
+
+          />,
+        },
+        // fragram
+
+
+
         {
           path: "/newArrival",
           element: <NewArrival />,
@@ -146,30 +171,9 @@ const App = () => {
           path: "/addTopRatedPerfume",
           element: <AddTopRatedPerfume />,
         },
-        {
-          path: "/relatedFragram",
-          element: <RelatedFragram />,
-        },
-        {
-          path: "/addRelatedFragram",
-          element: <AddRelatedFragram />,
-        },
-        {
-          path: "/yeahFragram",
-          element: <YeahFragram />,
-        },
-        {
-          path: "/addYeahFragram",
-          element: <AddYeahFragram />,
-        },
-        {
-          path: "/fragrams",
-          element: <Fragrams />,
-        },
-        {
-          path: "/addFragrams",
-          element: <AddFragrams />,
-        },
+
+
+
       ],
     },
     {
