@@ -6,9 +6,10 @@ import Select from "react-select";
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
-const AddPerfumeCategory = () => {
+const AddPerfumeCategory = ({ setIsShowing }) => {
   const dispatch = useDispatch()
   const { perfumeId } = useParams()
+  const [perfumeData, setPerfumeData] = useState(null);
   const [brandsData, setBrandsData] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const { brands, isDeleted, isUpdated } = useSelector(state => state.brand)
@@ -41,12 +42,14 @@ const AddPerfumeCategory = () => {
       setBrandsData(temp)
     }
   }, [brands])
-  const postRelatedFragram = async () => {
+  const postRelatedFragram = async (formData) => {
 
     try {
       setIsLoading(true)
-      const result = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/relatedFragrams?perfumeId=${perfumeId}`)
+      const result = await axios.post(`${import.meta.env.VITE_API_URL}/perfumeCategories?perfumeId=${perfumeId}`, formData)
+      setPerfumeData(result?.data?.data)
       setIsLoading(false)
+      setIsShowing(false)
 
       console.log(result, "relatedFragrams")
     } catch (error) {
@@ -58,6 +61,14 @@ const AddPerfumeCategory = () => {
   }
 
   const onSubmit = (data) => {
+    const formData = new FormData()
+    formData.append("perfumeName", data?.perfumeName)
+    formData.append("perfumeId", perfumeId)
+    formData.append("price", data?.price)
+    formData.append("link", data?.link)
+    formData.append("priceMl", data?.quantity)
+    formData.append("banner", data?.file[0])
+    postRelatedFragram(formData)
     console.log(data, perfumeId); // Handle form submission
   };
   return (
@@ -72,7 +83,7 @@ const AddPerfumeCategory = () => {
                 type="text"
                 {...register('perfumeName', { required: 'Title is required' })}
                 className="flex-shrink flex-grow flex-auto leading-normal w-px border border-green-200 h-10 border-grey-light rounded rounded-l-none px-3 relative focus:border-blue focus:shadow"
-                placeholder="Title"
+                placeholder="Perfume Name"
               />
               {errors.perfumeName && <p className="text-red-500">{errors.perfumeName.message}</p>}
             </div>
@@ -90,7 +101,7 @@ const AddPerfumeCategory = () => {
                 type="text"
                 {...register('quantity', { required: 'Quantity is required' })}
                 className="flex-shrink flex-grow flex-auto leading-normal w-px border border-green-200 h-10 border-grey-light rounded rounded-l-none px-3 relative focus:border-blue focus:shadow"
-                placeholder="Title"
+                placeholder="Quantity"
               />
               {errors.quantity && <p className="text-red-500">{errors.quantity.message}</p>}
             </div>
@@ -108,7 +119,7 @@ const AddPerfumeCategory = () => {
             </div>
 
             {/* React Select with Controller for Brand Selection */}
-            <div className="text-left mb-4 relative w-full ">
+            {/* <div className="text-left mb-4 relative w-full ">
               <Controller
                 name="brand"
                 control={control}
@@ -129,7 +140,7 @@ const AddPerfumeCategory = () => {
                 )}
               />
               {errors.brand && <p className="text-red-500">{errors.brand.message}</p>}
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -175,9 +186,13 @@ const AddPerfumeCategory = () => {
           )}
         </div>
 
-        <button className="bg-blue-500 px-4 py-3 rounded-md text-white w-full" type="submit">
-          Submit
-        </button>
+        {
+          isLoading ? <button className="bg-blue-500 px-4 py-3 rounded-md text-white w-full" type="button">
+            Loading...
+          </button> : <button className="bg-blue-500 px-4 py-3 rounded-md text-white w-full" type="submit">
+            Submit
+          </button>
+        }
       </form>
 
     </div>

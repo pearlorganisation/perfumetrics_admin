@@ -1,20 +1,21 @@
 import { Skeleton } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Toaster, toast } from "sonner";
 import ModalWrapper from "../../components/Modal/ModalWrapper";
 import AddRelatedFragram from "./AddFragram";
 import AddFragram from "./AddFragram";
 
 const Fragram = () => {
+    const { perfumeId } = useParams()
     const [perfumeData, setPerfumeData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isShowing, setIsShowing] = useState(false)
 
-    const getRelatedFragram = () => {
+    const getRelatedFragram = (perfumeId) => {
         axios
-            .get(`${import.meta.env.VITE_API_URL}/api/v1/relatedFragrams?perfumeId=${perfumeId}`)
+            .get(`${import.meta.env.VITE_API_URL}/fragrams?perfumeId=${perfumeId}`)
             .then((res) => {
                 console.log(res)
                 setPerfumeData(res?.data?.data);
@@ -27,7 +28,7 @@ const Fragram = () => {
     }
 
     useEffect(() => {
-
+        getRelatedFragram(perfumeId)
     }, []);
 
 
@@ -67,7 +68,7 @@ const Fragram = () => {
                                         Name
                                     </th>
                                     <th scope="col" className="px-6 py-3">
-                                        Brand
+                                        Posted By
                                     </th>
                                     <th scope="col" className="col-span-2 px-6 py-3">
                                         Actions
@@ -75,27 +76,27 @@ const Fragram = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {perfumeData.map((item, idx) => (
+                                {perfumeData?.map((item, idx) => (
                                     <tr className="bg-white border-b   hover:bg-gray-50 ">
                                         <th
                                             scope="row"
                                             className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap "
                                         >
                                             <div className="ps-3">
-                                                <img src={item.banner} width={"100px"} />
+                                                <img src={item?.banner} width={"100px"} />
                                             </div>
                                         </th>
-                                        <td className="px-6 py-4">{item.perfume}</td>
-                                        <td className="px-6 py-4">{item.perfume}</td>
+                                        <td className="px-6 py-4">{item?.title}</td>
+                                        <td className="px-6 py-4">{item?.postBy}</td>
 
-                                        <td className="px-6 py-4">
+                                        {/* <td className="px-6 py-4">
                                             <Link
                                                 to={`/perfume/update/${item?._id}`}
                                                 className="font-medium text-blue-600  hover:underline"
                                             >
                                                 View/edit
                                             </Link>
-                                        </td>
+                                        </td> */}
                                         <td className="px-6 py-4">
                                             <button
                                                 className="font-medium text-red-600  hover:underline"

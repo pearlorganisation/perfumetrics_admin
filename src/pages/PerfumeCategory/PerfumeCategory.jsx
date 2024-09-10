@@ -1,7 +1,7 @@
 import { Skeleton } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import { Toaster, toast } from "sonner";
 import ModalWrapper from "../../components/Modal/ModalWrapper";
 import AddBrandsFragram from "./AddPerfumeCategory";
@@ -9,14 +9,14 @@ import AddPerfumeCategory from "./AddPerfumeCategory";
 
 const PerfumeCategory = () => {
   const [perfumeData, setPerfumeData] = useState(null);
-  const { perfumeId } = useSearchParams()
+  const { perfumeId } = useParams()
   console.log(perfumeId)
   const [isLoading, setIsLoading] = useState(false);
   const [isShowing, setIsShowing] = useState(false)
 
   const getPerfumeCategory = () => {
     axios
-      .get(`${import.meta.env.VITE_API_URL}/api/v1/relatedFragrams?perfumeId=${perfumeId}`)
+      .get(`${import.meta.env.VITE_API_URL}/perfumeCategories?perfumeId=${perfumeId}`)
       .then((res) => {
         console.log(res)
         setPerfumeData(res?.data?.data);
@@ -29,8 +29,8 @@ const PerfumeCategory = () => {
   }
 
   useEffect(() => {
-
-  }, []);
+    getPerfumeCategory()
+  }, [isShowing]);
 
 
 
@@ -69,8 +69,12 @@ const PerfumeCategory = () => {
                     Name
                   </th>
                   <th scope="col" className="px-6 py-3">
-                    Brand
+                    Perfume Name
                   </th>
+                  <th scope="col" className="px-6 py-3">
+                    Quantity
+                  </th>
+
                   <th scope="col" className="col-span-2 px-6 py-3">
                     Actions
                   </th>
@@ -87,17 +91,18 @@ const PerfumeCategory = () => {
                         <img src={item.banner} width={"100px"} />
                       </div>
                     </th>
-                    <td className="px-6 py-4">{item.perfume}</td>
-                    <td className="px-6 py-4">{item.perfume}</td>
+                    <td className="px-6 py-4">{item?.perfumeName}</td>
+                    <td className="px-6 py-4">{item?.perfume?.perfume}</td>
+                    <td className="px-6 py-4">{item?.priceMl}</td>
 
-                    <td className="px-6 py-4">
+                    {/* <td className="px-6 py-4">
                       <Link
                         to={`/perfume/update/${item?._id}`}
                         className="font-medium text-blue-600  hover:underline"
                       >
                         View/edit
                       </Link>
-                    </td>
+                    </td> */}
                     <td className="px-6 py-4">
                       <button
                         className="font-medium text-red-600  hover:underline"
@@ -115,7 +120,7 @@ const PerfumeCategory = () => {
         </div>
       </div>
 
-      {isShowing && <ModalWrapper isShowing={isShowing} setIsShowing={setIsShowing}> <AddPerfumeCategory /> </ModalWrapper>}
+      {isShowing && <ModalWrapper isShowing={isShowing} setIsShowing={setIsShowing}> <AddPerfumeCategory setIsShowing={setIsShowing} /> </ModalWrapper>}
     </div>
   );
 };

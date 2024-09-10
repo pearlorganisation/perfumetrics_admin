@@ -45,7 +45,7 @@ const AddFragram = () => {
 
         try {
             setIsLoading(true)
-            const result = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/relatedFragrams?perfumeId=${perfumeId}`)
+            const result = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/fragrams?perfumeId=${perfumeId}`)
             setIsLoading(false)
 
             console.log(result, "relatedFragrams")
@@ -70,9 +70,27 @@ const AddFragram = () => {
                         <div className="flex flex-wrap items-stretch w-full mb-4 relative">
                             <input
                                 type="text"
-                                {...register('perfumeName', { required: 'Title is required' })}
+                                {...register('title', { required: 'Title is required' })}
                                 className="flex-shrink flex-grow flex-auto leading-normal w-px border border-green-200 h-10 border-grey-light rounded rounded-l-none px-3 relative focus:border-blue focus:shadow"
                                 placeholder="Title"
+                            />
+                            {errors.perfumeName && <p className="text-red-500">{errors.perfumeName.message}</p>}
+                        </div>
+                        <div className="flex flex-wrap items-stretch w-full mb-4 relative">
+                            <input
+                                type="text"
+                                {...register('postBy', { required: 'Title is required' })}
+                                className="flex-shrink flex-grow flex-auto leading-normal w-px border border-green-200 h-10 border-grey-light rounded rounded-l-none px-3 relative focus:border-blue focus:shadow"
+                                placeholder="Post By"
+                            />
+                            {errors.perfumeName && <p className="text-red-500">{errors.perfumeName.message}</p>}
+                        </div>
+                        <div className="flex flex-wrap items-stretch w-full mb-4 relative">
+                            <input
+                                type="text"
+                                {...register('rating', { required: 'Title is required' })}
+                                className="flex-shrink flex-grow flex-auto leading-normal w-px border border-green-200 h-10 border-grey-light rounded rounded-l-none px-3 relative focus:border-blue focus:shadow"
+                                placeholder="Rating"
                             />
                             {errors.perfumeName && <p className="text-red-500">{errors.perfumeName.message}</p>}
                         </div>
@@ -90,7 +108,7 @@ const AddFragram = () => {
                         </div>
 
                         {/* React Select with Controller for Brand Selection */}
-                        <div className="text-left mb-4 relative w-full ">
+                        {/* <div className="text-left mb-4 relative w-full ">
                             <Controller
                                 name="brand"
                                 control={control}
@@ -111,7 +129,7 @@ const AddFragram = () => {
                                 )}
                             />
                             {errors.brand && <p className="text-red-500">{errors.brand.message}</p>}
-                        </div>
+                        </div> */}
                     </div>
                 </div>
 

@@ -169,9 +169,13 @@ const AddRelatedFragram = ({ setIsShowing }) => {
                     )}
                 </div>
 
-                <button className="bg-blue-500 px-4 py-3 rounded-md text-white w-full" type="submit">
-                    Submit
-                </button>
+                {
+                    isLoading ? <button className="bg-blue-500 px-4 py-3 rounded-md text-white w-full" type="button">
+                        Loading...
+                    </button> : <button className="bg-blue-500 px-4 py-3 rounded-md text-white w-full" type="submit">
+                        Submit
+                    </button>
+                }
             </form>
 
         </div>
