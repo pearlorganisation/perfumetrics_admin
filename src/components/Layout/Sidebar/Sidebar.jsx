@@ -40,28 +40,8 @@ const Sidebar = () => {
               <span className="flex-1 ms-3 whitespace-nowrap">Perfumes</span>
             </Link>
           </li>
-          <li>
-            <Link
-              to="/menPerfume"
-              className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
-            >
-              <CategoryIcon />
-              <span className="flex-1 ms-3 whitespace-nowrap">
-                Men Perfumes
-              </span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/womenPerfume"
-              className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
-            >
-              <CategoryIcon />
-              <span className="flex-1 ms-3 whitespace-nowrap">
-                Women Perfumes
-              </span>
-            </Link>
-          </li>
+
+
           <li>
             <Link
               to="/topRatedPerfume"
@@ -105,6 +85,40 @@ const Sidebar = () => {
               <CategoryIcon />
               <span className="flex-1 ms-3 whitespace-nowrap">
                 Perfume Notes
+              </span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/celebrityPerfume"
+              className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
+            >
+              <CategoryIcon />
+              <span className="flex-1 ms-3 whitespace-nowrap">
+                Celebrity Perfumes
+              </span>
+            </Link>
+          </li>
+
+          <li>
+            <Link
+              to="/globalBanner"
+              className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
+            >
+              <CategoryIcon />
+              <span className="flex-1 ms-3 whitespace-nowrap">
+                Global Banner
+              </span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/globalVideo"
+              className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
+            >
+              <CategoryIcon />
+              <span className="flex-1 ms-3 whitespace-nowrap">
+                Global Video
               </span>
             </Link>
           </li>

@@ -6,7 +6,7 @@ import Select from "react-select";
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
-const AddFragram = ({ setIsShowing }) => {
+const AddRelatedFragram = () => {
     const dispatch = useDispatch()
     const { perfumeId } = useParams()
     const [brandsData, setBrandsData] = useState([])
@@ -41,13 +41,12 @@ const AddFragram = ({ setIsShowing }) => {
             setBrandsData(temp)
         }
     }, [brands])
-    const postRelatedFragram = async (formData) => {
+    const postRelatedFragram = async () => {
 
         try {
             setIsLoading(true)
-            const result = await axios.post(`${import.meta.env.VITE_API_URL}/fragrams?perfumeId=${perfumeId}`, formData)
+            const result = await axios.post(`${import.meta.env.VITE_API_URL}/api/v1/relatedFragrams?perfumeId=${perfumeId}`)
             setIsLoading(false)
-            setIsShowing(false)
 
             console.log(result, "relatedFragrams")
         } catch (error) {
@@ -59,21 +58,11 @@ const AddFragram = ({ setIsShowing }) => {
     }
 
     const onSubmit = (data) => {
-        const formData = new FormData()
-        formData.append("title", data?.title)
-        formData.append("postBy", data?.postBy)
-        formData.append("link", data?.link)
-        formData.append("rating", data?.rating)
-        formData.append("perfumeId", perfumeId)
-        formData.append("banner", data?.file[0])
-
-        postRelatedFragram(formData)
-
         console.log(data, perfumeId); // Handle form submission
     };
     return (
         <div className="w-full text-center space-y-5  bg-white  shadow overflow-hidden sm:rounded-md">
-            <h1 className="text-3xl">Add  Fragram </h1>
+            <h1 className="text-3xl">Add Related Fragram </h1>
 
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex flex-col items-center justify-center max-w-4xl mx-auto">
@@ -81,27 +70,9 @@ const AddFragram = ({ setIsShowing }) => {
                         <div className="flex flex-wrap items-stretch w-full mb-4 relative">
                             <input
                                 type="text"
-                                {...register('title', { required: 'Title is required' })}
+                                {...register('perfumeName', { required: 'Title is required' })}
                                 className="flex-shrink flex-grow flex-auto leading-normal w-px border border-green-200 h-10 border-grey-light rounded rounded-l-none px-3 relative focus:border-blue focus:shadow"
                                 placeholder="Title"
-                            />
-                            {errors.perfumeName && <p className="text-red-500">{errors.perfumeName.message}</p>}
-                        </div>
-                        <div className="flex flex-wrap items-stretch w-full mb-4 relative">
-                            <input
-                                type="text"
-                                {...register('postBy', { required: 'Title is required' })}
-                                className="flex-shrink flex-grow flex-auto leading-normal w-px border border-green-200 h-10 border-grey-light rounded rounded-l-none px-3 relative focus:border-blue focus:shadow"
-                                placeholder="Post By"
-                            />
-                            {errors.perfumeName && <p className="text-red-500">{errors.perfumeName.message}</p>}
-                        </div>
-                        <div className="flex flex-wrap items-stretch w-full mb-4 relative">
-                            <input
-                                type="text"
-                                {...register('rating', { required: 'Title is required' })}
-                                className="flex-shrink flex-grow flex-auto leading-normal w-px border border-green-200 h-10 border-grey-light rounded rounded-l-none px-3 relative focus:border-blue focus:shadow"
-                                placeholder="Rating"
                             />
                             {errors.perfumeName && <p className="text-red-500">{errors.perfumeName.message}</p>}
                         </div>
@@ -119,7 +90,7 @@ const AddFragram = ({ setIsShowing }) => {
                         </div>
 
                         {/* React Select with Controller for Brand Selection */}
-                        {/* <div className="text-left mb-4 relative w-full ">
+                        <div className="text-left mb-4 relative w-full ">
                             <Controller
                                 name="brand"
                                 control={control}
@@ -140,7 +111,7 @@ const AddFragram = ({ setIsShowing }) => {
                                 )}
                             />
                             {errors.brand && <p className="text-red-500">{errors.brand.message}</p>}
-                        </div> */}
+                        </div>
                     </div>
                 </div>
 
@@ -185,18 +156,14 @@ const AddFragram = ({ setIsShowing }) => {
                         </div>
                     )}
                 </div>
-                {
-                    isLoading ? <button className="bg-blue-500 px-4 py-3 rounded-md text-white w-full" type="button">
-                        Loading...
-                    </button> : <button className="bg-blue-500 px-4 py-3 rounded-md text-white w-full" type="submit">
-                        Submit
-                    </button>
-                }
 
+                <button className="bg-blue-500 px-4 py-3 rounded-md text-white w-full" type="submit">
+                    Submit
+                </button>
             </form>
 
         </div>
     );
 };
 
-export default AddFragram;
+export default AddRelatedFragram;

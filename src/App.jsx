@@ -40,6 +40,11 @@ import AddWomenPerfume from "./pages/WomenPerfume.jsx/AddWomenPerfume";
 import UpdateWomenPerfume from "./pages/WomenPerfume.jsx/UpdateWomenPerfume";
 import PerfumeCategory from "./pages/PerfumeCategory/PerfumeCategory";
 import Fragram from "./pages/Fragrams/Fragram";
+import CelebrityPerfume from "./pages/CelebrityPerfume/CelebrityPerfume";
+import AddCelebrityPerfume from "./pages/CelebrityPerfume/AddCelebrityPerfume";
+import UpdateCelebrityPerfume from "./pages/CelebrityPerfume/UpdateCelebrityPerfume";
+import GlobalVideo from "./pages/GlobalVideo/GlobalVideo";
+import AddGlobalVideo from "./pages/GlobalVideo/AddGlobalVideo";
 
 const isUserLoggedIn = localStorage.getItem("isusrlgd");
 
@@ -170,6 +175,32 @@ const App = () => {
         {
           path: "/addTopRatedPerfume",
           element: <AddTopRatedPerfume />,
+        },
+
+        // celebrity perfume
+        {
+          path: "/celebrityPerfume",
+          element: <CelebrityPerfume />,
+        },
+        // add celebrity perfume
+        {
+          path: "/addCelebrityPerfume",
+          element: <AddCelebrityPerfume />,
+        },
+        // update celebrity perfume
+        {
+          path: "/updateCelebrityPerfume/:celebrityPerfumeId",
+          element: <UpdateCelebrityPerfume />,
+        },
+        // global video
+        {
+          path: "/globalVideo",
+          element: <GlobalVideo />,
+        },
+        // add global video
+        {
+          path: "/addGlobalVideo",
+          element: <AddGlobalVideo />,
         },
 
 

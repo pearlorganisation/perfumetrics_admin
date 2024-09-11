@@ -25,6 +25,7 @@ const AddPerfume = () => {
   const [pros, setPros] = useState([]);
   const [cons, setCons] = useState([]);
   const [gendeR, setGender] = useState('');
+  const [video, setVideo] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const accordsRef = useRef(null);
@@ -151,9 +152,10 @@ const AddPerfume = () => {
     formData.append("banner", banner);
     formData.append("logo", logo);
     formData.append('brand', brandId)
+    formData.append('video', video)
     formData.append('ratingFragrams', JSON.stringify({
       longitivity: Number(data.longitivity),
-      gender: data?.gender,
+      gender: data?.gender?.value,
       sillage: Number(data?.sillage),
       pricing: Number(data?.pricing),
       overall: Number(data?.overall),
@@ -289,6 +291,8 @@ const AddPerfume = () => {
                   </div>
                 )}
 
+
+
                 <div>
                   <label
                     className="block mb-2 text-sm font-medium text-gray-900 "
@@ -374,6 +378,23 @@ const AddPerfume = () => {
                     ))}
                   </div>
                 )}
+              </div>
+              <div className="sm:col-span-2">
+                <label
+                  className="block mb-2 text-sm font-medium text-gray-900"
+                  htmlFor="file_input"
+                >
+                  Upload Video
+                </label>
+                <input
+                  className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+                  id="file_input"
+                  type="file"
+                  accept="video/*" // This allows only video file types
+                  onChange={(e) => {
+                    setVideo(e.target.files[0]);
+                  }}
+                />
               </div>
               <div className="sm:col-span-2">
                 <label
@@ -557,9 +578,7 @@ const AddPerfume = () => {
                           <th scope="col" className="px-1 pt-2 pb-1">
                             Company
                           </th>
-                          <th scope="col" className="px-1 pt-2 pb-1">
-                            Logo
-                          </th>
+
                           <th scope="col" className="px-1 pt-2 pb-1"></th>
                         </tr>
                       </thead>
@@ -616,29 +635,7 @@ const AddPerfume = () => {
                               />
                             </td>
 
-                            <td className="px-1 py-4">
-                              <input
-                                type="file"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                placeholder="Company Name"
-                                onChange={(e) => {
-                                  setPurchaseLinks((prev) => {
-                                    let tempArr = [...prev];
-                                    let idx = tempArr.findIndex((ele) => {
-                                      return ele.id === item.id;
-                                    });
 
-                                    let row = tempArr[idx];
-                                    tempArr.slice(idx, 1);
-
-                                    row.logo = e.target.value;
-                                    tempArr[idx] = row;
-                                    return tempArr;
-                                  });
-                                }}
-                                required
-                              />
-                            </td>
 
                             <td className="px-1 py-4">
                               <button
@@ -1004,7 +1001,17 @@ const AddPerfume = () => {
                   >
                     Gender
                   </label>
-                  <Select options={gender} />
+                  <Controller
+                    name="gender"
+                    control={control}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        options={gender}
+                        required
+                      />
+                    )}
+                  />
                 </div>
                 <div className="">
                   <label
