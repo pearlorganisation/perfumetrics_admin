@@ -39,6 +39,7 @@ const AddPerfume = () => {
     reset,
   } = useForm();
 
+
   const addAccord = () => {
     setAccords((prev) => {
       let id = (prev[prev?.length - 1]?.id || 0) + 1;
@@ -208,6 +209,7 @@ const AddPerfume = () => {
             color: "white",
           },
         });
+        navigate('/perfumes')
         // window.location.href = '/perfumes'
       })
       .catch((err) => {
@@ -1052,12 +1054,19 @@ const AddPerfume = () => {
 
 
             <div className="flex justify-center items-center space-x-4 w-full">
-              <button
-                type="submit"
-                className="w-1/3 text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-base px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-              >
-                {isLoading ? 'Saving...' : 'Save'}
-              </button>
+              {
+                isLoading ? <button
+                  type="button"
+                  className="w-1/3 text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-base px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                >
+                  Loading...
+                </button> : <button
+                  type="submit"
+                  className="w-1/3 text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-base px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                >
+                  Save
+                </button>
+              }
             </div>
           </form>
         </div>

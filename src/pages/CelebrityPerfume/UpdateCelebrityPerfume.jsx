@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Toaster, toast } from "sonner";
 import { ClipLoader } from "react-spinners";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import JoditEditor from "jodit-react";
 import axios from "axios";
 
@@ -15,6 +15,7 @@ const UpdateCelebrityPerfume = () => {
     const { blogId } = useParams();
     const { celebrityPerfumeId } = useParams()
     const [celebrityPerfume, setCelebrityPerfume] = useState(null);
+    const navigate = useNavigate()
 
     const {
         register,
@@ -52,6 +53,7 @@ const UpdateCelebrityPerfume = () => {
         try {
             setIsLoading(true)
             const restul = await axios.patch(`${import.meta.env.VITE_API_URL}/celebrityPerfumes/${celebrityPerfumeId}`, updateData)
+            navigate("/celebrityPerfume")
             setIsLoading(false)
         } catch (error) {
             toast.error("Error on Update Perfume!!")

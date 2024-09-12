@@ -18,7 +18,7 @@ const AddNews = () => {
 
     useEffect(() => {
         if (blogData?.status) {
-            navigate("/celebrityPerfume");
+            navigate("/news");
         }
     }, [blogData]);
 
@@ -33,7 +33,7 @@ const AddNews = () => {
         defaultValues: {},
     });
 
-    const postCelebrityPerfumeBlog = async (data) => {
+    const postNewsBlog = async (data) => {
         try {
             setIsLoading(true);
             const result = await axios.post(
@@ -42,7 +42,7 @@ const AddNews = () => {
             );
             setIsLoading(false);
             setBlogData(result?.data);
-            console.log(result?.data, "celebrityPerfumeBlog");
+            console.log(result?.data, "NewsBlog");
         } catch (error) {
             setIsLoading(false);
             console.log(error?.message);
@@ -57,9 +57,9 @@ const AddNews = () => {
         formData.append("banner", banner[0]);
         formData.append("content", data.content);
         formData.append("title", data.title);
-        formData.append("category", data.category?.value); // Save the selected category
+        formData.append("type", data.type?.value); // Save the selected category
         // api call here
-        postCelebrityPerfumeBlog(formData);
+        // postNewsBlog(formData);
     };
 
     const temp = watch("banner");
@@ -116,15 +116,15 @@ const AddNews = () => {
                                 />
                             )}
                         />
-                        {errors.category && (
+                        {errors.type && (
                             <span className="text-red-500">
-                                {errors.category.message}
+                                {errors.type.message}
                             </span>
                         )}
                     </div>
 
                     {/* Banner */}
-                    <div className="flex-1 items-center mx-auto mb-3 space-y-4 sm:flex sm:space-y-0">
+                    <div className="flex flex-col gap-6 items-center mx-auto mb-3 space-y-4 sm:flex sm:space-y-0">
                         <div className="relative w-full space-y-1">
                             <label htmlFor="input" className="font-medium ">
                                 Banner
@@ -163,7 +163,7 @@ const AddNews = () => {
                                         type="file"
                                         {...register("banner", {
                                             onChange: (e) => {
-
+                                                setPreview(URL.createObjectURL(e.target.files[0]));
                                             },
                                             required: "Banner is required",
                                         })}
@@ -180,7 +180,7 @@ const AddNews = () => {
                                 </span>
                             )}
                         </div>
-                        <div className=' w-[300px] h-[300px] font-medium flex justify-center items-center relative'>
+                        <div className=' w-[300px] h-[300px] font-medium flex justify-center items-center relative border-2 border-gray-400'>
 
 
 
