@@ -105,7 +105,7 @@ const GlobalVideo = () => {
                                         <td className="px-6 py-4 space-x-3 flex justify-center items-center">
 
                                             <Link
-                                                to={`/perfume/update/${item?._id}`}
+                                                to={`/updateGlobalVideo/${item?._id}`}
                                                 className="font-medium text-blue-600  hover:underline"
                                             >
                                                 View/edit

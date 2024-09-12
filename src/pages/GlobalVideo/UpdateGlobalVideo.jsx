@@ -1,9 +1,10 @@
 import axios from 'axios';
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner'; // Optionally, for notifications
 
-const AddGlobalVideo = () => {
+const UpdateGlobalVideo = () => {
+    const { globalVideoId } = useParams()
     const [video, setVideo] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -54,7 +55,7 @@ const AddGlobalVideo = () => {
             setError('');
 
             // Replace with your actual API endpoint
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/globalData`, formData);
+            const response = await axios.patch(`${import.meta.env.VITE_API_URL}/globalData/${globalVideoId}`, formData);
 
 
 
@@ -75,6 +76,24 @@ const AddGlobalVideo = () => {
             setLoading(false);
         }
     };
+
+    const getPerfumes = (globalVideoId) => {
+        axios
+            .get(`${import.meta.env.VITE_API_URL}/globalData/${globalVideoId}`)
+            .then((res) => {
+                console.log(res)
+                // setPerfumeData(res?.data?.data);
+                // setIsLoading(false);
+            })
+            .catch((err) => {
+                console.log(err);
+                // setIsLoading(false);
+            });
+    }
+
+    useEffect(() => {
+        getPerfumes(globalVideoId)
+    }, []);
 
     return (
         <>
@@ -129,4 +148,6 @@ const AddGlobalVideo = () => {
 
 
 
-export default AddGlobalVideo
+
+
+export default UpdateGlobalVideo

@@ -1,26 +1,27 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner'; // Optionally, for notifications
 
-const AddGlobalVideo = () => {
-    const [video, setVideo] = useState(null);
+const UpdateGlobalBanner = () => {
+    const { globalBannerId } = useParams()
+    const [image, setImage] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate()
 
-    const maxSizeInMB = 50; // Set max size (e.g., 50MB)
+    const maxSizeInMB = 5; // Set max size (e.g., 50MB)
 
-    // Function to handle video selection
-    const handleVideoChange = (e) => {
+    // Function to handle image selection
+    const handleImageChange = (e) => {
         const file = e.target.files[0];
 
         if (file) {
             // Validate file type
-            const isVideo = file.type.startsWith('video/');
-            if (!isVideo) {
-                setError('Please upload a valid video file.');
-                setVideo(null);
+            const isImage = file.type.startsWith('image/');
+            if (!isImage) {
+                setError('Please upload a valid image file.');
+                setImage(null);
                 return;
             }
 
@@ -28,49 +29,49 @@ const AddGlobalVideo = () => {
             const isValidSize = file.size / (1024 * 1024) <= maxSizeInMB;
             if (!isValidSize) {
                 setError(`File size should not exceed ${maxSizeInMB}MB.`);
-                setVideo(null);
+                setImage(null);
                 return;
             }
 
-            // Clear errors and set the video file
+            // Clear errors and set the image file
             setError('');
-            setVideo(file);
+            setImage(file);
         }
     };
 
-    // Function to upload video
+    // Function to upload image
     const handleUpload = async () => {
-        if (!video) {
-            setError('No video selected');
+        if (!image) {
+            setError('No image selected');
             return;
         }
 
         const formData = new FormData();
-        formData.append('file', video);
-        formData.append('itemType', "video");
+        formData.append('file', image);
+        formData.append('itemType', "banner");
 
         try {
             setLoading(true);
             setError('');
 
             // Replace with your actual API endpoint
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/globalData`, formData);
+            const response = await axios.patch(`${import.meta.env.VITE_API_URL}/globalData/${globalBannerId}`, formData);
 
 
 
             if (response?.data?.status) {
-                toast.success('Video uploaded successfully');
-                navigate(`/globalVideo`)
-                setVideo(null); // Reset video input
+                toast.success('image uploaded successfully');
+                navigate(`/globalBanner`)
+                setImage(null); // Reset image input
             } else {
-                setError(data?.message || 'Error uploading video');
+                setError(data?.message || 'Error uploading image');
             }
         } catch (error) {
             console.error('Upload failed', error);
             const { response } = error
             toast.error(response?.data?.message, { position: "top-center" })
 
-            setError('Error uploading video');
+            setError('Error uploading image');
         } finally {
             setLoading(false);
         }
@@ -79,7 +80,7 @@ const AddGlobalVideo = () => {
     return (
         <>
             <div className="max-w-md mx-auto my-10 p-4 border border-gray-300 rounded-lg shadow-md bg-white">
-                <h2 className="text-2xl font-semibold text-center mb-4">Upload a Video</h2>
+                <h2 className="text-2xl font-semibold text-center mb-4">Upload a image</h2>
 
                 {/* File input */}
                 <div>
@@ -87,14 +88,14 @@ const AddGlobalVideo = () => {
                         className="block mb-2 text-sm font-medium text-gray-900"
                         htmlFor="video_input"
                     >
-                        Select Video
+                        Select image
                     </label>
                     <input
                         className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
                         id="video_input"
                         type="file"
-                        accept="video/*"
-                        onChange={handleVideoChange}
+                        accept="image/*"
+                        onChange={handleImageChange}
                     />
                     {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
                 </div>
@@ -113,7 +114,7 @@ const AddGlobalVideo = () => {
                             onClick={handleUpload}
                             className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold"
                         >
-                            Upload Video
+                            Upload image
                         </button>
                     )}
                 </div>
@@ -129,4 +130,16 @@ const AddGlobalVideo = () => {
 
 
 
-export default AddGlobalVideo
+
+
+
+
+
+
+
+
+
+
+
+
+export default UpdateGlobalBanner

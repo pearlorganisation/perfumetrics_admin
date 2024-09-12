@@ -45,6 +45,13 @@ import AddCelebrityPerfume from "./pages/CelebrityPerfume/AddCelebrityPerfume";
 import UpdateCelebrityPerfume from "./pages/CelebrityPerfume/UpdateCelebrityPerfume";
 import GlobalVideo from "./pages/GlobalVideo/GlobalVideo";
 import AddGlobalVideo from "./pages/GlobalVideo/AddGlobalVideo";
+import UpdateGlobalVideo from "./pages/GlobalVideo/UpdateGlobalVideo";
+import GlobalBanner from "./pages/GlobalBanner/GlobalBanner";
+import AddGlobalBanner from "./pages/GlobalBanner/AddGlobalBanner";
+import UpdateGlobalBanner from "./pages/GlobalBanner/UpdateGlobalBanner";
+import News from "./pages/News/News";
+import AddNews from "./pages/News/AddNews";
+import UpdateNews from "./pages/News/UpdateNews";
 
 const isUserLoggedIn = localStorage.getItem("isusrlgd");
 
@@ -202,6 +209,43 @@ const App = () => {
           path: "/addGlobalVideo",
           element: <AddGlobalVideo />,
         },
+        // update global video
+        {
+          path: "/updateGlobalVideo/:globalVideoId",
+          element: <UpdateGlobalVideo />,
+        },
+
+        //  global video
+        {
+          path: "/globalBanner",
+          element: <GlobalBanner />,
+        },
+        //  add global video
+        {
+          path: "/addGlobalBanner",
+          element: <AddGlobalBanner />,
+        },
+        //  update global video
+        {
+          path: "/updateGlobalBanner/:globalBannerId",
+          element: <UpdateGlobalBanner />,
+        },
+        //  News
+        {
+          path: "/News",
+          element: <News />,
+        },
+        // Add News
+        {
+          path: "/addNews",
+          element: <AddNews />,
+        },
+        // Update  News
+        {
+          path: "/updateNews/:newsId",
+          element: <UpdateNews />,
+        },
+
 
 
 

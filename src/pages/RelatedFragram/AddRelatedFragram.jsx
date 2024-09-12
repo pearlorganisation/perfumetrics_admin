@@ -92,14 +92,21 @@ const AddRelatedFragram = ({ setIsShowing }) => {
 
 
 
-                        <div className="flex flex-wrap items-stretch w-full mb-4 relative">
+                        <div className="flex flex-wrap flex-col items-stretch w-full mb-4 relative">
                             <input
                                 type="text"
                                 placeholder="Redirection Link"
-                                {...register('link', { required: 'Redirection link is required' })}
-                                className="flex-shrink flex-grow flex-auto leading-normal w-px border border-green-200 h-10 border-grey-light rounded rounded-l-none px-3 relative"
+                                {...register("link", {
+                                    required: "This field is required",
+                                    pattern: {
+                                        value: /^(https?:\/\/(?:www\.)?[^\s/$.?#].[^\s]*)$/i,
+                                        message: "Enter a valid URL (e.g. https://www.Dummy.com)"
+                                    }
+                                })}
+
+                                className="flex-shrink flex-grow flex-auto leading-normal w-full border border-green-200 h-10 border-grey-light rounded rounded-l-none px-3 relative"
                             />
-                            {errors.link && <p className="text-red-500">{errors.link.message}</p>}
+                            {errors.link && <div className="text-left text-red-500">{errors.link.message}</div>}
                         </div>
 
                         {/* React Select with Controller for Brand Selection */}
