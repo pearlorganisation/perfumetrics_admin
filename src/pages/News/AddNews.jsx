@@ -37,7 +37,7 @@ const AddNews = () => {
         try {
             setIsLoading(true);
             const result = await axios.post(
-                `${import.meta.env.VITE_API_URL}/celebrityPerfumes`,
+                `${import.meta.env.VITE_API_URL}/news`,
                 data
             );
             setIsLoading(false);
@@ -57,9 +57,10 @@ const AddNews = () => {
         formData.append("banner", banner[0]);
         formData.append("content", data.content);
         formData.append("title", data.title);
+        formData.append("user", data.user);
         formData.append("type", data.type?.value); // Save the selected category
         // api call here
-        // postNewsBlog(formData);
+        postNewsBlog(formData);
     };
 
     const temp = watch("banner");
@@ -70,9 +71,9 @@ const AddNews = () => {
 
     // Sample options for React-Select
     const types = [
-        { value: "small", label: "Small" },
-        { value: "medium", label: "Medium" },
-        { value: "large", label: "Large" },
+        { value: "SMALL", label: "Small" },
+        { value: "MEDIUM", label: "Medium" },
+        { value: "LARGE", label: "Large" },
     ];
 
     return (
@@ -99,6 +100,20 @@ const AddNews = () => {
                     {errors.title && (
                         <span className="text-red-500">{errors.title.message}</span>
                     )}
+
+                    <div>
+                        {/* Title */}
+                        <label className="font-medium">Published By</label>
+                        <input
+                            {...register("user", { required: "Published By is required" })}
+                            type="text"
+                            className="w-full mt-2 me-50 px-5 py-2 text-gray-500 border-slate-300 bg-transparent outline-none border focus:border-teal-400 shadow-sm rounded-lg"
+                            placeholder="Enter a Name"
+                        />
+                        {errors.user && (
+                            <span className="text-red-500">{errors.user.message}</span>
+                        )}
+                    </div>
 
                     {/* Category (React-Select) */}
                     <div>

@@ -177,7 +177,7 @@ const AddPerfume = () => {
     return formData;
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (isLoading) return
     toast("saving");
     let tempAccords = [...accords];
@@ -197,31 +197,31 @@ const AddPerfume = () => {
     let formData = filterData(data);
     setIsLoading(true)
     console.log(formData)
-    axios
-      .post(`${import.meta.env.VITE_API_URL}/perfume`, formData)
-      .then((res) => {
-        setIsLoading(false)
-        navigate(
-          '/perfumes')
-        toast.success("Saved successfully", {
-          style: {
-            background: "green",
-            color: "white",
-          },
-        });
-        navigate('/perfumes')
-        // window.location.href = '/perfumes'
-      })
-      .catch((err) => {
-        console.err(err);
-        setIsLoading(false)
-        toast.error("Server down, please try again later", {
-          style: {
-            background: "red",
-            color: "white",
-          },
-        });
+    try {
+      setIsLoading(true);
+
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/perfume`, formData);
+
+      setIsLoading(false);
+      navigate('/perfumes');
+      toast.success("Saved successfully", {
+        position: "top-center",
+        style: {
+          background: "green",
+          color: "white",
+        },
       });
+
+    } catch (err) {
+      console.error(err);
+      setIsLoading(false);
+      toast.error("Server down, please try again later", {
+        style: {
+          background: "red",
+          color: "white",
+        },
+      });
+    }
   };
 
   useEffect(() => {
@@ -1023,13 +1023,13 @@ const AddPerfume = () => {
                     Compliment
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     id="number"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5      "
                     placeholder="Compliment"
                     {...register("compliment", { required: true })}
-                    min={"0"}
-                    max={"10"}
+                    min={0}
+                    max={10}
                   />
                 </div>
                 <div className="">
