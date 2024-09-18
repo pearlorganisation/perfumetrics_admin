@@ -6,8 +6,24 @@ import { Toaster, toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBrands } from "../../features/actions/brandsAction";
+import ct from 'countries-and-timezones';
+
 
 const AddPerfume = () => {
+  const tmz = Intl.DateTimeFormat().resolvedOptions().timeZone
+  const timezone = ct.getTimezone(tmz);
+  console.log(timezone);
+
+
+  const defaultCountryOptions = [
+    { value: 'US', label: 'United States' },
+    { value: 'IN', label: 'India' },
+    { value: 'GB', label: 'United Kingdom' },
+    { value: 'JP', label: 'Japan' },
+    { value: 'AU', label: 'Australia' },
+    { value: 'FR', label: 'France' },
+    { value: 'DE', label: 'Germany' }
+  ];
 
   const { brands } = useSelector(state => state.brand)
   const dispatch = useDispatch()
@@ -59,7 +75,7 @@ const AddPerfume = () => {
   const addPurchaseLink = () => {
     setPurchaseLinks((prev) => {
       let id = (prev[prev?.length - 1]?.id || 0) + 1;
-      let purchaseLink = { id: id, link: "", company: "", logo: null };
+      let purchaseLink = { id: id, link: "", company: "" };
       return [...prev, purchaseLink];
     });
   };
@@ -140,6 +156,10 @@ const AddPerfume = () => {
       return { title: item.cons };
     });
     console.log("puschase links", purchaseLinks)
+    const map = new Map()
+
+    formData.append("purchaseLinks", JSON.stringify(purchaseLinks));
+
     formData.append("topNote", JSON.stringify(topNote));
     formData.append("middleNote", JSON.stringify(midNote));
     formData.append("baseNote", JSON.stringify(baseNote));
@@ -149,7 +169,7 @@ const AddPerfume = () => {
     formData.append("mainAccords", JSON.stringify(filteredAccords));
     formData.append("pros", JSON.stringify(filteredPros));
     formData.append("cons", JSON.stringify(filteredCons));
-    formData.append("purchaseLinks", JSON.stringify(purchaseLinks));
+
     formData.append("banner", banner);
     formData.append("logo", logo);
     formData.append('brand', brandId)
@@ -195,33 +215,33 @@ const AddPerfume = () => {
     }
 
     let formData = filterData(data);
-    setIsLoading(true)
+    // setIsLoading(true)
     console.log(formData)
-    try {
-      setIsLoading(true);
+    // try {
+    //   setIsLoading(true);
 
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/perfume`, formData);
+    //   const res = await axios.post(`${import.meta.env.VITE_API_URL}/perfume`, formData);
 
-      setIsLoading(false);
-      navigate('/perfumes');
-      toast.success("Saved successfully", {
-        position: "top-center",
-        style: {
-          background: "green",
-          color: "white",
-        },
-      });
+    //   setIsLoading(false);
+    //   navigate('/perfumes');
+    //   toast.success("Saved successfully", {
+    //     position: "top-center",
+    //     style: {
+    //       background: "green",
+    //       color: "white",
+    //     },
+    //   });
 
-    } catch (err) {
-      console.error(err);
-      setIsLoading(false);
-      toast.error("Server down, please try again later", {
-        style: {
-          background: "red",
-          color: "white",
-        },
-      });
-    }
+    // } catch (err) {
+    //   console.error(err);
+    //   setIsLoading(false);
+    //   toast.error("Server down, please try again later", {
+    //     style: {
+    //       background: "red",
+    //       color: "white",
+    //     },
+    //   });
+    // }
   };
 
   useEffect(() => {
@@ -567,7 +587,7 @@ const AddPerfume = () => {
                   </button>
                 </div>
                 {purchaseLinks && purchaseLinks?.length > 0 && (
-                  <div className="relative overflow-x-auto">
+                  <div className="relative over">
                     <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
                       <thead className="text-xs text-gray-700 bg-gray-50 ">
                         <tr>
@@ -579,6 +599,9 @@ const AddPerfume = () => {
                           </th>
                           <th scope="col" className="px-1 pt-2 pb-1">
                             Company
+                          </th>
+                          <th scope="col" className="px-1 pt-2 pb-1">
+                            Country
                           </th>
 
                           <th scope="col" className="px-1 pt-2 pb-1"></th>
@@ -634,6 +657,36 @@ const AddPerfume = () => {
                                   });
                                 }}
                                 required
+                              />
+                            </td>
+                            <td
+                              className="px-1 py-4"
+                            >
+                              <Select
+                                options={defaultCountryOptions}
+                                onChange={(selectedOption) => {
+                                  setPurchaseLinks((prev) => {
+                                    // Clone the previous array
+                                    let tempArr = [...prev];
+
+                                    // Find the index of the item you want to update
+                                    let idx = tempArr.findIndex((ele) => ele.id === item.id);
+
+                                    // Make sure the item exists
+                                    if (idx !== -1) {
+                                      // Update the relevant field with the selected value
+                                      tempArr[idx] = {
+                                        ...tempArr[idx],
+                                        country: selectedOption.value, // Assuming company field gets the selected value
+                                      };
+                                    }
+
+                                    return tempArr;
+                                  });
+                                }}
+                                // value={selectedCountry}
+                                // onChange={handleCountrySelect}
+                                placeholder="Select a country"
                               />
                             </td>
 

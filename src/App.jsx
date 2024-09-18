@@ -52,6 +52,7 @@ import UpdateGlobalBanner from "./pages/GlobalBanner/UpdateGlobalBanner";
 import News from "./pages/News/News";
 import AddNews from "./pages/News/AddNews";
 import UpdateNews from "./pages/News/UpdateNews";
+import SideBarReview from "./pages/SideBarReview/SideBarReview";
 
 const isUserLoggedIn = localStorage.getItem("isusrlgd");
 
@@ -109,6 +110,15 @@ const App = () => {
         {
           path: "perfume/fragram/:perfumeId",
           element: <Fragram
+
+          />,
+        },
+        // fragram
+
+        // fragram
+        {
+          path: "perfume/sideBarReview/:perfumeId",
+          element: <SideBarReview
 
           />,
         },

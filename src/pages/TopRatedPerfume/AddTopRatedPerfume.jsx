@@ -9,6 +9,20 @@ import { fetchBrands } from "../../features/actions/brandsAction";
 
 const AddTopRatedPerfume = () => {
 
+  const CustomOption = ({ innerRef, innerProps, data }) => (
+    <div ref={innerRef} {...innerProps} style={{ display: "flex", alignItems: "center" }} className="hover:bg-blue-300/30 p-1 cursor-default">
+      <img src={data.banner} alt="" style={{ width: 40, height: 40, marginRight: 10 }} />
+      {data.label}
+    </div>
+  );
+
+  // Options data including image URLs
+  const options = [
+    { value: "option1", label: "Option 1", image: "https://via.placeholder.com/20" },
+    { value: "option2", label: "Option 2", image: "https://via.placeholder.com/20" },
+    { value: "option3", label: "Option 3", image: "https://via.placeholder.com/20" },
+  ];
+
   const { brands } = useSelector(state => state.brand)
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -272,7 +286,14 @@ const AddTopRatedPerfume = () => {
 
   const handleTopRated = async () => {
     console.log(perfume, "perfume")
-    const response = axios.post(`${import.meta.env.VITE_API_URL}/topRatedPerfume`, { topRatedPerfume: perfume })
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/topRatedPerfume`, { topRatedPerfume: perfume })
+      console.log(response, "response")
+      toast.success("Successfuly Added!!", { position: 'top-center' })
+    } catch (error) {
+      console.log(error)
+      toast.error(error?.response?.data?.message, { position: 'top-center' })
+    }
     console.log(response, "huadjfgf");
   }
 
@@ -286,6 +307,7 @@ const AddTopRatedPerfume = () => {
           <Toaster />
           <Select
             options={modifiedPerfumes}
+            components={{ Option: CustomOption }}
 
             onChange={(val) => {
 
@@ -295,6 +317,10 @@ const AddTopRatedPerfume = () => {
             isMulti
           // closeMenuOnSelect={true}
           />
+          {/* <Select
+            options={options}
+            components={{ Option: CustomOption }} // Custom component for option rendering
+          /> */}
           {
             perfume.length < 1 ? <div>
               <div
@@ -437,21 +463,7 @@ const AddTopRatedPerfume = () => {
                       {...register("perfume", { required: true })}
                     />
                   </div>
-                  <div className="sm:col-span-2">
-                    <label
-                      htmlFor="name"
-                      className="block mb-2 text-sm font-medium text-gray-900 "
-                    >
-                      Top Rated Perfume
-                    </label>
-                    <input
-                      type="checkbox"
-                      checked
-                      id="name"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5      "
-                      {...register("topRated", { required: true })}
-                    />
-                  </div>
+
                   <div className="col-span-2" ref={accordsRef}>
                     <div className="w-full flex justify-between pb-1">
                       <label

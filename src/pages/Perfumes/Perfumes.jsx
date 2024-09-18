@@ -106,6 +106,7 @@ const PerfumeNotes = () => {
                       <Link to={`/perfume/relatedFragram/${item?._id}`} className="px-6 py-4 font-medium text-blue-600 hover:underline">Related Fragram</Link>
                       <Link to={`/perfume/perfumeCategory/${item?._id}`} className="px-6 py-4 font-medium text-blue-600 hover:underline">Perfume Category</Link>
                       <Link to={`/perfume/fragram/${item?._id}`} className="px-6 py-4 font-medium text-blue-600 hover:underline">Fragram</Link>
+                      <Link to={`/perfume/sideBarReview/${item?._id}`} className="px-6 py-4 font-medium text-blue-600 hover:underline">SideBar Review</Link>
                       <Link
                         to={`/perfume/update/${item?._id}`}
                         className="font-medium text-blue-600  hover:underline"
