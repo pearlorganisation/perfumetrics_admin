@@ -53,6 +53,8 @@ import News from "./pages/News/News";
 import AddNews from "./pages/News/AddNews";
 import UpdateNews from "./pages/News/UpdateNews";
 import SideBarReview from "./pages/SideBarReview/SideBarReview";
+import WriteAReview from "./pages/WriteAReview/WriteAReview";
+
 
 const isUserLoggedIn = localStorage.getItem("isusrlgd");
 
@@ -254,6 +256,12 @@ const App = () => {
         {
           path: "/updateNews/:newsId",
           element: <UpdateNews />,
+        },
+
+        // Write A Review
+        {
+          path: "/writeAReview",
+          element: <WriteAReview />,
         },
 
 

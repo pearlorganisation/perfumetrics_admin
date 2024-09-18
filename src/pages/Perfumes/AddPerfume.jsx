@@ -12,7 +12,7 @@ import ct from 'countries-and-timezones';
 const AddPerfume = () => {
   const tmz = Intl.DateTimeFormat().resolvedOptions().timeZone
   const timezone = ct.getTimezone(tmz);
-  console.log(timezone);
+  console.log(timezone?.countries[0], "timezone");
 
 
   const defaultCountryOptions = [
@@ -215,33 +215,33 @@ const AddPerfume = () => {
     }
 
     let formData = filterData(data);
-    // setIsLoading(true)
+    setIsLoading(true)
     console.log(formData)
-    // try {
-    //   setIsLoading(true);
+    try {
+      setIsLoading(true);
 
-    //   const res = await axios.post(`${import.meta.env.VITE_API_URL}/perfume`, formData);
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/perfume`, formData);
 
-    //   setIsLoading(false);
-    //   navigate('/perfumes');
-    //   toast.success("Saved successfully", {
-    //     position: "top-center",
-    //     style: {
-    //       background: "green",
-    //       color: "white",
-    //     },
-    //   });
+      setIsLoading(false);
+      navigate('/perfumes');
+      toast.success("Saved successfully", {
+        position: "top-center",
+        style: {
+          background: "green",
+          color: "white",
+        },
+      });
 
-    // } catch (err) {
-    //   console.error(err);
-    //   setIsLoading(false);
-    //   toast.error("Server down, please try again later", {
-    //     style: {
-    //       background: "red",
-    //       color: "white",
-    //     },
-    //   });
-    // }
+    } catch (err) {
+      console.error(err);
+      setIsLoading(false);
+      toast.error("Server down, please try again later", {
+        style: {
+          background: "red",
+          color: "white",
+        },
+      });
+    }
   };
 
   useEffect(() => {
