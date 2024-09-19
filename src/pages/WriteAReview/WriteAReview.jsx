@@ -126,7 +126,7 @@ const WriteAReview = () => {
                                         <td className="px-6 py-4 space-x-3 flex justify-center items-center">
 
                                             <Link
-                                                to={`/updateNews/${item?._id}`}
+                                                to={`/viewReview/${item._id}`}
                                                 className="font-medium text-blue-600  hover:underline"
                                             >
                                                 View
