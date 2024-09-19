@@ -109,6 +109,7 @@ const PerfumeNotes = () => {
                       <Link to={`/perfume/sideBarReview/${item?._id}`} className="px-6 py-4 font-medium text-blue-600 hover:underline">SideBar Review</Link>
                       <Link
                         to={`/perfume/update/${item?._id}`}
+                        state={item}
                         className="font-medium text-blue-600  hover:underline"
                       >
                         View/edit

@@ -3,13 +3,18 @@ import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Toaster, toast } from "sonner";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBrands } from "../../features/actions/brandsAction";
 import ct from 'countries-and-timezones';
 
 
 const UpdatePerfume = () => {
+  const { state } = useLocation();
+  console.log(state, "state")
+
+
+
   const tmz = Intl.DateTimeFormat().resolvedOptions().timeZone
   const timezone = ct.getTimezone(tmz);
   console.log(timezone?.countries[0], "timezone");
@@ -30,7 +35,11 @@ const UpdatePerfume = () => {
   const navigate = useNavigate()
   const [brandsData, setBrandsData] = useState([])
   const { perfumeId } = useParams()
+  const gender = [
+    { value: 'M', label: 'Male' },
+    { value: 'F', label: 'Female' },
 
+  ]
   const [banner, setBanner] = useState(null);
   const [logo, setLogo] = useState(null);
   const [brandId, setBrandId] = useState(null);
@@ -45,6 +54,8 @@ const UpdatePerfume = () => {
   const [video, setVideo] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  const [defaultTopNote, setDefaultTopNote] = useState([]);
+
   const accordsRef = useRef(null);
 
   const {
@@ -54,16 +65,49 @@ const UpdatePerfume = () => {
     watch,
     formState: { errors },
     reset,
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      perfume: state?.perfume,
+      detail: state?.details,
+      description: state?.description,
 
-  const getSinglePerfume = async () => {
-    const res = await axios.get(`${import.meta.env.VITE_API_URL}/perfume/${perfumeId}`);
-    console.log(res?.data?.data, "perfume")
-  }
+      gender: gender.find(el => el.value === state?.ratingFragrams?.gender,
+
+      ),
+      overall: state?.ratingFragrams?.overall
+
+      // midNote: state?.midNote?.map((el) => {
+      //   return {
+      //     label: el.name || 'something is wrong on forms',
+      //     value: el._id
+      //   }
+      // }),
+      // baseNote: state?.baseNote?.map((el) => {
+      //   return {
+      //     label: el.name || 'something is wrong on forms',
+      //     value: el._id
+      //   }
+      // })
+
+    }
+  });
+
+
 
   useEffect(() => {
-    getSinglePerfume()
+
+    setAccords(state.mainAccords);
+    setPurchaseLinks(state.purchaseLinks);
+    setPros(state.pros)
+    setCons(state.cons)
+
+    console.log(state, "perfume")
   }, [])
+
+
+  useEffect(() => {
+    console.log("defaultTopNote", defaultTopNote);
+  }, [purchaseLinks])
 
 
 
@@ -146,9 +190,9 @@ const UpdatePerfume = () => {
   const filterData = (data) => {
     let formData = new FormData();
 
-    let topNote = data?.topNote.map((item) => item.value);
-    let midNote = data?.midNote.map((item) => item.value);
-    let baseNote = data?.baseNote.map((item) => item.value);
+    let topNote = data?.topNote?.map((item) => item.value) || state?.topNote;
+    let midNote = data?.midNote?.map((item) => item.value) || state?.midNote;
+    let baseNote = data?.baseNote?.map((item) => item.value) || state?.baseNote;
 
 
 
@@ -275,11 +319,13 @@ const UpdatePerfume = () => {
     }
   }, [brands])
 
-  const gender = [
-    { value: 'M', label: 'Male' },
-    { value: 'F', label: 'Female' },
 
-  ]
+
+  useEffect(() => {
+    console.log(brandsData?.find(item => item?.value === state?.brand))
+    console.log(state?.mainAccords, "state?.mainAccords || []")
+  }, [brandsData])
+
 
 
   return (
@@ -291,11 +337,13 @@ const UpdatePerfume = () => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="grid gap-4 mb-4 sm:grid-cols-2 sm:gap-6 sm:mb-5">
               <div className="col-span-2 sm:col-span-1">
-                {banner && (
+                {banner ? (
                   <div className="flex justify-center items-centerw-[250px] h-[250px] border border-gray-300">
                     <img src={URL.createObjectURL(banner)} className="h-full" />
                   </div>
-                )}
+                ) : <div className="flex justify-center items-centerw-[250px] h-[250px] border border-gray-300">
+                  <img src={state?.banner} className="h-full" />
+                </div>}
 
                 <div>
                   <label
@@ -312,17 +360,19 @@ const UpdatePerfume = () => {
                       setBanner(e.target.files[0]);
                     }}
                     accept=".jpg, .jpeg, .png, .webp"
-                    required
+
                   />
                 </div>
               </div>
 
               <div className="col-span-2 sm:col-span-1">
-                {logo && (
+                {logo ? (
                   <div className="w-[250px] h-[250px] border border-red-300">
                     <img src={URL.createObjectURL(logo)} className="h-full" />
                   </div>
-                )}
+                ) : <div className="w-[250px] h-[250px] border border-red-300">
+                  <img src={state?.logo} className="h-full" />
+                </div>}
 
 
 
@@ -341,7 +391,7 @@ const UpdatePerfume = () => {
                       setLogo(e.target.files[0]);
                     }}
                     accept=".jpg, .jpeg, .png, .webp"
-                    required
+
                   />
                 </div>
               </div>
@@ -358,7 +408,8 @@ const UpdatePerfume = () => {
                   onChange={(val) => {
                     setBrandId(val?.value)
                   }}
-                  required
+                  defaultValue={{ label: state?.brand?.brand, value: state?.brand?._id }}
+
                 // closeMenuOnSelect={true}
                 />
 
@@ -385,7 +436,7 @@ const UpdatePerfume = () => {
 
                   />
                 </div>
-                {gallery && gallery?.length > 0 && (
+                {gallery && gallery?.length > 0 ? (
                   <div className="w-full flex flex-wrap gap-2 py-2">
                     {gallery?.map((item, idx) => (
                       <div key={`gallery${idx}`}>
@@ -410,7 +461,30 @@ const UpdatePerfume = () => {
                       </div>
                     ))}
                   </div>
-                )}
+                ) : <div className="w-full flex flex-wrap gap-2 py-2">
+                  {state?.gallery?.map((item, idx) => (
+                    <div key={`gallery${idx}`}>
+                      <div className="h-[200px] border rounded-sm flex items-center justify-center box-border">
+                        <img
+                          src={item?.path}
+                          className="h-full"
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        className="w-full bg-red-500 hover:bg-white hover:text-black hover:shadow-[0_0_0_2px#ff0000] text-white rounded-sm p-2.5 px-2 transition duration-300"
+                        onClick={() => {
+                          setGallery((prev) => {
+                            let tempArr = [...prev];
+                            return tempArr.filter((ele) => ele !== item);
+                          });
+                        }}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ))}
+                </div>}
               </div>
               <div className="sm:col-span-2">
                 <label
@@ -431,15 +505,15 @@ const UpdatePerfume = () => {
               </div>
               <div className="sm:col-span-2">
                 <label
-                  htmlFor="name"
+                  htmlFor="perfume"
                   className="block mb-2 text-sm font-medium text-gray-900 "
                 >
                   Perfume Name
                 </label>
                 <input
                   type="text"
-                  name="name"
-                  id="name"
+                  defaultValue={state?.perfume}
+                  id="perfume"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5      "
                   placeholder="Type product name"
                   {...register("perfume", { required: true })}
@@ -495,6 +569,7 @@ const UpdatePerfume = () => {
                                 type="text"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                 placeholder="E.g, Wood, lavender etc"
+                                defaultValue={item?.name || 'Something went wrong'}
                                 onChange={(e) => {
                                   setAccords((prev) => {
                                     let tempArr = [...prev];
@@ -509,7 +584,7 @@ const UpdatePerfume = () => {
                                     return tempArr;
                                   });
                                 }}
-                                required
+
                               />
                             </td>
                             <td className="px-1 py-4">
@@ -520,6 +595,7 @@ const UpdatePerfume = () => {
                                 max={100}
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                 placeholder="0"
+                                defaultValue={item?.percentage || 0}
                                 onChange={(e) => {
                                   setAccords((prev) => {
                                     let tempArr = [...prev];
@@ -535,7 +611,7 @@ const UpdatePerfume = () => {
                                     return tempArr;
                                   });
                                 }}
-                                required
+
                               />
                             </td>
                             <td className="px-1 py-4">
@@ -543,6 +619,7 @@ const UpdatePerfume = () => {
                                 type="color"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  block w-full h-[42px]"
                                 placeholder="John"
+                                defaultValue={item?.color || '#ffffff'}
                                 onChange={(e) => {
                                   setAccords((prev) => {
                                     let tempArr = [...prev];
@@ -557,7 +634,7 @@ const UpdatePerfume = () => {
                                     return tempArr;
                                   });
                                 }}
-                                required
+
                               />
                             </td>
                             <td className="px-1 py-4">
@@ -630,6 +707,7 @@ const UpdatePerfume = () => {
                                 type="text"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                 placeholder="https://xyz.xyz/xyzzz"
+                                defaultValue={item.link}
                                 onChange={(e) => {
                                   setPurchaseLinks((prev) => {
                                     let tempArr = [...prev];
@@ -644,7 +722,7 @@ const UpdatePerfume = () => {
                                     return tempArr;
                                   });
                                 }}
-                                required
+
                               />
                             </td>
                             <td className="px-1 py-4">
@@ -652,6 +730,7 @@ const UpdatePerfume = () => {
                                 type="text"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                 placeholder="Company Name"
+                                defaultValue={item.company}
                                 onChange={(e) => {
                                   setPurchaseLinks((prev) => {
                                     let tempArr = [...prev];
@@ -667,14 +746,17 @@ const UpdatePerfume = () => {
                                     return tempArr;
                                   });
                                 }}
-                                required
+
                               />
                             </td>
                             <td
                               className="px-1 py-4"
                             >
                               <Select
+                                defaultValue={defaultCountryOptions.find(it => it?.value === item?.country)}
+                                value={defaultCountryOptions.find(it => it?.value === item?.country)}
                                 options={defaultCountryOptions}
+                                // defaultValue={ }
                                 onChange={(selectedOption) => {
                                   setPurchaseLinks((prev) => {
                                     // Clone the previous array
@@ -772,6 +854,7 @@ const UpdatePerfume = () => {
                                   type="text"
                                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                   placeholder="A Pro of this perfume"
+                                  defaultValue={item.title}
                                   onChange={(e) => {
                                     setPros((prev) => {
                                       let tempArr = [...prev];
@@ -786,7 +869,7 @@ const UpdatePerfume = () => {
                                       return tempArr;
                                     });
                                   }}
-                                  required
+
                                 />
                               </td>
 
@@ -857,6 +940,7 @@ const UpdatePerfume = () => {
                                   type="text"
                                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                   placeholder="A Con of this perfume"
+                                  defaultValue={item.title}
                                   onChange={(e) => {
                                     setCons((prev) => {
                                       let tempArr = [...prev];
@@ -871,7 +955,7 @@ const UpdatePerfume = () => {
                                       return tempArr;
                                     });
                                   }}
-                                  required
+
                                 />
                               </td>
 
@@ -915,9 +999,17 @@ const UpdatePerfume = () => {
                 <Controller
                   name="topNote"
                   control={control}
-                  render={({ field }) => (
+                  render={({ field: { onChange, value, ref } }) => (
                     <Select
-                      {...field}
+
+
+
+                      defaultValue={state.topNote?.map(ite => {
+                        return {
+                          label: ite?.name,
+                          value: ite._id
+                        }
+                      })}
                       options={noteData.map((note) => ({
                         value: note._id,
                         label: note.name,
@@ -938,9 +1030,14 @@ const UpdatePerfume = () => {
                 <Controller
                   name="midNote"
                   control={control}
-                  render={({ field }) => (
+                  render={({ field: { onChange, value, ref } }) => (
                     <Select
-                      {...field}
+                      defaultValue={state.middleNote?.map(ite => {
+                        return {
+                          label: ite?.name,
+                          value: ite._id
+                        }
+                      })}
                       options={noteData.map((note) => ({
                         value: note._id,
                         label: note.name,
@@ -964,6 +1061,13 @@ const UpdatePerfume = () => {
                   render={({ field }) => (
                     <Select
                       {...field}
+                      defaultValue={state.baseNote
+                        ?.map(ite => {
+                          return {
+                            label: ite?.name,
+                            value: ite._id
+                          }
+                        })}
                       options={noteData.map((note) => ({
                         value: note._id,
                         label: note.name,
@@ -983,6 +1087,7 @@ const UpdatePerfume = () => {
                 </label>
                 <textarea
                   id="description"
+                  defaultValue={state?.description}
                   rows="8"
                   className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500      "
                   placeholder="Write a product description here..."
@@ -1002,6 +1107,7 @@ const UpdatePerfume = () => {
                   rows="8"
                   className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500      "
                   placeholder="Write a product details here..."
+                  defaultValue={state?.details}
                   {...register("details", { required: true })}
                 ></textarea>
               </div>
@@ -1019,6 +1125,7 @@ const UpdatePerfume = () => {
                   <input
                     type="number"
                     id="name"
+                    defaultValue={state?.ratingFragrams?.longitivity || 0}
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5      "
                     placeholder="Longitivity"
                     min={"0"}
@@ -1036,6 +1143,7 @@ const UpdatePerfume = () => {
                   <input
                     type="number"
                     id="name"
+                    defaultValue={state?.ratingFragrams?.sillage || 0}
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5      "
                     placeholder="Sillage"
                     min={"0"}
@@ -1053,6 +1161,7 @@ const UpdatePerfume = () => {
                   <input
                     type="number"
                     id="name"
+                    defaultValue={state?.ratingFragrams?.pricing || 0}
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5      "
                     placeholder="Pricing"
                     min={"0"}
@@ -1070,11 +1179,15 @@ const UpdatePerfume = () => {
                   <Controller
                     name="gender"
                     control={control}
-                    render={({ field }) => (
+                    render={({ field: { onChange, value, ref } }) => (
                       <Select
-                        {...field}
+
+                        value={gender.find(el => el.value === value
+                        )}
                         options={gender}
-                        required
+                        defaultValue={gender.find(el => el.value === state?.ratingFragrams?.gender
+                        )}
+
                       />
                     )}
                   />
@@ -1089,6 +1202,7 @@ const UpdatePerfume = () => {
                   <input
                     type="number"
                     id="number"
+                    defaultValue={state?.ratingFragrams?.compliment || 0}
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5      "
                     placeholder="Compliment"
                     {...register("compliment", { required: true })}
@@ -1106,6 +1220,7 @@ const UpdatePerfume = () => {
                   <input
                     type="number"
                     id="name"
+                    defaultValue={state?.ratingFragrams?.overall}
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5      "
                     placeholder="Overall"
                     min={"0"}
