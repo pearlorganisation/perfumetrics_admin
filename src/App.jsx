@@ -88,7 +88,7 @@ const App = () => {
           element: <AddPerfume />,
         },
         {
-          path: "/perfume/update/:id",
+          path: "/perfume/update/:perfumeId",
           element: <UpdatePerfume />,
         },
         // Related Fragram
