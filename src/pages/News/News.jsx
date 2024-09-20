@@ -9,9 +9,9 @@ const News = () => {
     const [celebrityPerfume, setCelebrityPerfume] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
-    const getCelebrityPerfume = () => {
+    const getNews = () => {
         axios
-            .get(`${import.meta.env.VITE_API_URL}/celebrityPerfumes`)
+            .get(`${import.meta.env.VITE_API_URL}/news`)
             .then((res) => {
                 console.log(res)
                 setCelebrityPerfume(res?.data?.data);
@@ -23,12 +23,12 @@ const News = () => {
             });
     }
     useEffect(() => {
-        getCelebrityPerfume()
+        getNews()
     }, []);
 
     const deleteItem = (item) => {
         if (window.confirm(`Are you sure you want to delete perfume:- ${item.perfume}`)) {
-            axios.delete(`${import.meta.env.VITE_API_URL}/perfume/${item._id}`).then((res) => {
+            axios.delete(`${import.meta.env.VITE_API_URL}/news/${item._id}`).then((res) => {
 
                 setPerfumeData(res.data.perfumeData)
                 toast.success(res.data.message, {
@@ -103,7 +103,7 @@ const News = () => {
                                             className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap "
                                         >
                                             <div className="ps-3">
-                                                <img src={item?.banner} width={"100px"} />
+                                                <img src={item?.image} width={"100px"} />
                                             </div>
                                         </th>
                                         <td className="px-6 py-4">{item?.title}</td>
@@ -112,12 +112,12 @@ const News = () => {
 
                                         <td className="px-6 py-4 space-x-3 flex justify-center items-center">
 
-                                            <Link
+                                            {/* <Link
                                                 to={`/updateNews/${item?._id}`}
                                                 className="font-medium text-blue-600  hover:underline"
                                             >
                                                 View/edit
-                                            </Link>
+                                            </Link> */}
                                             <button
                                                 className="font-medium text-red-600  hover:underline"
                                                 onClick={() => {

@@ -54,6 +54,7 @@ import AddNews from "./pages/News/AddNews";
 import UpdateNews from "./pages/News/UpdateNews";
 import SideBarReview from "./pages/SideBarReview/SideBarReview";
 import WriteAReview from "./pages/WriteAReview/WriteAReview";
+import ViewReview from "./pages/WriteAReview/ViewReview";
 
 
 const isUserLoggedIn = localStorage.getItem("isusrlgd");
@@ -262,6 +263,10 @@ const App = () => {
         {
           path: "/writeAReview",
           element: <WriteAReview />,
+        },
+        {
+          path: "/viewReview/:id",
+          element: <ViewReview />,
         },
 
 
