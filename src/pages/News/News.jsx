@@ -107,7 +107,7 @@ const News = () => {
                                             </div>
                                         </th>
                                         <td className="px-6 py-4">{item?.title}</td>
-                                        <td className="px-6 py-4">{parse(item?.content)}</td>
+                                        <td className="px-6 py-4">{parse(item?.description)}</td>
 
 
                                         <td className="px-6 py-4 space-x-3 flex justify-center items-center">

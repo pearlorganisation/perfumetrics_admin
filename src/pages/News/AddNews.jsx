@@ -54,8 +54,8 @@ const AddNews = () => {
 
         const formData = new FormData();
         const { banner } = data;
-        formData.append("banner", banner[0]);
-        formData.append("content", data.content);
+        formData.append("image", banner[0]);
+        formData.append("description", data.content);
         formData.append("title", data.title);
         formData.append("user", data.user);
         // formData.append("type", data.type?.value); // Save the selected category
