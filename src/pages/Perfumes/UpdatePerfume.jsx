@@ -48,8 +48,8 @@ const UpdatePerfume = () => {
   const [accords, setAccords] = useState([]);
   const [noteData, setNoteData] = useState([]);
   const [purchaseLinks, setPurchaseLinks] = useState([]);
-  const [pros, setPros] = useState([]);
-  const [cons, setCons] = useState([]);
+  const [pros, setPros] = useState(null);
+  const [cons, setCons] = useState(null);
   const [gendeR, setGender] = useState('');
   const [video, setVideo] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -74,20 +74,27 @@ const UpdatePerfume = () => {
       gender: gender.find(el => el.value === state?.ratingFragrams?.gender,
 
       ),
-      overall: state?.ratingFragrams?.overall
+      overall: state?.ratingFragrams?.overall,
+      midNote: state?.middleNote
 
-      // midNote: state?.midNote?.map((el) => {
-      //   return {
-      //     label: el.name || 'something is wrong on forms',
-      //     value: el._id
-      //   }
-      // }),
-      // baseNote: state?.baseNote?.map((el) => {
-      //   return {
-      //     label: el.name || 'something is wrong on forms',
-      //     value: el._id
-      //   }
-      // })
+        ?.map(ite => {
+          return {
+            label: ite?.name,
+            value: ite._id
+          }
+        }),
+      baseNote: state?.baseNote?.map((el) => {
+        return {
+          label: el.name,
+          value: el._id
+        }
+      }),
+      topNote: state?.topNote?.map((el) => {
+        return {
+          label: el.name,
+          value: el._id
+        }
+      })
 
     }
   });
@@ -102,7 +109,14 @@ const UpdatePerfume = () => {
     setCons(state.cons)
 
     console.log(state, "perfume")
-  }, [])
+  }, [state])
+
+  useEffect(() => {
+
+    console.log(pros, cons)
+
+    console.log(noteData, "noteData")
+  }, [noteData, state])
 
 
   useEffect(() => {
@@ -188,13 +202,16 @@ const UpdatePerfume = () => {
   }, []);
 
   const filterData = (data) => {
+
+    console.log("data submittion", data);
+
     let formData = new FormData();
 
-    let topNote = data?.topNote?.map((item) => item.value) || state?.topNote;
-    let midNote = data?.midNote?.map((item) => item.value) || state?.midNote;
-    let baseNote = data?.baseNote?.map((item) => item.value) || state?.baseNote;
+    let topNote = data?.topNote?.map((item) => item.value) || state?.topNotemap?.((item) => item._id);
+    let midNote = data?.midNote?.map((item) => item.value) || state?.midNotemap?.((item) => item._id);
+    let baseNote = data?.baseNote?.map((item) => item.value) || state?.baseNotemap?.((item) => item._id);
 
-
+    console.log("dfdsfsda", baseNote);
 
     let filteredAccords = accords.map((item) => {
       delete item.id;
@@ -203,12 +220,12 @@ const UpdatePerfume = () => {
 
     let filteredPros = pros.map((item) => {
       delete item.id;
-      return { title: item.pros };
+      return { title: item.title || item?.pros };
     });
 
     let filteredCons = cons.map((item) => {
       delete item.id;
-      return { title: item.cons };
+      return { title: item.cons || item?.title };
     });
     console.log("puschase links", purchaseLinks)
     const map = new Map()
@@ -227,7 +244,7 @@ const UpdatePerfume = () => {
 
     formData.append("banner", banner);
     formData.append("logo", logo);
-    formData.append('brand', brandId)
+    formData.append('brand', brandId || { label: state?.brand?.brand, value: state?.brand?._id }.value)
     formData.append('video', video)
     formData.append('ratingFragrams', JSON.stringify({
       longitivity: Number(data.longitivity),
@@ -275,11 +292,11 @@ const UpdatePerfume = () => {
     try {
       setIsLoading(true);
 
-      const res = await axios.patch(`${import.meta.env.VITE_API_URL}/perfume`, formData);
+      const res = await axios.patch(`${import.meta.env.VITE_API_URL}/perfume/${perfumeId}`, formData);
 
       setIsLoading(false);
       navigate('/perfumes');
-      toast.success("Saved successfully", {
+      toast.success("Updated successfully", {
         position: "top-center",
         style: {
           background: "green",
@@ -301,10 +318,10 @@ const UpdatePerfume = () => {
 
   useEffect(() => {
     dispatch(fetchBrands())
-    addAccord()
-    addPurchaseLink()
-    addCons();
-    addPros();
+    // addAccord()
+    // addPurchaseLink()
+    // addCons();
+    // addPros();
   }, [])
 
   useEffect(() => {
@@ -999,9 +1016,9 @@ const UpdatePerfume = () => {
                 <Controller
                   name="topNote"
                   control={control}
-                  render={({ field: { onChange, value, ref } }) => (
+                  render={({ field }) => (
                     <Select
-
+                      {...field}
 
 
                       defaultValue={state.topNote?.map(ite => {
@@ -1030,14 +1047,17 @@ const UpdatePerfume = () => {
                 <Controller
                   name="midNote"
                   control={control}
-                  render={({ field: { onChange, value, ref } }) => (
+                  render={({ field }) => (
                     <Select
-                      defaultValue={state.middleNote?.map(ite => {
-                        return {
-                          label: ite?.name,
-                          value: ite._id
-                        }
-                      })}
+                      {...field}
+                      defaultValue={state.middleNote
+
+                        ?.map(ite => {
+                          return {
+                            label: ite?.name,
+                            value: ite._id
+                          }
+                        })}
                       options={noteData.map((note) => ({
                         value: note._id,
                         label: note.name,

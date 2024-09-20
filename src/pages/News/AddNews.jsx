@@ -58,7 +58,7 @@ const AddNews = () => {
         formData.append("content", data.content);
         formData.append("title", data.title);
         formData.append("user", data.user);
-        formData.append("type", data.type?.value); // Save the selected category
+        // formData.append("type", data.type?.value); // Save the selected category
         // api call here
         postNewsBlog(formData);
     };
