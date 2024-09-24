@@ -1,27 +1,34 @@
 import { Skeleton } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Toaster, toast } from "sonner";
+import Pagination from "../../components/Pagination/Pagination";
+import SearchBar from "../../components/SearchBar/SearchBar";
 
 
 const PerfumeNotes = () => {
   const [noteData, setNoteData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  let [searchParams, setSearchParams] = useSearchParams();
+  const page = searchParams.get('page');
+  const search = searchParams.get('search');
+
+
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_API_URL}/note`)
+      .get(`${import.meta.env.VITE_API_URL}/note?Page=${page}&Limit=${10}&Search=${search || ''}`)
       .then((res) => {
 
-        setNoteData(res?.data?.data);
+        setNoteData(res?.data);
         setIsLoading(false);
       })
       .catch((err) => {
         console.log(err);
         setIsLoading(false);
       });
-  }, []);
+  }, [search, page]);
 
   const deleteItem = (item) => {
     if (window.confirm(`Are you sure you want to delete perfume:- ${item.name}`)) {
@@ -49,7 +56,10 @@ const PerfumeNotes = () => {
     <div>
       <Toaster />
       <div class="p-10 ">
-        <div class="flex items-center justify-end flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-8 bg-white ">
+        <div className="text-center text-2xl py-2">PERFUME NOTES</div>
+
+        <div class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-8 bg-white ">
+          <SearchBar />
           <Link
             to="/perfumenotes/add"
             className="bg-blue-600 rounded-md text-white px-3 py-1 font-semibold "
@@ -66,7 +76,7 @@ const PerfumeNotes = () => {
               <Skeleton animation="wave" height={50} />
             </>
           )}
-          {noteData && (
+          {noteData?.data && (
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50  ">
                 <tr>
@@ -82,7 +92,7 @@ const PerfumeNotes = () => {
                 </tr>
               </thead>
               <tbody>
-                {noteData.map((item, idx) => (
+                {noteData?.data?.map((item, idx) => (
                   <tr className="bg-white border-b   hover:bg-gray-50 ">
                     <th
                       scope="row"
@@ -119,6 +129,11 @@ const PerfumeNotes = () => {
             </table>
           )}
         </div>
+        <Pagination
+          searchParams={searchParams}
+          setSearchParams={setSearchParams}
+          totalPages={noteData?.totalPage}
+        />
       </div>
     </div>
   );
