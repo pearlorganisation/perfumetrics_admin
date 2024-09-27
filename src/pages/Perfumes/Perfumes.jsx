@@ -1,11 +1,14 @@
 import { Skeleton } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Toaster, toast } from "sonner";
+import SearchBar from "../../components/SearchBar/SearchBar";
+import Pagination from "../../components/Pagination/Pagination";
 
 const PerfumeNotes = () => {
   const [perfumeData, setPerfumeData] = useState(null);
+  let [searchParams, setSearchParams] = useSearchParams();
   const [isLoading, setIsLoading] = useState(true);
   const getPerfumes = () => {
     axios
@@ -55,7 +58,8 @@ const PerfumeNotes = () => {
       <Toaster />
 
       <div class="p-10 ">
-        <div class="flex items-center justify-end flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-8 bg-white ">
+        <div class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-8 bg-white ">
+          <SearchBar />
           <Link
             to="/perfume/add"
             className="bg-blue-600 rounded-md text-white px-3 py-1 font-semibold "
@@ -130,6 +134,11 @@ const PerfumeNotes = () => {
             </table>
           )}
         </div>
+        <Pagination
+          searchParams={searchParams}
+          setSearchParams={setSearchParams}
+          totalPages={19}
+        />
       </div>
     </div>
   );

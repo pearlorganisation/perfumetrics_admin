@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addBrands, deleteBrands, fetchBrands, updateBrands } from '../../features/actions/brandsAction';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import SearchBar from '../../components/SearchBar/SearchBar';
+import Pagination from '../../components/Pagination/Pagination';
 
 const PerfumeBrands = () => {
 
-
+    let [searchParams, setSearchParams] = useSearchParams();
     const [newBrand, setNewBrand] = useState('');
     const dispatch = useDispatch()
     const { brands, isLoading, isDeleted, isUpdated } = useSelector(state => state.brand)
@@ -35,6 +37,8 @@ const PerfumeBrands = () => {
 
     return (
         <div className="container mx-auto p-4 pt-12">
+            <SearchBar />
+
             <div className='flex justify-between py-3'>
                 <h1 className="text-2xl font-bold mb-4">Perfume Brands</h1> <button
                     onClick={() => { navigate('/addBrand') }}
@@ -91,6 +95,11 @@ const PerfumeBrands = () => {
                     Add Brand
                 </button>
             </div> */}
+            <Pagination
+                searchParams={searchParams}
+                setSearchParams={setSearchParams}
+                totalPages={19}
+            />
         </div>
     );
 };

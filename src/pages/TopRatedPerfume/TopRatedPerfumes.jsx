@@ -1,10 +1,13 @@
 import { Skeleton } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Toaster, toast } from "sonner";
+import Pagination from "../../components/Pagination/Pagination";
+import SearchBar from "../../components/SearchBar/SearchBar";
 //EDIT NOT REQUIRED
 const TopRatedPerfumes = () => {
+  let [searchParams, setSearchParams] = useSearchParams();
   const [perfumeData, setPerfumeData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -57,7 +60,9 @@ const TopRatedPerfumes = () => {
       <Toaster />
       <div class="p-10 ">
         <div className="text-center text-3xl font-medium">Top Rated Perfume</div>
-        <div class="flex items-center justify-end flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-8 bg-white ">
+        <div class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-8 bg-white ">
+          <SearchBar />
+
           <Link
             to="/addTopRatedPerfume"
             className="bg-blue-600 rounded-md text-white px-3 py-1 font-semibold "
@@ -127,6 +132,11 @@ const TopRatedPerfumes = () => {
             </table>
           )}
         </div>
+        <Pagination
+          searchParams={searchParams}
+          setSearchParams={setSearchParams}
+          totalPages={19}
+        />
       </div>
     </div>
   );

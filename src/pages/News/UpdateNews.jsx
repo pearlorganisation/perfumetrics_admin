@@ -13,7 +13,8 @@ const UpdateNews = () => {
     const [selectedBanner, setSelectedBanner] = useState(null);
     const [previewImage, setPreviewImage] = useState(null);
     const { celebrityPerfumeId } = useParams()
-    const [celebrityPerfume, setCelebrityPerfume] = useState(null);
+    const [newsData, setNewsData] = useState(null);
+    const { newsId } = useParams()
 
     const {
         register,
@@ -22,20 +23,21 @@ const UpdateNews = () => {
         control,
         watch,
         setValue, // Allows you to manually set field values
-        reset,
     } = useForm({
-        defaultValues: {},
+        defaultValues: {
+            title: newsData?.title
+        },
     });
 
-    const getCelebrityPerfume = (celebrityPerfumeId) => {
+    const getNews = (newsId) => {
         axios
-            .get(`${import.meta.env.VITE_API_URL}/celebrityPerfumes/${celebrityPerfumeId}`)
+            .get(`${import.meta.env.VITE_API_URL}/news/${newsId}`)
             .then((res) => {
                 console.log(res)
-                setCelebrityPerfume(res?.data?.data);
-                setValue("title", res?.data?.data?.title)
-                setValue("content", res?.data?.data?.content)
-                setPreviewImage(res?.data?.data?.banner);
+                setNewsData(res?.data?.data);
+                // setValue("title", res?.data?.data?.title)
+                // setValue("content", res?.data?.data?.content)
+                // setPreviewImage(res?.data?.data?.banner);
 
             })
             .catch((err) => {
@@ -44,8 +46,12 @@ const UpdateNews = () => {
             });
     }
     useEffect(() => {
-        getCelebrityPerfume(celebrityPerfumeId)
+        getNews(newsId)
     }, []);
+    useEffect(() => {
+        console.log(newsData, "newsData")
+    }, [newsData])
+
 
     const updateCelebrityPerfume = async (updateData) => {
         try {
@@ -104,6 +110,7 @@ const UpdateNews = () => {
                     <label className="font-medium">Title</label>
                     <input
                         {...register("title", { required: "title is required" })}
+                        defaultValue={newsData?.title}
                         type="text"
                         className="w-full mt-2 me-50 px-5 py-2 text-gray-500 border-slate-300 bg-transparent outline-none border focus:border-teal-400 shadow-sm rounded-lg"
                         placeholder="Enter a title for your blog"
