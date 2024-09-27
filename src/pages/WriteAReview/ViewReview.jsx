@@ -4,9 +4,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 const ViewReview = () => {
-    const [data, setData] = useState(); 
+    const [data, setData] = useState();
     const [loading, setLoading] = useState(false)
-    const {id} = useParams()
+    const { id } = useParams()
     const navigate = useNavigate()
 
     const getWriteAReview = (id) => {
@@ -21,19 +21,19 @@ const ViewReview = () => {
             });
     };
 
-   const  approveReview = async(id,status)=>{
-    
+    const approveReview = async (id, status) => {
+
         try {
-         const res =  await axios.put(`${import.meta.env.VITE_API_URL}/writeReview/${id}`,{status:status})
-         navigate(-1)
-         console.log(res,"res")
+            const res = await axios.put(`${import.meta.env.VITE_API_URL}/writeReview/${id}`, { status: status })
+            navigate(-1)
+            console.log(res, "res")
         } catch (error) {
-         toast.error("Server is Busy !! Try Again Later!!")
-         console.log(error)
+            toast.error("Server is Busy !! Try Again Later!!")
+            console.log(error)
         }
-     }
-   
-   
+    }
+
+
 
     useEffect(() => {
         // Use the id from params if needed
@@ -52,11 +52,11 @@ const ViewReview = () => {
                 <div className="flex flex-col space-y-4">
                     {/* Perfume Image */}
                     <div className="w-full flex justify-center">
-                        {data && data.img && (
+                        {data && data?.images && (
                             <img
-                                src={data.img}
+                                src={data.images[0]?.path}
                                 alt={data.name}
-                                className="w-32 h-32 object-cover rounded"
+                                className=" h-48 object-cover rounded"
                             />
                         )}
                     </div>
@@ -88,35 +88,35 @@ const ViewReview = () => {
 
                 {/* Close Button */}
                 <div className="mt-6 grid grid-cols-2 gap-4">
-                   {
-                    loading ?  <button
-                   type="button"
-                   className="w-full bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600"
-               >
-                   Loading...
-               </button> :  <button
-                         onClick={()=>{
-                            approveReview(id,"discarded")
-                        }}
-                        className="w-full bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600"
-                    >
-                        Discarded
-                    </button>
-                   }
                     {
                         loading ? <button
-                       type="button"
-                        className="w-full bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600"
-                    >
-                        Loading...
-                    </button> : <button
-                        onClick={()=>{
-                            approveReview(id,"approved")
-                        }}
-                        className="w-full bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600"
-                    >
-                        Approve
-                    </button>
+                            type="button"
+                            className="w-full bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600"
+                        >
+                            Loading...
+                        </button> : <button
+                            onClick={() => {
+                                approveReview(id, "discarded")
+                            }}
+                            className="w-full bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600"
+                        >
+                            Discarded
+                        </button>
+                    }
+                    {
+                        loading ? <button
+                            type="button"
+                            className="w-full bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600"
+                        >
+                            Loading...
+                        </button> : <button
+                            onClick={() => {
+                                approveReview(id, "approved")
+                            }}
+                            className="w-full bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600"
+                        >
+                            Approve
+                        </button>
                     }
                 </div>
             </div>

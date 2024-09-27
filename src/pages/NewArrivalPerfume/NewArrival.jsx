@@ -7,7 +7,7 @@ import { Toaster, toast } from "sonner";
 const NewArrival = () => {
   const [perfumeData, setPerfumeData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  
+
   useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_API_URL}/newArrival`)
@@ -23,7 +23,7 @@ const NewArrival = () => {
   }, []);
 
   const deleteItem = (item) => {
-    if(window.confirm(`Are you sure you want to delete perfume:- ${item._id}`)){
+    if (window.confirm(`Are you sure you want to remove perfume:- ${item._id}`)) {
       axios.delete(`${import.meta.env.VITE_API_URL}/newArrival/${item._id}`).then((res) => {
 
         setPerfumeData(res.data.perfumeData)
@@ -34,13 +34,13 @@ const NewArrival = () => {
           },
         });
       }).catch(err => {
-        toast.error("There was some issue deleting the perfume", {
+        toast.error("There was some issue removing the perfume", {
           style: {
             background: "red",
             color: "white",
           },
         });
-        
+
       })
     }
   }
@@ -51,6 +51,7 @@ const NewArrival = () => {
       <Toaster />
 
       <div class="p-10 ">
+        <div className="text-center text-3xl font-medium">New Arrival Perfume</div>
         <div class="flex items-center justify-end flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-8 bg-white ">
           <Link
             to="/newArrival/add"
@@ -61,12 +62,12 @@ const NewArrival = () => {
         </div>
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
           {isLoading && (
-           <>
-           <Skeleton animation="wave" height={50} />
-           <Skeleton animation="wave" height={50} />
-           <Skeleton animation="wave" height={50} />
-           <Skeleton animation="wave" height={50} />
-         </>
+            <>
+              <Skeleton animation="wave" height={50} />
+              <Skeleton animation="wave" height={50} />
+              <Skeleton animation="wave" height={50} />
+              <Skeleton animation="wave" height={50} />
+            </>
           )}
           {perfumeData && (
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
@@ -111,7 +112,7 @@ const NewArrival = () => {
                           deleteItem(item)
                         }}
                       >
-                        Delete
+                        Remove
                       </button>
                     </td>
                   </tr>

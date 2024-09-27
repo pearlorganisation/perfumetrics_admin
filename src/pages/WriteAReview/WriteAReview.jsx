@@ -6,7 +6,7 @@ import { Toaster, toast } from "sonner";
 import parse from 'html-react-parser';
 
 const WriteAReview = () => {
-    const [celebrityPerfume, setCelebrityPerfume] = useState(null);
+    const [writeReviewData, setWriteReveiwData] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
     const getWriteAReview = () => {
@@ -14,7 +14,7 @@ const WriteAReview = () => {
             .get(`${import.meta.env.VITE_API_URL}/writeReview`)
             .then((res) => {
                 console.log(res)
-                setCelebrityPerfume(res?.data?.data);
+                setWriteReveiwData(res?.data?.data);
                 setIsLoading(false);
             })
             .catch((err) => {
@@ -27,17 +27,17 @@ const WriteAReview = () => {
     }, []);
 
     const deleteItem = (item) => {
-        if (window.confirm(`Are you sure you want to delete perfume:- ${item.perfume}`)) {
-            axios.delete(`${import.meta.env.VITE_API_URL}/perfume/${item._id}`).then((res) => {
+        if (window.confirm(`Are you sure you want to delete review:- ${item.perfumeName}`)) {
+            axios.delete(`${import.meta.env.VITE_API_URL}/writeReview/${item._id}`).then((res) => {
 
-                setPerfumeData(res.data.perfumeData)
+                setWriteReveiwData(res.data.perfumeData)
                 toast.success(res.data.message, {
                     style: {
                         background: "green",
                         color: "white",
                     },
                 });
-                getPerfumes()
+                getWriteAReview()
 
             }).catch(err => {
                 toast.error("There was some issue deleting the perfume", {
@@ -76,7 +76,7 @@ const WriteAReview = () => {
                             <Skeleton animation="wave" height={50} />
                         </>
                     )}
-                    {celebrityPerfume && (
+                    {writeReviewData && (
                         <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
                             <thead className="text-xs text-gray-700 uppercase bg-gray-50  ">
                                 <tr>
@@ -102,7 +102,7 @@ const WriteAReview = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {celebrityPerfume?.map((item, idx) => (
+                                {writeReviewData?.map((item, idx) => (
                                     <tr className="bg-white border-b   hover:bg-gray-50 ">
                                         <th
                                             scope="row"
@@ -134,7 +134,7 @@ const WriteAReview = () => {
                                             <button
                                                 className="font-medium text-red-600  hover:underline"
                                                 onClick={() => {
-                                                    // deleteItem(item)
+                                                    deleteItem(item)
                                                 }}
                                             >
                                                 Delete

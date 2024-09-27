@@ -394,7 +394,7 @@ const AddTopRatedPerfume = () => {
                         setBrandId(val?.value)
                       }}
 
-                    // closeMenuOnSelect={true}
+
                     />
 
                   </div>

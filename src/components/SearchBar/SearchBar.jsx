@@ -11,6 +11,8 @@ const SearchBar = () => {
         const params = new URLSearchParams(location.search);
         if (term) {
             params.set(name, term);
+            params.set('page', 1);
+
         } else {
             params.delete(name);
         }

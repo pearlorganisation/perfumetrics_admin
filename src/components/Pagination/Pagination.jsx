@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useDebouncedCallback } from 'use-debounce';
 
 const Pagination = ({ searchParams, setSearchParams, totalPages }) => {
-    const [currentPage, setCurrentPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState(Number(searchParams.get('page')) || 1);
     const location = useLocation();
+
     const navigate = useNavigate();
     const handlePagination = useDebouncedCallback((name, term) => {
         console.log(name, term)
@@ -16,6 +17,11 @@ const Pagination = ({ searchParams, setSearchParams, totalPages }) => {
         }
         navigate(`${location.pathname}?${params.toString()}`);
     }, 500);
+
+    useEffect(() => {
+        setCurrentPage(Number(searchParams.get('page')))
+    }, [Number(searchParams.get('page'))])
+
 
 
 

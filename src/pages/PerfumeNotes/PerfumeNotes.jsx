@@ -14,9 +14,8 @@ const PerfumeNotes = () => {
   const page = searchParams.get('page');
   const search = searchParams.get('search');
 
-
-
-  useEffect(() => {
+  const getNotesData = () => {
+    setIsLoading(true);
     axios
       .get(`${import.meta.env.VITE_API_URL}/note?Page=${page}&Limit=${10}&Search=${search || ''}`)
       .then((res) => {
@@ -28,6 +27,10 @@ const PerfumeNotes = () => {
         console.log(err);
         setIsLoading(false);
       });
+  }
+
+  useEffect(() => {
+    getNotesData()
   }, [search, page]);
 
   const deleteItem = (item) => {
@@ -68,14 +71,14 @@ const PerfumeNotes = () => {
           </Link>
         </div>
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-          {isLoading && (
+          {/* {isLoading && (
             <>
               <Skeleton animation="wave" height={50} />
               <Skeleton animation="wave" height={50} />
               <Skeleton animation="wave" height={50} />
               <Skeleton animation="wave" height={50} />
             </>
-          )}
+          )} */}
           {noteData?.data && (
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50  ">
@@ -91,41 +94,61 @@ const PerfumeNotes = () => {
                   </th>
                 </tr>
               </thead>
-              <tbody>
-                {noteData?.data?.map((item, idx) => (
-                  <tr className="bg-white border-b   hover:bg-gray-50 ">
-                    <th
-                      scope="row"
-                      className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap "
-                    >
-                      <div className="ps-3">
-                        <img src={item.image} width={"50px"} />
-                      </div>
-                    </th>
-                    <td className="px-6 py-4">{item.name}</td>
+              {
+                isLoading ? Array.from({ length: 10 }).map(item => {
+                  return <tbody class="animate-pulse">
+                    <tr class="bg-gray-200 border-b">
+                      <th scope="row" class="flex items-center px-6 py-4">
+                        <div class="ps-3 h-10 w-10 bg-gray-300 rounded"></div>
+                      </th>
+                      <td class="px-6 py-4">
+                        <div class="h-4 bg-gray-300 rounded w-1/2"></div>
+                      </td>
+                      <td class="px-6 py-4">
+                        <div class="h-4 bg-gray-300 rounded w-1/4"></div>
+                      </td>
+                      <td class="px-6 py-4">
+                        <div class="h-4 bg-gray-300 rounded w-1/4"></div>
+                      </td>
+                    </tr>
+
+                  </tbody>
+                }) : <tbody>
+                  {noteData?.data?.map((item, idx) => (
+                    <tr className="bg-white border-b   hover:bg-gray-50 ">
+                      <th
+                        scope="row"
+                        className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap "
+                      >
+                        <div className="ps-3">
+                          <img src={item.image} width={"50px"} />
+                        </div>
+                      </th>
+                      <td className="px-6 py-4">{item.name}</td>
 
 
-                    <td className="px-6 py-4">
-                      <Link
-                        to={`/perfumenotes/update/${item?._id}`}
-                        className="font-medium text-blue-600  hover:underline"
-                      >
-                        View/edit
-                      </Link>
-                    </td>
-                    <td className="px-6 py-4">
-                      <button
-                        className="font-medium text-red-600  hover:underline"
-                        onClick={() => {
-                          deleteItem(item)
-                        }}
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
+                      <td className="px-6 py-4">
+                        <Link
+                          to={`/perfumenotes/update/${item?._id}`}
+                          className="font-medium text-blue-600  hover:underline"
+                        >
+                          View/edit
+                        </Link>
+                      </td>
+                      <td className="px-6 py-4">
+                        <button
+                          className="font-medium text-red-600  hover:underline"
+                          onClick={() => {
+                            deleteItem(item)
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              }
             </table>
           )}
         </div>

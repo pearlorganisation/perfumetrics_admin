@@ -3,32 +3,32 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Toaster, toast } from "sonner";
-
+//EDIT NOT REQUIRED
 const TopRatedPerfumes = () => {
   const [perfumeData, setPerfumeData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const getPerfumes = () => {
     axios
-    .get(`${import.meta.env.VITE_API_URL}/topRatedPerfume`)
-    .then((res) => {
-      console.log(res)
-      setPerfumeData(res?.data);
-      setIsLoading(false);
-    })
-    .catch((err) => {
-      console.log(err);
-      setIsLoading(false);
-    });
+      .get(`${import.meta.env.VITE_API_URL}/topRatedPerfume`)
+      .then((res) => {
+        console.log(res)
+        setPerfumeData(res?.data);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
   }
 
   useEffect(() => {
-   getPerfumes()
+    getPerfumes()
   }, []);
 
   const deleteItem = (item) => {
     console.log('item', item);
-    if (window.confirm(`Are you sure you want to delete perfume:- ${item._id}`)) {
+    if (window.confirm(`Are you sure you want to remove perfume:- ${item._id}`)) {
       axios.delete(`${import.meta.env.VITE_API_URL}/topRatedPerfume/${item._id}`).then((res) => {
 
         setPerfumeData(res.data.perfumeData)
@@ -55,8 +55,8 @@ const TopRatedPerfumes = () => {
   return (
     <div>
       <Toaster />
-
       <div class="p-10 ">
+        <div className="text-center text-3xl font-medium">Top Rated Perfume</div>
         <div class="flex items-center justify-end flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-8 bg-white ">
           <Link
             to="/addTopRatedPerfume"
@@ -118,7 +118,7 @@ const TopRatedPerfumes = () => {
                           deleteItem(item)
                         }}
                       >
-                        Delete
+                        Remove
                       </button>
                     </td>
                   </tr>
