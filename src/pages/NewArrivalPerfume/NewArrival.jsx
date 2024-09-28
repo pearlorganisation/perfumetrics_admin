@@ -3,12 +3,14 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Toaster, toast } from "sonner";
+import ModalWrapper from "../../components/Modal/ModalWrapper";
+import AddNewArrival from "./AddNewArrival";
 
 const NewArrival = () => {
   const [perfumeData, setPerfumeData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
+  const [isShowing, setIsShowing] = useState(false)
+  const getNewArrival = () => {
     axios
       .get(`${import.meta.env.VITE_API_URL}/newArrival`)
       .then((res) => {
@@ -20,6 +22,9 @@ const NewArrival = () => {
         console.log(err);
         setIsLoading(false);
       });
+  }
+  useEffect(() => {
+    getNewArrival()
   }, []);
 
   const deleteItem = (item) => {
@@ -33,6 +38,8 @@ const NewArrival = () => {
             color: "white",
           },
         });
+        getNewArrival()
+
       }).catch(err => {
         toast.error("There was some issue removing the perfume", {
           style: {
@@ -99,10 +106,11 @@ const NewArrival = () => {
 
                     <td className="px-6 py-4">
                       <Link
-                        to={`/newArrival/update/${item?._id}`}
+                        to={`${item?.link}`}
+                        target="_blank"
                         className="font-medium text-blue-600  hover:underline"
                       >
-                        View/edit
+                        View
                       </Link>
                     </td>
                     <td className="px-6 py-4">
@@ -122,6 +130,7 @@ const NewArrival = () => {
           )}
         </div>
       </div>
+      {isShowing && <ModalWrapper isShowing={isShowing} setIsShowing={setIsShowing}> <AddNewArrival setIsShowing={setIsShowing} /> </ModalWrapper>}
     </div>
   );
 };

@@ -27,9 +27,10 @@ const News = () => {
     }, []);
 
     const deleteItem = (item) => {
-        if (window.confirm(`Are you sure you want to delete perfume:- ${item.perfume}`)) {
+        if (window.confirm(`Are you sure you want to delete perfume:- ${item.title}`)) {
             axios.delete(`${import.meta.env.VITE_API_URL}/news/${item._id}`).then((res) => {
 
+                getNews()
                 setPerfumeData(res.data.perfumeData)
                 toast.success(res.data.message, {
                     style: {
@@ -37,7 +38,7 @@ const News = () => {
                         color: "white",
                     },
                 });
-                getPerfumes()
+
 
             }).catch(err => {
                 toast.error("There was some issue deleting the perfume", {
@@ -121,7 +122,7 @@ const News = () => {
                                             <button
                                                 className="font-medium text-red-600  hover:underline"
                                                 onClick={() => {
-                                                    // deleteItem(item)
+                                                    deleteItem(item)
                                                 }}
                                             >
                                                 Delete
