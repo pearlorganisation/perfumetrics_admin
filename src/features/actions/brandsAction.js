@@ -2,10 +2,10 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 // Async thunk for fetching perfume brands from an API
-export const fetchBrands = createAsyncThunk("brands/fetchBrands", async () => {
-  const response = await axios.get(`${import.meta.env.VITE_API_URL}/brand`);
+export const fetchBrands = createAsyncThunk("brands/fetchBrands", async ({page,search}) => {
+  const response = await axios.get(`${import.meta.env.VITE_API_URL}/brand?Page=${page||1}&Search=${search||''}`);
   console.log(response.data, "response.data");
-  return response.data?.data;
+  return response.data;
 });
 
 // Async thunk for add perfume brands from an API
