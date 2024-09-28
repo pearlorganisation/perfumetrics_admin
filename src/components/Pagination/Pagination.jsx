@@ -3,9 +3,13 @@ import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useDebouncedCallback } from 'use-debounce';
 
 const Pagination = ({ searchParams, setSearchParams, totalPages }) => {
-    const [currentPage, setCurrentPage] = useState(Number(searchParams.get('page')) || 1);
+    const [currentPage, setCurrentPage] = useState((Number(searchParams?.get('page'))) || 1);
     const location = useLocation();
 
+
+    useEffect(()=>{
+        console.log("currentPage",Number(searchParams.get('page')));
+    },[Number(searchParams.get('page'))]);
     const navigate = useNavigate();
     const handlePagination = useDebouncedCallback((name, term) => {
         console.log(name, term)
@@ -19,7 +23,8 @@ const Pagination = ({ searchParams, setSearchParams, totalPages }) => {
     }, 500);
 
     useEffect(() => {
-        setCurrentPage(Number(searchParams.get('page')))
+        let currPage = Number(searchParams.get('page'));
+        setCurrentPage(currPage < 1 ? 1:currPage);
     }, [Number(searchParams.get('page'))])
 
 

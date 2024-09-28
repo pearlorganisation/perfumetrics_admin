@@ -10,12 +10,14 @@ const PerfumeNotes = () => {
   const [perfumeData, setPerfumeData] = useState(null);
   let [searchParams, setSearchParams] = useSearchParams();
   const [isLoading, setIsLoading] = useState(true);
+  const page = searchParams.get('page');
+  const search = searchParams.get('search');
   const getPerfumes = () => {
     axios
-      .get(`${import.meta.env.VITE_API_URL}/perfume`)
+      .get(`${import.meta.env.VITE_API_URL}/perfume/?Page=${page}&Search=${search||''}`)
       .then((res) => {
         console.log(res)
-        setPerfumeData(res?.data?.data);
+        setPerfumeData(res?.data);
         setIsLoading(false);
       })
       .catch((err) => {
@@ -25,7 +27,7 @@ const PerfumeNotes = () => {
   }
   useEffect(() => {
     getPerfumes()
-  }, []);
+  }, [search,page]);
 
   const deleteItem = (item) => {
     if (window.confirm(`Are you sure you want to delete perfume:- ${item.perfume}`)) {
@@ -51,7 +53,11 @@ const PerfumeNotes = () => {
       })
     }
   }
+  
 
+  useEffect(()=>{
+  console.log("perfumeData",perfumeData);
+  },[perfumeData])
 
   return (
     <div>
@@ -93,8 +99,8 @@ const PerfumeNotes = () => {
                 </tr>
               </thead>
               <tbody>
-                {perfumeData.map((item, idx) => (
-                  <tr className="bg-white border-b   hover:bg-gray-50 ">
+                {perfumeData?.data && perfumeData.data.map((item, idx) => (
+                  <tr key={idx} className="bg-white border-b   hover:bg-gray-50 ">
                     <th
                       scope="row"
                       className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap "
@@ -134,11 +140,14 @@ const PerfumeNotes = () => {
             </table>
           )}
         </div>
-        <Pagination
+
+{  perfumeData &&  <Pagination
           searchParams={searchParams}
           setSearchParams={setSearchParams}
-          totalPages={19}
-        />
+          totalPages={
+            perfumeData.totalPage}
+        />}
+      
       </div>
     </div>
   );
