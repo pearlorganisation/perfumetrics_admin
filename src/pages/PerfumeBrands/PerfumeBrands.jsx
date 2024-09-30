@@ -4,15 +4,17 @@ import { addBrands, deleteBrands, fetchBrands, updateBrands } from '../../featur
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import Pagination from '../../components/Pagination/Pagination';
+import { Skeleton } from '@mui/material';
 
 const PerfumeBrands = () => {
 
     let [searchParams, setSearchParams] = useSearchParams();
+    const [brand ,setBrand] = useState();
     const page = searchParams.get('page');
     const search = searchParams.get('search');
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     const { brands, isLoading, isDeleted, isUpdated } = useSelector(state => state.brand)
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
 
 
@@ -60,6 +62,13 @@ const PerfumeBrands = () => {
                     Add Brand
                 </button>
             </div>
+            {isLoading && (
+                        <>
+                            <Skeleton animation="wave" height={50} />
+                            <Skeleton animation="wave" height={50} />
+                            <Skeleton animation="wave" height={50} />
+                        </>
+                    )}
             <table className="min-w-full bg-white border border-gray-200">
                 <thead>
                     <tr>

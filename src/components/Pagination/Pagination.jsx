@@ -24,7 +24,7 @@ const Pagination = ({ searchParams, setSearchParams, totalPages }) => {
 
     useEffect(() => {
         let currPage = Number(searchParams.get('page'));
-        setCurrentPage(currPage < 1 ? 1:currPage);
+        setCurrentPage(currPage < 1 ? 1:currPage)
     }, [Number(searchParams.get('page'))])
 
 

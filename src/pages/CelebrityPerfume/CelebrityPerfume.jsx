@@ -1,20 +1,26 @@
-import { Skeleton } from "@mui/material";
+import {  Skeleton } from "@mui/material";
+import Pagination from "../../components/Pagination/Pagination";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Toaster, toast } from "sonner";
 import parse from 'html-react-parser';
+import SearchBar from "../../components/SearchBar/SearchBar";
 
 const CelebrityPerfume = () => {
     const [celebrityPerfume, setCelebrityPerfume] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    let [searchParams, setSearchParams] = useSearchParams();
 
-    const getCelebrityPerfume = () => {
+    const page = searchParams.get('page');
+    const search = searchParams.get('search');
+
+    const getCelebrityPerfume = ({page,search}) => {
         axios
-            .get(`${import.meta.env.VITE_API_URL}/celebrityPerfumes`)
+            .get(`${import.meta.env.VITE_API_URL}/celebrityPerfumes/admin?Page=${page||1}&Search=${search||''}`)
             .then((res) => {
                 console.log(res)
-                setCelebrityPerfume(res?.data?.data);
+                setCelebrityPerfume(res?.data);
                 setIsLoading(false);
             })
             .catch((err) => {
@@ -23,14 +29,18 @@ const CelebrityPerfume = () => {
             });
     }
     useEffect(() => {
-        getCelebrityPerfume()
+        getCelebrityPerfume({})
     }, []);
+
+    useEffect(() => {
+        getCelebrityPerfume({page,search})
+    }, [search,page]);
 
     const deleteItem = (item) => {
         if (window.confirm(`Are you sure you want to delete perfume:- ${item.perfume}`)) {
             axios.delete(`${import.meta.env.VITE_API_URL}/perfume/${item._id}`).then((res) => {
 
-                setPerfumeData(res.data.perfumeData)
+                setPerfumeData(res.data)
                 toast.success(res.data.message, {
                     style: {
                         background: "green",
@@ -58,6 +68,10 @@ const CelebrityPerfume = () => {
 
             <div class="p-10 ">
                 <div className="text-center text-3xl font-medium">Celebrity Perfume</div>
+                <div className="grid grid-cols-2 justify-center items-center ">
+                  <div className="space-y-4 md:space-y-0 pb-8">
+                  <SearchBar/>
+                    </div>
                 <div class="flex items-center justify-end flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-8 bg-white ">
 
                     <Link
@@ -67,6 +81,8 @@ const CelebrityPerfume = () => {
                         Add
                     </Link>
                 </div>
+                </div>
+                
                 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                     {isLoading && (
                         <>
@@ -76,7 +92,7 @@ const CelebrityPerfume = () => {
                             <Skeleton animation="wave" height={50} />
                         </>
                     )}
-                    {celebrityPerfume && (
+                    {celebrityPerfume &&celebrityPerfume.data && (
                         <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
                             <thead className="text-xs text-gray-700 uppercase bg-gray-50  ">
                                 <tr>
@@ -96,7 +112,7 @@ const CelebrityPerfume = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {celebrityPerfume?.map((item, idx) => (
+                                {celebrityPerfume.data.map((item, idx) => (
                                     <tr className="bg-white border-b   hover:bg-gray-50 ">
                                         <th
                                             scope="row"
@@ -133,7 +149,13 @@ const CelebrityPerfume = () => {
                             </tbody>
                         </table>
                     )}
+
                 </div>
+                {celebrityPerfume &&<Pagination
+          searchParams={searchParams}
+          setSearchParams={setSearchParams}
+          totalPages={celebrityPerfume.totalPage}
+        />}
             </div>
         </div>
     );
