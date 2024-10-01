@@ -29,11 +29,14 @@ const AddNewArrival = ({ setIsShowing }) => {
 
 
   useEffect(() => {
-    dispatch(fetchBrands())
+    console.log("brands");
+    dispatch(fetchBrands());
   }, [])
+
+
   useEffect(() => {
     if (brands.length > 0) {
-      const temp = brands?.map(item => {
+      const temp = brands.data?.map(item => {
         return {
           value: item?._id,
           label: item?.brand

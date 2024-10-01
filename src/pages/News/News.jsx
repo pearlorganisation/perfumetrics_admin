@@ -87,9 +87,9 @@ const News = () => {
                                     <th scope="col" className="px-6 py-3">
                                         Name
                                     </th>
-                                    <th scope="col" className="px-6 py-3">
+                                    {/* <th scope="col" className="px-6 py-3">
                                         Content
-                                    </th>
+                                    </th> */}
 
                                     <th scope="col" className="col-span-2 px-6 py-3 text-center">
                                         Actions
@@ -108,7 +108,7 @@ const News = () => {
                                             </div>
                                         </th>
                                         <td className="px-6 py-4">{item?.title}</td>
-                                        <td className="px-6 py-4">{parse(item?.description)}</td>
+                                        {/* <td className="px-6 py-4">{parse(item?.description?.slice(0, 10))}</td> */}
 
 
                                         <td className="px-6 py-4 space-x-3 flex justify-center items-center">

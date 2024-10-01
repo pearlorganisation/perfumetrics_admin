@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Toaster, toast } from "sonner";
 import { ClipLoader } from "react-spinners";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import JoditEditor from "jodit-react";
 import axios from "axios";
 
@@ -15,6 +15,7 @@ const UpdateNews = () => {
     const { celebrityPerfumeId } = useParams()
     const [newsData, setNewsData] = useState(null);
     const { newsId } = useParams()
+    const navigate = useNavigate()
 
     const {
         register,
@@ -25,7 +26,8 @@ const UpdateNews = () => {
         setValue, // Allows you to manually set field values
     } = useForm({
         defaultValues: {
-            title: newsData?.title
+            // title: newsData?.title,
+            // content: newsData?.content
         },
     });
 
@@ -35,9 +37,9 @@ const UpdateNews = () => {
             .then((res) => {
                 console.log(res)
                 setNewsData(res?.data?.data);
-                // setValue("title", res?.data?.data?.title)
-                // setValue("content", res?.data?.data?.content)
-                // setPreviewImage(res?.data?.data?.banner);
+                setValue("title", res?.data?.data?.title)
+                setValue("content", res?.data?.data?.content)
+                setPreviewImage(res?.data?.data?.image);
 
             })
             .catch((err) => {
@@ -56,7 +58,8 @@ const UpdateNews = () => {
     const updateCelebrityPerfume = async (updateData) => {
         try {
             setIsLoading(true)
-            const restul = await axios.patch(`${import.meta.env.VITE_API_URL}/celebrityPerfumes/${celebrityPerfumeId}`, updateData)
+            const restul = await axios.patch(`${import.meta.env.VITE_API_URL}/news/${newsId}`, updateData)
+            navigate('/news')
             setIsLoading(false)
         } catch (error) {
             toast.error("Error on Update Perfume!!")
@@ -73,7 +76,7 @@ const UpdateNews = () => {
         const formData = new FormData();
         const { banner } = data;
         if (selectedBanner) {
-            formData.append("banner", selectedBanner);
+            formData.append("image", selectedBanner);
         }
         formData.append("content", data.content);
         formData.append("title", data.title);

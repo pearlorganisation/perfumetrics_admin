@@ -58,6 +58,7 @@ const AddNews = () => {
         formData.append("description", data.content);
         formData.append("title", data.title);
         formData.append("user", data.user);
+        formData.append("details", data.details);
         // formData.append("type", data.type?.value); // Save the selected category
         // api call here
         postNewsBlog(formData);
@@ -101,6 +102,8 @@ const AddNews = () => {
                         <span className="text-red-500">{errors.title.message}</span>
                     )}
 
+
+
                     <div>
                         {/* Title */}
                         <label className="font-medium">Published By</label>
@@ -135,6 +138,20 @@ const AddNews = () => {
                             <span className="text-red-500">
                                 {errors.type.message}
                             </span>
+                        )}
+                    </div>
+                    <div>
+                        <label className="font-medium">Description</label>
+                        <textarea
+                            rows={10}
+                            cols={6}
+                            {...register("details", { required: "Description is required" })}
+                            type="text"
+                            className="w-full mt-2 me-50 px-5 py-2 text-gray-500 border-slate-300 bg-transparent outline-none border focus:border-teal-400 shadow-sm rounded-lg"
+                            placeholder="Enter a title for your blog"
+                        />
+                        {errors.details && (
+                            <span className="text-red-500">{errors.details.message}</span>
                         )}
                     </div>
 
