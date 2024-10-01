@@ -822,7 +822,7 @@ const UpdatePerfume = () => {
               </div>
 
               {/* pros */}
-              <div className="col-span-2">
+              {/* <div className="col-span-2">
                 <div className="col-span-2 md:col-span-1">
                   <div className="w-full flex justify-between pb-1">
                     <label
@@ -994,7 +994,7 @@ const UpdatePerfume = () => {
                     </div>
                   )}
                 </div>
-              </div>
+              </div> */}
 
               <div className="col-span-2">
                 <div className="w-full border border-b border-x-0 border-t-0 mb-2">
