@@ -115,13 +115,13 @@ const TopRatedPerfumes = () => {
                     <td className="px-6 py-4">{item.perfumeName}</td>
 
                     <td className="px-6 py-4">
-                      <Link
+                      {/* <Link
                         to='#'
                         // to={`/perfume/update/${item?.perfumeId}`}
                         className="font-medium text-blue-600  hover:underline"
                       >
                         View/edit
-                      </Link>
+                      </Link> */}
                     </td>
                     <td className="px-6 py-4">
                       <button

@@ -289,6 +289,7 @@ const AddTopRatedPerfume = () => {
     try {
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/topRatedPerfume`, { topRatedPerfume: perfume })
       console.log(response, "response")
+      navigate('/topRatedPerfume')
       toast.success("Successfuly Added!!", { position: 'top-center' })
     } catch (error) {
       console.log(error)

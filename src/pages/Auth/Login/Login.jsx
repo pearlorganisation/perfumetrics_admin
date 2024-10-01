@@ -15,9 +15,9 @@ function Login() {
   const myPass = "admin@123";
 
   useEffect(() => {
-    if(localStorage.getItem('isusrlgd')) localStorage.clear()
+    if (localStorage.getItem('isusrlgd')) localStorage.clear()
   }, [])
-  
+
   const onSubmit = (data) => {
     // Handle form submission here
     if (data.userName === myUserName && data.password === myPass) {

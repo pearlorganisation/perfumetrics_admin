@@ -37,8 +37,8 @@ const CelebrityPerfume = () => {
     }, [search,page]);
 
     const deleteItem = (item) => {
-        if (window.confirm(`Are you sure you want to delete perfume:- ${item.perfume}`)) {
-            axios.delete(`${import.meta.env.VITE_API_URL}/perfume/${item._id}`).then((res) => {
+        if (window.confirm(`Are you sure you want to delete Celebrity Perfume:- ${item.title}`)) {
+            axios.delete(`${import.meta.env.VITE_API_URL}/celebrityPerfumes/${item._id}`).then((res) => {
 
                 setPerfumeData(res.data)
                 toast.success(res.data.message, {
@@ -47,7 +47,8 @@ const CelebrityPerfume = () => {
                         color: "white",
                     },
                 });
-                getPerfumes()
+                getCelebrityPerfume()
+
 
             }).catch(err => {
                 toast.error("There was some issue deleting the perfume", {
@@ -66,13 +67,13 @@ const CelebrityPerfume = () => {
         <div>
             <Toaster />
 
-            <div class="p-10 ">
+            <div className="p-10 ">
                 <div className="text-center text-3xl font-medium">Celebrity Perfume</div>
                 <div className="grid grid-cols-2 justify-center items-center ">
                   <div className="space-y-4 md:space-y-0 pb-8">
                   <SearchBar/>
                     </div>
-                <div class="flex items-center justify-end flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-8 bg-white ">
+                <div className="flex items-center justify-end flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-8 bg-white ">
 
                     <Link
                         to="/addCelebrityPerfume"
@@ -113,7 +114,7 @@ const CelebrityPerfume = () => {
                             </thead>
                             <tbody>
                                 {celebrityPerfume.data.map((item, idx) => (
-                                    <tr className="bg-white border-b   hover:bg-gray-50 ">
+                                    <tr key={idx} className="bg-white border-b   hover:bg-gray-50 ">
                                         <th
                                             scope="row"
                                             className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap "
@@ -137,7 +138,7 @@ const CelebrityPerfume = () => {
                                             <button
                                                 className="font-medium text-red-600  hover:underline"
                                                 onClick={() => {
-                                                    // deleteItem(item)
+                                                    deleteItem(item)
                                                 }}
                                             >
                                                 Delete

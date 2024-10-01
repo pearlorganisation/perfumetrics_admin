@@ -5,6 +5,8 @@ import React, { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Toaster, toast } from "sonner";
 import SearchBar from "../../components/SearchBar/SearchBar";
+import ModalWrapper from "../../components/Modal/ModalWrapper";
+import AddNewArrival from "./AddNewArrival";
 
 const NewArrival = () => {
   const [perfumeData, setPerfumeData] = useState(null);
@@ -12,6 +14,7 @@ const NewArrival = () => {
   let [searchParams, setSearchParams] = useSearchParams();
   const page = searchParams.get('page');
   const search = searchParams.get('search');
+  const [isShowing, setIsShowing] = useState(false)
 
 
   function fetchNewArrival({page,search})
@@ -32,7 +35,8 @@ const NewArrival = () => {
 
   useEffect(() => {
     fetchNewArrival({})
-  }, []);
+  },[]);
+
 
   useEffect(() => {
     fetchNewArrival({search,page})
@@ -49,6 +53,9 @@ const NewArrival = () => {
             color: "white",
           },
         });
+        fetchNewArrival({})
+
+
       }).catch(err => {
         toast.error("There was some issue removing the perfume", {
           style: {
@@ -66,13 +73,13 @@ const NewArrival = () => {
     <div>
       <Toaster />
        
-      <div class="p-10 ">
+      <div className="p-10 ">
         <div className="text-center text-3xl font-medium">New Arrival Perfume</div>
         <div className="grid grid-cols-2 justify-center items-center space-y-4 md:space-y-0 pb-8">
           <div className="">
             <SearchBar/>
           </div>
-        <div class="flex items-center justify-end flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-8 bg-white ">
+        <div className="flex items-center justify-end flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-8 bg-white ">
           <Link
             to="/newArrival/add"
             className="bg-blue-600 rounded-md text-white px-3 py-1 font-semibold "
@@ -82,7 +89,7 @@ const NewArrival = () => {
         </div>
         </div>
         
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
           {isLoading && (
             <>
               <Skeleton animation="wave" height={50} />
@@ -121,10 +128,11 @@ const NewArrival = () => {
 
                     <td className="px-6 py-4">
                       <Link
-                        to={`/newArrival/update/${item?._id}`}
+                        to={`${item?.link}`}
+                        target="_blank"
                         className="font-medium text-blue-600  hover:underline"
                       >
-                        View/edit
+                        View
                       </Link>
                     </td>
                     <td className="px-6 py-4">
@@ -150,6 +158,7 @@ const NewArrival = () => {
           setSearchParams={setSearchParams}
           totalPages={perfumeData.totalPage}
         />}
+      {isShowing && <ModalWrapper isShowing={isShowing} setIsShowing={setIsShowing}> <AddNewArrival setIsShowing={setIsShowing} /> </ModalWrapper>}
     </div>
   );
 };
