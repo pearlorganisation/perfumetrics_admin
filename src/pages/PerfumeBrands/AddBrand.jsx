@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 const AddBrand = () => {
     const [newBrand, setNewBrand] = useState('');
     const dispatch = useDispatch()
-    const { brands, isLoading } = useSelector(state => state.brand)
+    const { brands, isLoading, isUpdated } = useSelector(state => state.brand)
     const navigate = useNavigate()
     const handleAddBrand = () => {
 
@@ -14,10 +14,10 @@ const AddBrand = () => {
 
     };
     useEffect(() => {
-        if (brands?.status) {
+        if (isUpdated) {
             navigate('/perfumeBrands')
         }
-    }, [brands])
+    }, [isUpdated])
 
     return (
         <div className="flex items-center justify-center h-[90vh]">

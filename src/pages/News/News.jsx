@@ -31,7 +31,7 @@ const News = () => {
             axios.delete(`${import.meta.env.VITE_API_URL}/news/${item._id}`).then((res) => {
 
                 getNews()
-                setPerfumeData(res.data.perfumeData)
+
                 toast.success(res.data.message, {
                     style: {
                         background: "green",
@@ -41,6 +41,7 @@ const News = () => {
 
 
             }).catch(err => {
+                console.log(err, "Error")
                 toast.error("There was some issue deleting the perfume", {
                     style: {
                         background: "red",

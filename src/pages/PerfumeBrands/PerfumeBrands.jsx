@@ -9,7 +9,7 @@ import { Skeleton } from '@mui/material';
 const PerfumeBrands = () => {
 
     let [searchParams, setSearchParams] = useSearchParams();
-    const [brand ,setBrand] = useState();
+    const [brand, setBrand] = useState();
     const page = searchParams.get('page');
     const search = searchParams.get('search');
     const dispatch = useDispatch();
@@ -27,23 +27,22 @@ const PerfumeBrands = () => {
         dispatch(updateBrands({ id: id, data: { brand: updatedName } }))
     };
     useEffect(() => {
-        dispatch(fetchBrands())
+        dispatch(fetchBrands({}))
     }, [])
 
     useEffect(() => {
-        if (isDeleted || isUpdated)
-        {
-            dispatch(fetchBrands())
+        if (isUpdated) {
+            dispatch(fetchBrands({}))
         }
-    }, [isDeleted, isUpdated]);
-    
-    
+    }, [isUpdated]);
+
+
     useEffect(() => {
-        
-    
-    dispatch(fetchBrands({search,page}))
-        
-    }, [search,page]);
+
+
+        dispatch(fetchBrands({ search, page }))
+
+    }, [search, page]);
 
 
 
@@ -63,12 +62,12 @@ const PerfumeBrands = () => {
                 </button>
             </div>
             {isLoading && (
-                        <>
-                            <Skeleton animation="wave" height={50} />
-                            <Skeleton animation="wave" height={50} />
-                            <Skeleton animation="wave" height={50} />
-                        </>
-                    )}
+                <>
+                    <Skeleton animation="wave" height={50} />
+                    <Skeleton animation="wave" height={50} />
+                    <Skeleton animation="wave" height={50} />
+                </>
+            )}
             <table className="min-w-full bg-white border border-gray-200">
                 <thead>
                     <tr>
@@ -119,10 +118,10 @@ const PerfumeBrands = () => {
             </div> */}
             {brands &&
                 <Pagination
-                searchParams={searchParams}
-                setSearchParams={setSearchParams}
-                totalPages={brands.totalPage}
-            />}
+                    searchParams={searchParams}
+                    setSearchParams={setSearchParams}
+                    totalPages={brands.totalPage}
+                />}
         </div>
     );
 };

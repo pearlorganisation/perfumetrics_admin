@@ -39,6 +39,7 @@ const brandsSlice = createSlice({
       })
       .addCase(addBrands.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.isUpdated = true;
         state.brands = action.payload; // Assuming the API returns an array of brands
       })
       .addCase(addBrands.rejected, (state, action) => {
@@ -51,7 +52,7 @@ const brandsSlice = createSlice({
       })
       .addCase(deleteBrands.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.isDeleted = true;
+        state.isUpdated = true;
         state.brands = action.payload; // Assuming the API returns an array of brands
       })
       .addCase(deleteBrands.rejected, (state, action) => {
