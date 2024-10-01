@@ -3,12 +3,11 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Toaster, toast } from "sonner";
-import parse from 'html-react-parser';
 import Pagination from "../../components/Pagination/Pagination";
 import SearchBar from "../../components/SearchBar/SearchBar";
 
-const WriteAReview = () => {
-    const [writeReviewData, setWriteReveiwData] = useState(null);
+const RequestViewReview = () => {
+    const [requestReviewData, setRequestReveiewData] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     let [searchParams, setSearchParams] = useSearchParams();
     const page = searchParams.get('page');
@@ -16,10 +15,10 @@ const WriteAReview = () => {
 
     const getWriteAReview = ({page,search}) => {
         axios
-            .get(`${import.meta.env.VITE_API_URL}/writeReview?Page=${page||1}&Search=${search||''}`)
+            .get(`${import.meta.env.VITE_API_URL}/requestReview?Page=${page||1}&Search=${search||''}`)
             .then((res) => {
                 console.log(res)
-                setWriteReveiwData(res?.data);
+                setRequestReveiewData(res?.data);
                 setIsLoading(false);
             })
             .catch((err) => {
@@ -31,8 +30,9 @@ const WriteAReview = () => {
         getWriteAReview({})
     }, []);
 
+
     useEffect(() => {
-        getWriteAReview({page,search})
+        getWriteAReview({page,search});
     }, [page,search]);
 
     const deleteItem = (item) => {
@@ -66,10 +66,10 @@ const WriteAReview = () => {
             <Toaster />
 
             <div className="p-10 ">
-                <div className="text-center text-3xl font-medium">Write A Review</div>
-                <div className="p-4">
-                <SearchBar/>
-                </div>
+                <div className="text-center text-3xl font-medium">Requested  Reviews</div>
+              <div className="pb-4">
+              <SearchBar/>
+              </div>
                 <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
                     {isLoading && (
                         <>
@@ -79,7 +79,7 @@ const WriteAReview = () => {
                             <Skeleton animation="wave" height={50} />
                         </>
                     )}
-                    {writeReviewData && (
+                    {requestReviewData && (
                         <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
                             <thead className="text-xs text-gray-700 uppercase bg-gray-50  ">
                                 <tr>
@@ -105,8 +105,8 @@ const WriteAReview = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {writeReviewData?.data?.map((item, idx) => (
-                                    <tr className="bg-white border-b   hover:bg-gray-50 ">
+                                {requestReviewData.data?.map((item, idx) => (
+                                    <tr key={idx} className="bg-white border-b   hover:bg-gray-50 ">
                                         <th
                                             scope="row"
                                             className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap "
@@ -129,7 +129,7 @@ const WriteAReview = () => {
                                         <td className="px-6 py-4 space-x-3 flex justify-center items-center">
 
                                             <Link
-                                                to={`/viewReview/${item._id}`}
+                                                to={`/viewRequestReview/${item._id}`}
                                                 className="font-medium text-blue-600  hover:underline"
                                             >
                                                 View
@@ -150,10 +150,10 @@ const WriteAReview = () => {
                         </table>
                     )}
                 </div>
-                {writeReviewData &&<Pagination
+                {requestReviewData &&<Pagination
           searchParams={searchParams}
           setSearchParams={setSearchParams}
-          totalPages={writeReviewData.totalPage}
+          totalPages={requestReviewData.totalPage}
         />}
             </div>
         </div>
@@ -166,4 +166,4 @@ const WriteAReview = () => {
 
 
 
-export default WriteAReview
+export default RequestViewReview;

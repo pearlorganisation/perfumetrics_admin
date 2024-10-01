@@ -10,10 +10,13 @@ const TopRatedPerfumes = () => {
   let [searchParams, setSearchParams] = useSearchParams();
   const [perfumeData, setPerfumeData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const page = searchParams.get('page');
+  const search = searchParams.get('search');
 
-  const getPerfumes = () => {
+
+  const getPerfumes = (payload) => {
     axios
-      .get(`${import.meta.env.VITE_API_URL}/topRatedPerfume`)
+      .get(`${import.meta.env.VITE_API_URL}/topRatedPerfume/admin?Page=${payload?.page||1}&Search=${payload?.search||''}`)
       .then((res) => {
         console.log(res)
         setPerfumeData(res?.data);
@@ -29,12 +32,16 @@ const TopRatedPerfumes = () => {
     getPerfumes()
   }, []);
 
+  useEffect(() => {
+    getPerfumes({page,search})
+  }, [page,search]);
+
   const deleteItem = (item) => {
     console.log('item', item);
     if (window.confirm(`Are you sure you want to remove perfume:- ${item._id}`)) {
       axios.delete(`${import.meta.env.VITE_API_URL}/topRatedPerfume/${item._id}`).then((res) => {
 
-        setPerfumeData(res.data.perfumeData)
+        setPerfumeData(res.data)
         toast.success(res.data.message, {
           style: {
             background: "green",
@@ -95,7 +102,7 @@ const TopRatedPerfumes = () => {
                 </tr>
               </thead>
               <tbody>
-                {perfumeData.map((item, idx) => (
+                {perfumeData.topRatedPerfumes &&perfumeData.topRatedPerfumes.map((item, idx) => (
                   <tr className="bg-white border-b   hover:bg-gray-50 ">
                     <th
                       scope="row"
@@ -132,11 +139,11 @@ const TopRatedPerfumes = () => {
             </table>
           )}
         </div>
-        <Pagination
+{perfumeData &&<Pagination
           searchParams={searchParams}
           setSearchParams={setSearchParams}
-          totalPages={19}
-        />
+          totalPages={perfumeData.totalPage}
+        />}
       </div>
     </div>
   );

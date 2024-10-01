@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import {
   createBrowserRouter,
   Navigate,
@@ -55,6 +54,8 @@ import UpdateNews from "./pages/News/UpdateNews";
 import SideBarReview from "./pages/SideBarReview/SideBarReview";
 import WriteAReview from "./pages/WriteAReview/WriteAReview";
 import ViewReview from "./pages/WriteAReview/ViewReview";
+import RequestViewReview from "./pages/RequestAReview/RequestViewReview";
+import RequestAReview from "./pages/RequestAReview/RequestAReview";
 
 
 const isUserLoggedIn = localStorage.getItem("isusrlgd");
@@ -263,6 +264,14 @@ const App = () => {
         {
           path: "/writeAReview",
           element: <WriteAReview />,
+        },
+        {
+          path: "/requestAReview",
+          element: <RequestViewReview/>,
+        },
+        {
+          path: "/viewRequestReview/:id",
+          element: <RequestAReview/>,
         },
         {
           path: "/viewReview/:id",

@@ -1,44 +1,60 @@
-import { Skeleton } from "@mui/material";
+import {  Skeleton } from "@mui/material";
+import Pagination from "../../components/Pagination/Pagination";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Toaster, toast } from "sonner";
+import SearchBar from "../../components/SearchBar/SearchBar";
 import ModalWrapper from "../../components/Modal/ModalWrapper";
 import AddNewArrival from "./AddNewArrival";
 
 const NewArrival = () => {
   const [perfumeData, setPerfumeData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  let [searchParams, setSearchParams] = useSearchParams();
+  const page = searchParams.get('page');
+  const search = searchParams.get('search');
   const [isShowing, setIsShowing] = useState(false)
-  const getNewArrival = () => {
+
+
+  function fetchNewArrival({page,search})
+  {
     axios
-      .get(`${import.meta.env.VITE_API_URL}/newArrival`)
-      .then((res) => {
-        console.log(res)
-        setPerfumeData(res?.data?.data);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setIsLoading(false);
-      });
+    .get(`${import.meta.env.VITE_API_URL}/newArrival/admin?Search=${search||''}&Page=${page||1}`)
+    .then((res) => {
+      console.log(res)
+      setPerfumeData(res.data);
+      setIsLoading(false);
+    })
+    .catch((err) => {
+      console.log(err);
+      setIsLoading(false);
+    });
   }
+
+
   useEffect(() => {
-    getNewArrival()
-  }, []);
+    fetchNewArrival({})
+  },[]);
+
+
+  useEffect(() => {
+    fetchNewArrival({search,page})
+  }, [search,page]);
 
   const deleteItem = (item) => {
     if (window.confirm(`Are you sure you want to remove perfume:- ${item._id}`)) {
       axios.delete(`${import.meta.env.VITE_API_URL}/newArrival/${item._id}`).then((res) => {
 
-        setPerfumeData(res.data.perfumeData)
+        setPerfumeData(res.data)
         toast.success(res.data.message, {
           style: {
             background: "green",
             color: "white",
           },
         });
-        getNewArrival()
+        fetchNewArrival({})
+
 
       }).catch(err => {
         toast.error("There was some issue removing the perfume", {
@@ -56,10 +72,14 @@ const NewArrival = () => {
   return (
     <div>
       <Toaster />
-
-      <div class="p-10 ">
+       
+      <div className="p-10 ">
         <div className="text-center text-3xl font-medium">New Arrival Perfume</div>
-        <div class="flex items-center justify-end flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-8 bg-white ">
+        <div className="grid grid-cols-2 justify-center items-center space-y-4 md:space-y-0 pb-8">
+          <div className="">
+            <SearchBar/>
+          </div>
+        <div className="flex items-center justify-end flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-8 bg-white ">
           <Link
             to="/newArrival/add"
             className="bg-blue-600 rounded-md text-white px-3 py-1 font-semibold "
@@ -67,7 +87,9 @@ const NewArrival = () => {
             Add
           </Link>
         </div>
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+        </div>
+        
+        <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
           {isLoading && (
             <>
               <Skeleton animation="wave" height={50} />
@@ -92,7 +114,7 @@ const NewArrival = () => {
                 </tr>
               </thead>
               <tbody>
-                {perfumeData.map((item, idx) => (
+                {perfumeData.data &&perfumeData.data.map((item, idx) => (
                   <tr key={idx} className="bg-white border-b   hover:bg-gray-50 ">
                     <th
                       scope="row"
@@ -129,7 +151,13 @@ const NewArrival = () => {
             </table>
           )}
         </div>
+
       </div>
+      {perfumeData &&<Pagination
+          searchParams={searchParams}
+          setSearchParams={setSearchParams}
+          totalPages={perfumeData.totalPage}
+        />}
       {isShowing && <ModalWrapper isShowing={isShowing} setIsShowing={setIsShowing}> <AddNewArrival setIsShowing={setIsShowing} /> </ModalWrapper>}
     </div>
   );
