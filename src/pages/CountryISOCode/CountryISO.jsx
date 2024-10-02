@@ -28,7 +28,21 @@ const CountryISO = () => {
     useEffect(() => {
         getCountryISO()
     }, []);
+   
 
+    function deleteItem(id){
+        axios
+        .delete(`${import.meta.env.VITE_API_URL}/countryISOcodes/${id}`)
+        .then((res) => {
+            console.log(res)
+            getCountryISO();
+            setIsLoading(false);
+        })
+        .catch((err) => {
+            console.log(err);
+            setIsLoading(false);
+        });  
+    }
 
 
 
@@ -80,23 +94,23 @@ const CountryISO = () => {
 
 
 
-                                        {/* <td className="px-6 py-4 space-x-3 flex justify-center items-center">
+                                        <td className="px-6 py-4 space-x-3 flex justify-center items-center">
 
-                                            <Link
+                                            {/* <Link
                                                 to={`/viewReview/${item._id}`}
                                                 className="font-medium text-blue-600  hover:underline"
                                             >
                                                 View
-                                            </Link>
+                                            </Link> */}
                                             <button
                                                 className="font-medium text-red-600  hover:underline"
                                                 onClick={() => {
-                                                    deleteItem(item)
+                                                    deleteItem(item._id)
                                                 }}
                                             >
                                                 Delete
                                             </button>
-                                        </td> */}
+                                        </td>
 
                                     </tr>
                                 ))}

@@ -7,9 +7,7 @@ const Pagination = ({ searchParams, setSearchParams, totalPages }) => {
     const location = useLocation();
 
 
-    useEffect(()=>{
-        console.log("currentPage",Number(searchParams.get('page')));
-    },[Number(searchParams.get('page'))]);
+ 
     const navigate = useNavigate();
     const handlePagination = useDebouncedCallback((name, term) => {
         console.log(name, term)

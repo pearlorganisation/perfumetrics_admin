@@ -12,18 +12,11 @@ import ct from 'countries-and-timezones';
 const AddPerfume = () => {
   const tmz = Intl.DateTimeFormat().resolvedOptions().timeZone
   const timezone = ct.getTimezone(tmz);
+  const [countryISOData, setCountryISOData] = useState(null);
+
   console.log(timezone?.countries[0], "timezone");
 
 
-  const defaultCountryOptions = [
-    { value: 'US', label: 'United States' },
-    { value: 'IN', label: 'India' },
-    { value: 'GB', label: 'United Kingdom' },
-    { value: 'JP', label: 'Japan' },
-    { value: 'AU', label: 'Australia' },
-    { value: 'FR', label: 'France' },
-    { value: 'DE', label: 'Germany' }
-  ];
 
   const { brands } = useSelector(state => state.brand)
   const dispatch = useDispatch()
@@ -45,7 +38,23 @@ const AddPerfume = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const accordsRef = useRef(null);
+  const getCountryISO = () => {
+    axios
+        .get(`${import.meta.env.VITE_API_URL}/countryISOcodes`)
+        .then((res) => {
+            console.log(res)
+            setCountryISOData(res?.data.data);
 
+            setIsLoading(false);
+        })
+        .catch((err) => {
+            console.log(err);
+            setIsLoading(false);
+        });
+}
+useEffect(() => {
+    getCountryISO()
+}, []);
   const {
     control,
     register,
@@ -664,7 +673,7 @@ const AddPerfume = () => {
                               className="px-1 py-4"
                             >
                               <Select
-                                options={defaultCountryOptions}
+                                options={countryISOData}
                                 onChange={(selectedOption) => {
                                   setPurchaseLinks((prev) => {
                                     // Clone the previous array

@@ -11,24 +11,32 @@ import ct from 'countries-and-timezones';
 
 const UpdatePerfume = () => {
   const { state } = useLocation();
-  console.log(state, "state")
+  const [countryISOData, setCountryISOData] = useState(null);
 
+  const getCountryISO = () => {
+    axios
+        .get(`${import.meta.env.VITE_API_URL}/countryISOcodes`)
+        .then((res) => {
+            console.log(res)
+            setCountryISOData(res?.data.data);
 
+            setIsLoading(false);
+        })
+        .catch((err) => {
+            console.log(err);
+            setIsLoading(false);
+        });
+}
+useEffect(() => {
+    getCountryISO()
+}, []);
 
   const tmz = Intl.DateTimeFormat().resolvedOptions().timeZone
   const timezone = ct.getTimezone(tmz);
   console.log(timezone?.countries[0], "timezone");
 
 
-  const defaultCountryOptions = [
-    { value: 'US', label: 'United States' },
-    { value: 'IN', label: 'India' },
-    { value: 'GB', label: 'United Kingdom' },
-    { value: 'JP', label: 'Japan' },
-    { value: 'AU', label: 'Australia' },
-    { value: 'FR', label: 'France' },
-    { value: 'DE', label: 'Germany' }
-  ];
+  
 
   const { brands } = useSelector(state => state.brand)
   const dispatch = useDispatch()
@@ -769,10 +777,10 @@ const UpdatePerfume = () => {
                             <td
                               className="px-1 py-4"
                             >
-                              <Select
-                                defaultValue={defaultCountryOptions.find(it => it?.value === item?.country)}
-                                value={defaultCountryOptions.find(it => it?.value === item?.country)}
-                                options={defaultCountryOptions}
+                             {countryISOData &&  <Select
+                                defaultValue={countryISOData.find(it => it?.value === item?.country)}
+                                value={countryISOData.find(it => it?.value === item?.country)}
+                                options={countryISOData}
                                 // defaultValue={ }
                                 onChange={(selectedOption) => {
                                   setPurchaseLinks((prev) => {
@@ -797,7 +805,7 @@ const UpdatePerfume = () => {
                                 // value={selectedCountry}
                                 // onChange={handleCountrySelect}
                                 placeholder="Select a country"
-                              />
+                              />}
                             </td>
 
 

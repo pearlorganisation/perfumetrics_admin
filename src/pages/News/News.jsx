@@ -1,20 +1,25 @@
 import { Skeleton } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Toaster, toast } from "sonner";
 import parse from 'html-react-parser';
+import SearchBar from "../../components/SearchBar/SearchBar";
+import Pagination from "../../components/Pagination/Pagination";
 
 const News = () => {
     const [celebrityPerfume, setCelebrityPerfume] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
-    const getNews = () => {
+      let [searchParams, setSearchParams] = useSearchParams();
+      const page = searchParams.get('page');
+      const search = searchParams.get('search');
+    const getNews = ({page,search}) => {
         axios
-            .get(`${import.meta.env.VITE_API_URL}/news`)
+            .get(`${import.meta.env.VITE_API_URL}/news/admin?Search=${search||''}&Page=${page||1}`)
             .then((res) => {
                 console.log(res)
-                setCelebrityPerfume(res?.data?.data);
+                setCelebrityPerfume(res?.data);
                 setIsLoading(false);
             })
             .catch((err) => {
@@ -23,9 +28,11 @@ const News = () => {
             });
     }
     useEffect(() => {
-        getNews()
+        getNews({})
     }, []);
-
+    useEffect(() => {
+        getNews({search,page})
+      }, [search, page]);
     const deleteItem = (item) => {
         if (window.confirm(`Are you sure you want to delete perfume:- ${item.title}`)) {
             axios.delete(`${import.meta.env.VITE_API_URL}/news/${item._id}`).then((res) => {
@@ -57,11 +64,11 @@ const News = () => {
     return (
         <div>
             <Toaster />
-
+  
             <div class="p-10 ">
                 <div className="text-center text-3xl font-medium">News Blogs</div>
-                <div class="flex items-center justify-end flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-8 bg-white ">
-
+                <div class="flex  items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-8 bg-white ">
+                   <SearchBar/>
                     <Link
                         to="/addNews"
                         className="bg-blue-600 rounded-md text-white px-3 py-1 font-semibold "
@@ -88,17 +95,14 @@ const News = () => {
                                     <th scope="col" className="px-6 py-3">
                                         Name
                                     </th>
-                                    {/* <th scope="col" className="px-6 py-3">
-                                        Content
-                                    </th> */}
-
+                                
                                     <th scope="col" className="col-span-2 px-6 py-3 text-center">
                                         Actions
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {celebrityPerfume?.map((item, idx) => (
+                                {celebrityPerfume?.data?.map((item, idx) => (
                                     <tr className="bg-white border-b   hover:bg-gray-50 ">
                                         <th
                                             scope="row"
@@ -136,6 +140,11 @@ const News = () => {
                         </table>
                     )}
                 </div>
+               {celebrityPerfume&& <Pagination
+          searchParams={searchParams}
+          setSearchParams={setSearchParams}
+          totalPages={celebrityPerfume?.totalPage}
+        />}
             </div>
         </div>
     );
