@@ -30,12 +30,12 @@ const AddNewArrival = ({ setIsShowing }) => {
 
   useEffect(() => {
     console.log("brands");
-    dispatch(fetchBrands());
+    dispatch(fetchBrands({ limit: "infinite" }));
   }, [])
 
 
   useEffect(() => {
-    if (brands.length > 0) {
+    if (brands?.data?.length > 0) {
       const temp = brands.data?.map(item => {
         return {
           value: item?._id,

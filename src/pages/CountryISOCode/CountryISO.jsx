@@ -28,20 +28,20 @@ const CountryISO = () => {
     useEffect(() => {
         getCountryISO()
     }, []);
-   
 
-    function deleteItem(id){
+
+    function deleteItem(id) {
         axios
-        .delete(`${import.meta.env.VITE_API_URL}/countryISOcodes/${id}`)
-        .then((res) => {
-            console.log(res)
-            getCountryISO();
-            setIsLoading(false);
-        })
-        .catch((err) => {
-            console.log(err);
-            setIsLoading(false);
-        });  
+            .delete(`${import.meta.env.VITE_API_URL}/countryISOcodes/${id}`)
+            .then((res) => {
+                console.log(res)
+                getCountryISO();
+                setIsLoading(false);
+            })
+            .catch((err) => {
+                console.log(err);
+                setIsLoading(false);
+            });
     }
 
 
@@ -55,7 +55,7 @@ const CountryISO = () => {
             <div className="p-10 ">
                 <div className="text-center text-3xl font-medium">Country ISO</div>
                 <div className="p-4 flex justify-between items-center">
-                    <SearchBar /> <Link to='/addCountryISO' className="px-5 py-2 bg-blue-600 text-white rounded-lg">Add</Link>
+                    <Link to='/addCountryISO' className="px-5 py-2 bg-blue-600 text-white rounded-lg">Add</Link>
                 </div>
                 <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
                     {isLoading && (

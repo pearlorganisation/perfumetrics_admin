@@ -30,6 +30,8 @@ const RelatedFragram = () => {
             const result = await axios.delete(`${import.meta.env.VITE_API_URL}/relatedFragrams/single/${relatedFragramId}`)
             if (result?.data?.status) {
                 toast.success("Deleted Successfully!!", { position: 'top-center' })
+
+                getRelatedFragram(perfumeId);
             }
             console.log(result, "deleteRelatedFragram")
         } catch (error) {

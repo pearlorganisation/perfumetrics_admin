@@ -29,11 +29,11 @@ const AddRelatedFragram = ({ setIsShowing }) => {
 
 
     useEffect(() => {
-        dispatch(fetchBrands())
+        dispatch(fetchBrands({}))
     }, [])
     useEffect(() => {
-        if (brands.length > 0) {
-            const temp = brands?.map(item => {
+        if (brands?.data?.length > 0) {
+            const temp = brands?.data?.map(item => {
                 return {
                     value: item?._id,
                     label: item?.brand

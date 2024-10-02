@@ -40,21 +40,21 @@ const AddPerfume = () => {
   const accordsRef = useRef(null);
   const getCountryISO = () => {
     axios
-        .get(`${import.meta.env.VITE_API_URL}/countryISOcodes`)
-        .then((res) => {
-            console.log(res)
-            setCountryISOData(res?.data.data);
+      .get(`${import.meta.env.VITE_API_URL}/countryISOcodes`)
+      .then((res) => {
+        console.log(res)
+        setCountryISOData(res?.data.data);
 
-            setIsLoading(false);
-        })
-        .catch((err) => {
-            console.log(err);
-            setIsLoading(false);
-        });
-}
-useEffect(() => {
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
+  }
+  useEffect(() => {
     getCountryISO()
-}, []);
+  }, []);
   const {
     control,
     register,
@@ -132,7 +132,7 @@ useEffect(() => {
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_API_URL}/note`)
+      .get(`${import.meta.env.VITE_API_URL}/note?Limit="infinite"`)
       .then((res) => {
         setNoteData(res?.data?.data);
       })
@@ -254,7 +254,7 @@ useEffect(() => {
   };
 
   useEffect(() => {
-    dispatch(fetchBrands())
+    dispatch(fetchBrands({ limit: "infinite" }))
     addAccord()
     addPurchaseLink()
     addCons();
@@ -262,8 +262,8 @@ useEffect(() => {
   }, [])
 
   useEffect(() => {
-    if (brands.length > 0) {
-      const temp = brands?.map(item => {
+    if (brands?.data?.length > 0) {
+      const temp = brands?.data?.map(item => {
         return {
           value: item?._id,
           label: item?.brand

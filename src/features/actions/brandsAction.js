@@ -4,13 +4,13 @@ import axios from "axios";
 // Async thunk for fetching perfume brands from an API
 export const fetchBrands = createAsyncThunk(
   "brands/fetchBrands",
-  async ({ page, search }) => {
+  async ({ page, search, limit }) => {
     console.log("fetching new arrival");
 
     const response = await axios.get(
       `${import.meta.env.VITE_API_URL}/brand?Page=${page || 1}&Search=${
         search || ""
-      }`
+      }&Limit=${limit || 1} `
     );
     console.log(response.data, "response.data");
     return response.data;

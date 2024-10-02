@@ -28,6 +28,20 @@ const PerfumeCategory = () => {
       });
   }
 
+  const deletePerfumeCategory = (id) => {
+    axios
+      .delete(`${import.meta.env.VITE_API_URL}/perfumeCategories/single/${id}`)
+      .then((res) => {
+        getPerfumeCategory()
+        console.log(res)
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
+  }
+
   useEffect(() => {
     getPerfumeCategory()
   }, [isShowing]);
@@ -107,6 +121,7 @@ const PerfumeCategory = () => {
                       <button
                         className="font-medium text-red-600  hover:underline"
                         onClick={() => {
+                          deletePerfumeCategory(item?._id)
                         }}
                       >
                         Delete

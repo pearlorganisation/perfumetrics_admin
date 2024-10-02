@@ -15,28 +15,28 @@ const UpdatePerfume = () => {
 
   const getCountryISO = () => {
     axios
-        .get(`${import.meta.env.VITE_API_URL}/countryISOcodes`)
-        .then((res) => {
-            console.log(res)
-            setCountryISOData(res?.data.data);
+      .get(`${import.meta.env.VITE_API_URL}/countryISOcodes`)
+      .then((res) => {
+        console.log(res)
+        setCountryISOData(res?.data.data);
 
-            setIsLoading(false);
-        })
-        .catch((err) => {
-            console.log(err);
-            setIsLoading(false);
-        });
-}
-useEffect(() => {
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
+  }
+  useEffect(() => {
     getCountryISO()
-}, []);
+  }, []);
 
   const tmz = Intl.DateTimeFormat().resolvedOptions().timeZone
   const timezone = ct.getTimezone(tmz);
   console.log(timezone?.countries[0], "timezone");
 
 
-  
+
 
   const { brands } = useSelector(state => state.brand)
   const dispatch = useDispatch()
@@ -200,7 +200,7 @@ useEffect(() => {
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_API_URL}/note`)
+      .get(`${import.meta.env.VITE_API_URL}/note?Limit="infinte"`)
       .then((res) => {
         setNoteData(res?.data?.data);
       })
@@ -325,7 +325,7 @@ useEffect(() => {
   };
 
   useEffect(() => {
-    dispatch(fetchBrands())
+    dispatch(fetchBrands({ limit: "infinite" }))
     // addAccord()
     // addPurchaseLink()
     // addCons();
@@ -333,8 +333,8 @@ useEffect(() => {
   }, [])
 
   useEffect(() => {
-    if (brands.length > 0) {
-      const temp = brands?.map(item => {
+    if (brands?.data?.length > 0) {
+      const temp = brands?.data?.map(item => {
         return {
           value: item?._id,
           label: item?.brand
@@ -777,7 +777,7 @@ useEffect(() => {
                             <td
                               className="px-1 py-4"
                             >
-                             {countryISOData &&  <Select
+                              {countryISOData && <Select
                                 defaultValue={countryISOData.find(it => it?.value === item?.country)}
                                 value={countryISOData.find(it => it?.value === item?.country)}
                                 options={countryISOData}

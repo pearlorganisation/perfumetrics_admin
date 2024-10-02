@@ -27,9 +27,23 @@ const Fragram = () => {
             });
     }
 
+    const deleteRelatedFragram = (id) => {
+        axios
+            .delete(`${import.meta.env.VITE_API_URL}/fragrams/single/${id}`)
+            .then((res) => {
+                console.log(res)
+                getRelatedFragram(perfumeId)
+                setIsLoading(false);
+            })
+            .catch((err) => {
+                console.log(err);
+                setIsLoading(false);
+            });
+    }
+
     useEffect(() => {
         getRelatedFragram(perfumeId)
-    }, [isShowing]);
+    }, [isShowing, perfumeId]);
 
 
 
@@ -101,6 +115,7 @@ const Fragram = () => {
                                             <button
                                                 className="font-medium text-red-600  hover:underline"
                                                 onClick={() => {
+                                                    deleteRelatedFragram(item?._id)
                                                 }}
                                             >
                                                 Delete

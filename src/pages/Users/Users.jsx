@@ -7,7 +7,7 @@ import SearchBar from "../../components/SearchBar/SearchBar";
 
 const Users = () => {
 
-    
+
     const { usersData } = useSelector(state => state.users)
     const dispatch = useDispatch()
     let [searchParams, setSearchParams] = useSearchParams();
@@ -18,12 +18,12 @@ const Users = () => {
     useEffect(() => {
         dispatch(fetchAllUsers())
     }, []);
-    
-    useEffect(() => {
-        dispatch(fetchAllUsers({page,search}))
-    }, [page,search]);
 
-    
+    useEffect(() => {
+        dispatch(fetchAllUsers({ page, search }))
+    }, [page, search]);
+
+
 
 
     return (
@@ -34,12 +34,12 @@ const Users = () => {
                     <h3 className="text-gray-800 text-xl font-bold sm:text-2xl">
                         Team members
                     </h3>
-                    <p className="text-gray-600 mt-2">
+                    {/* <p className="text-gray-600 mt-2">
                         Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                    </p>
+                    </p> */}
                 </div>
                 <div className="mt-3 md:mt-0">
-                <SearchBar />
+                    <SearchBar />
 
                 </div>
             </div>
@@ -83,14 +83,14 @@ const Users = () => {
                     </tbody>
                 </table>
             </div>
-        
-            
+
+
             {usersData.data &&
                 <Pagination
-                searchParams={searchParams}
-                setSearchParams={setSearchParams}
-                totalPages={usersData.totalPage}
-            />}
+                    searchParams={searchParams}
+                    setSearchParams={setSearchParams}
+                    totalPages={usersData.totalPage}
+                />}
 
         </div>
     )

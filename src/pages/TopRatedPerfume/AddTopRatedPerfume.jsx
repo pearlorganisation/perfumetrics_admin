@@ -56,7 +56,7 @@ const AddTopRatedPerfume = () => {
   } = useForm();
 
   const getPerfumes = async () => {
-    const result = await axios.get(`${import.meta.env.VITE_API_URL}/perfume`)
+    const result = await axios.get(`${import.meta.env.VITE_API_URL}/perfume?Limit=infinite`)
     console.log(result?.data?.data)
     setPerfumes(result?.data?.data)
 
@@ -269,8 +269,8 @@ const AddTopRatedPerfume = () => {
   }, [])
 
   useEffect(() => {
-    if (brands.length > 0) {
-      const temp = brands?.map(item => {
+    if (brands?.data?.length > 0) {
+      const temp = brands?.data?.map(item => {
         return {
           value: item?._id,
           label: item?.brand
@@ -323,7 +323,7 @@ const AddTopRatedPerfume = () => {
             components={{ Option: CustomOption }} // Custom component for option rendering
           /> */}
           {
-            perfume.length < 1 ? <div>
+            false ? <div>
               <div
                 className="text-3xl text-center font-medium py-5">OR</div>
               <form onSubmit={handleSubmit(onSubmit)}>
