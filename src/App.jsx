@@ -56,6 +56,8 @@ import WriteAReview from "./pages/WriteAReview/WriteAReview";
 import ViewReview from "./pages/WriteAReview/ViewReview";
 import RequestViewReview from "./pages/RequestAReview/RequestViewReview";
 import RequestAReview from "./pages/RequestAReview/RequestAReview";
+import AddCountryISO from "./pages/CountryISOCode/AddCountryISO";
+import CountryISO from "./pages/CountryISOCode/CountryISO";
 
 
 const isUserLoggedIn = localStorage.getItem("isusrlgd");
@@ -267,15 +269,25 @@ const App = () => {
         },
         {
           path: "/requestAReview",
-          element: <RequestViewReview/>,
+          element: <RequestViewReview />,
         },
         {
           path: "/viewRequestReview/:id",
-          element: <RequestAReview/>,
+          element: <RequestAReview />,
         },
         {
           path: "/viewReview/:id",
           element: <ViewReview />,
+        },
+
+        //Country ISO Code
+        {
+          path: "/addCountryISO",
+          element: <AddCountryISO />,
+        },
+        {
+          path: "/countryISO",
+          element: <CountryISO />,
         },
 
 
