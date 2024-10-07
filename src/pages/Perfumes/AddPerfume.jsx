@@ -281,6 +281,7 @@ const AddPerfume = () => {
   ]
 
 
+
   return (
     <>
       <section className="bg-white ">
@@ -914,17 +915,32 @@ const AddPerfume = () => {
                 <Controller
                   name="topNote"
                   control={control}
+                  rules={{
+                    validate: (value) =>
+                      value && value.length <= 4
+                        ? true
+                        : `You can select up to ${4} items only.`
+                  }}
                   render={({ field }) => (
                     <Select
                       {...field}
+
                       options={noteData.map((note) => ({
                         value: note._id,
                         label: note.name,
                       }))}
                       isMulti
+                      onChange={(selected) => {
+                        field.onChange(selected);
+                      }}
+
                     />
+
                   )}
                 />
+                {errors.topNote && (
+                  <p className="" style={{ color: 'red' }}>{errors.topNote.message}</p>
+                )}
 
                 <div className="w-full flex justify-between py-2">
                   <label
@@ -937,6 +953,12 @@ const AddPerfume = () => {
                 <Controller
                   name="midNote"
                   control={control}
+                  rules={{
+                    validate: (value) =>
+                      value && value.length <= 4
+                        ? true
+                        : `You can select up to ${4} items only.`
+                  }}
                   render={({ field }) => (
                     <Select
                       {...field}
@@ -945,9 +967,15 @@ const AddPerfume = () => {
                         label: note.name,
                       }))}
                       isMulti
+                      onChange={(selected) => {
+                        field.onChange(selected);
+                      }}
                     />
                   )}
                 />
+                {errors.midNote && (
+                  <p className="" style={{ color: 'red' }}>{errors.midNote.message}</p>
+                )}
 
                 <div className="w-full flex justify-between py-2">
                   <label
@@ -960,6 +988,12 @@ const AddPerfume = () => {
                 <Controller
                   name="baseNote"
                   control={control}
+                  rules={{
+                    validate: (value) =>
+                      value && value.length <= 4
+                        ? true
+                        : `You can select up to ${4} items only.`
+                  }}
                   render={({ field }) => (
                     <Select
                       {...field}
@@ -967,10 +1001,16 @@ const AddPerfume = () => {
                         value: note._id,
                         label: note.name,
                       }))}
+                      onChange={(selected) => {
+                        field.onChange(selected);
+                      }}
                       isMulti
                     />
                   )}
                 />
+                {errors.baseNote && (
+                  <p className="" style={{ color: 'red' }}>{errors.baseNote.message}</p>
+                )}
               </div>
 
               <div className="sm:col-span-2">
