@@ -29,7 +29,7 @@ const AddRelatedFragram = ({ setIsShowing }) => {
 
 
     useEffect(() => {
-        dispatch(fetchBrands({}))
+        dispatch(fetchBrands({limit:"infinite"}))
     }, [])
     useEffect(() => {
         if (brands?.data?.length > 0) {
