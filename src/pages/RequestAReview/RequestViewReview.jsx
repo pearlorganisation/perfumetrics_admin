@@ -37,16 +37,16 @@ const RequestViewReview = () => {
 
     const deleteItem = (item) => {
         if (window.confirm(`Are you sure you want to delete review:- ${item.perfumeName}`)) {
-            axios.delete(`${import.meta.env.VITE_API_URL}/writeReview/${item._id}`).then((res) => {
+            axios.delete(`${import.meta.env.VITE_API_URL}/requestReview/${item._id}`).then((res) => {
 
-                setWriteReveiwData(res.data.perfumeData)
+                // setRequestReveiewData(res.data.perfumeData)
                 toast.success(res.data.message, {
                     style: {
                         background: "green",
                         color: "white",
                     },
                 });
-                getWriteAReview()
+                getWriteAReview({})
 
             }).catch(err => {
                 toast.error("There was some issue deleting the perfume", {

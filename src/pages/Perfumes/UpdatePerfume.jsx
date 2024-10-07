@@ -46,6 +46,7 @@ const UpdatePerfume = () => {
   const gender = [
     { value: 'M', label: 'Male' },
     { value: 'F', label: 'Female' },
+    { value: 'O', label: 'Unisex' },
 
   ]
   const [banner, setBanner] = useState(null);
@@ -1209,13 +1210,16 @@ const UpdatePerfume = () => {
                     control={control}
                     render={({ field: { onChange, value, ref } }) => (
                       <Select
+                      onChange={selected => {
+                        onChange(selected); // Use `selected` if you need the whole object
+                      }}
+                      value={gender.find(el => el.value === value
+                      )}
+                      options={gender}
+                      defaultValue={gender.find(el => el.value === state?.ratingFragrams?.gender,
 
-                        value={gender.find(el => el.value === value
-                        )}
-                        options={gender}
-                        defaultValue={gender.find(el => el.value === state?.ratingFragrams?.gender
-                        )}
-
+                      )}
+                      
                       />
                     )}
                   />

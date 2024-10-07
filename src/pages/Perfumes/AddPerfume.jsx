@@ -164,7 +164,6 @@ const AddPerfume = () => {
       delete item.id;
       return { title: item.cons };
     });
-    console.log("puschase links", purchaseLinks)
     const map = new Map()
 
     formData.append("purchaseLinks", JSON.stringify(purchaseLinks));
