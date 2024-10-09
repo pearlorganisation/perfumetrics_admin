@@ -38,7 +38,7 @@ const UpdateNews = () => {
                 console.log(res)
                 setNewsData(res?.data?.data);
                 setValue("title", res?.data?.data?.title)
-                setValue("content", res?.data?.data?.content)
+                setValue("content", res?.data?.data?.description)
                 setPreviewImage(res?.data?.data?.image);
 
             })

@@ -11,12 +11,12 @@ const News = () => {
     const [celebrityPerfume, setCelebrityPerfume] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
-      let [searchParams, setSearchParams] = useSearchParams();
-      const page = searchParams.get('page');
-      const search = searchParams.get('search');
-    const getNews = ({page,search}) => {
+    let [searchParams, setSearchParams] = useSearchParams();
+    const page = searchParams.get('page');
+    const search = searchParams.get('search');
+    const getNews = ({ page, search }) => {
         axios
-            .get(`${import.meta.env.VITE_API_URL}/news/admin?Search=${search||''}&Page=${page||1}`)
+            .get(`${import.meta.env.VITE_API_URL}/news/admin?Search=${search || ''}&Page=${page || 1}`)
             .then((res) => {
                 console.log(res)
                 setCelebrityPerfume(res?.data);
@@ -31,15 +31,15 @@ const News = () => {
         getNews({})
     }, []);
     useEffect(() => {
-        getNews({search,page})
-      }, [search, page]);
+        getNews({ search, page })
+    }, [search, page]);
     const deleteItem = (item) => {
         if (window.confirm(`Are you sure you want to delete perfume:- ${item.title}`)) {
             axios.delete(`${import.meta.env.VITE_API_URL}/news/${item._id}`).then((res) => {
 
-                getNews()
+                getNews({ search, page })
 
-                toast.success(res.data.message, {
+                toast.success("Successfully Deleted !!", {
                     style: {
                         background: "green",
                         color: "white",
@@ -64,11 +64,11 @@ const News = () => {
     return (
         <div>
             <Toaster />
-  
+
             <div class="p-10 ">
                 <div className="text-center text-3xl font-medium">News Blogs</div>
                 <div class="flex  items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-8 bg-white ">
-                   <SearchBar/>
+                    <SearchBar />
                     <Link
                         to="/addNews"
                         className="bg-blue-600 rounded-md text-white px-3 py-1 font-semibold "
@@ -95,7 +95,7 @@ const News = () => {
                                     <th scope="col" className="px-6 py-3">
                                         Name
                                     </th>
-                                
+
                                     <th scope="col" className="col-span-2 px-6 py-3 text-center">
                                         Actions
                                     </th>
@@ -140,11 +140,11 @@ const News = () => {
                         </table>
                     )}
                 </div>
-               {celebrityPerfume&& <Pagination
-          searchParams={searchParams}
-          setSearchParams={setSearchParams}
-          totalPages={celebrityPerfume?.totalPage}
-        />}
+                {celebrityPerfume && <Pagination
+                    searchParams={searchParams}
+                    setSearchParams={setSearchParams}
+                    totalPages={celebrityPerfume?.totalPage}
+                />}
             </div>
         </div>
     );
