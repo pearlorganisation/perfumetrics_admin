@@ -77,6 +77,9 @@ const UpdatePerfume = () => {
   } = useForm({
     defaultValues: {
       perfume: state?.perfume,
+      brandAltAttribute: state.brandAltAttribute,
+      mainImageAltAttribute: state.mainImageAltAttribute,
+
       detail: state?.details,
       description: state?.description,
 
@@ -245,6 +248,8 @@ const UpdatePerfume = () => {
     formData.append("middleNote", JSON.stringify(midNote));
     formData.append("baseNote", JSON.stringify(baseNote));
     formData.append("perfume", data.perfume);
+    formData.append("brandAltAttribute", data.brandAltAttribute);
+    formData.append("mainImageAltAttribute", data.mainImageAltAttribute);
     formData.append("description", data.description);
     formData.append("details", data.details);
     formData.append("mainAccords", JSON.stringify(filteredAccords));
@@ -390,8 +395,24 @@ const UpdatePerfume = () => {
                   />
                 </div>
               </div>
+              <div className="">
+                <label
+                  htmlFor="name"
+                  className="block mb-2 text-sm font-medium text-gray-900 "
+                >
+                  MainImageAltAttribute
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5      "
+                  placeholder="Type product name"
+                  {...register("mainImageAltAttribute", { required: true })}
+                />
+              </div>
 
-              <div className="col-span-2 sm:col-span-1">
+              <div className="col-span-2 sm:col-span-1 space-y-3">
                 {logo ? (
                   <div className="w-[250px] h-[250px] border border-red-300">
                     <img src={URL.createObjectURL(logo)} className="h-full" />
@@ -402,7 +423,7 @@ const UpdatePerfume = () => {
 
 
 
-                <div>
+                <div className="">
                   <label
                     className="block mb-2 text-sm font-medium text-gray-900 "
                     htmlFor="file_input"
@@ -418,6 +439,22 @@ const UpdatePerfume = () => {
                     }}
                     accept=".jpg, .jpeg, .png, .webp"
 
+                  />
+                </div>
+                <div className="">
+                  <label
+                    htmlFor="name"
+                    className="block mb-2 text-sm font-medium text-gray-900 "
+                  >
+                    BrandAltAttribute
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    id="name"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5      "
+                    placeholder="Type product name"
+                    {...register("brandAltAttribute", { required: true })}
                   />
                 </div>
               </div>
@@ -1025,6 +1062,12 @@ const UpdatePerfume = () => {
                 <Controller
                   name="topNote"
                   control={control}
+                  rules={{
+                    validate: (value) =>
+                      value && value.length <= 4
+                        ? true
+                        : `You can select up to ${4} items only.`
+                  }}
                   render={({ field }) => (
                     <Select
                       {...field}
@@ -1041,9 +1084,15 @@ const UpdatePerfume = () => {
                         label: note.name,
                       }))}
                       isMulti
+                      onChange={(selected) => {
+                        field.onChange(selected);
+                      }}
                     />
                   )}
                 />
+                {errors.topNote && (
+                  <p className="" style={{ color: 'red' }}>{errors.topNote.message}</p>
+                )}
 
                 <div className="w-full flex justify-between py-2">
                   <label
@@ -1056,6 +1105,12 @@ const UpdatePerfume = () => {
                 <Controller
                   name="midNote"
                   control={control}
+                  rules={{
+                    validate: (value) =>
+                      value && value.length <= 4
+                        ? true
+                        : `You can select up to ${4} items only.`
+                  }}
                   render={({ field }) => (
                     <Select
                       {...field}
@@ -1072,9 +1127,15 @@ const UpdatePerfume = () => {
                         label: note.name,
                       }))}
                       isMulti
+                      onChange={(selected) => {
+                        field.onChange(selected);
+                      }}
                     />
                   )}
                 />
+                {errors.midNote && (
+                  <p className="" style={{ color: 'red' }}>{errors.midNote.message}</p>
+                )}
 
                 <div className="w-full flex justify-between py-2">
                   <label
@@ -1087,6 +1148,12 @@ const UpdatePerfume = () => {
                 <Controller
                   name="baseNote"
                   control={control}
+                  rules={{
+                    validate: (value) =>
+                      value && value.length <= 4
+                        ? true
+                        : `You can select up to ${4} items only.`
+                  }}
                   render={({ field }) => (
                     <Select
                       {...field}
@@ -1102,9 +1169,15 @@ const UpdatePerfume = () => {
                         label: note.name,
                       }))}
                       isMulti
+                      onChange={(selected) => {
+                        field.onChange(selected);
+                      }}
                     />
                   )}
                 />
+                {errors.baseNote && (
+                  <p className="" style={{ color: 'red' }}>{errors.baseNote.message}</p>
+                )}
               </div>
 
               <div className="sm:col-span-2">
@@ -1210,16 +1283,16 @@ const UpdatePerfume = () => {
                     control={control}
                     render={({ field: { onChange, value, ref } }) => (
                       <Select
-                      onChange={selected => {
-                        onChange(selected); // Use `selected` if you need the whole object
-                      }}
-                      value={gender.find(el => el.value === value
-                      )}
-                      options={gender}
-                      defaultValue={gender.find(el => el.value === state?.ratingFragrams?.gender,
+                        onChange={selected => {
+                          onChange(selected); // Use `selected` if you need the whole object
+                        }}
+                        value={gender.find(el => el.value === value
+                        )}
+                        options={gender}
+                        defaultValue={gender.find(el => el.value === state?.ratingFragrams?.gender,
 
-                      )}
-                      
+                        )}
+
                       />
                     )}
                   />

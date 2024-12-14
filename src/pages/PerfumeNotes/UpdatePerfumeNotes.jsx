@@ -1,155 +1,187 @@
-import React, { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate, useParams } from "react-router-dom";
+import { Toaster, toast } from "sonner";
 
 const UpdatePerfumeNotes = () => {
-  const { state } = useLocation();
+  const [isLoading, setIsLoading] = useState(false);
+  const [defaultImage, setDefaultImage] = useState(null); // State to store the current image
+  const [previewImage, setPreviewImage] = useState(null); // State to store the new image preview
+  const { id } = useParams();  // Get perfume note ID from URL
+  const navigate = useNavigate()
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm();
+
+  // Function to filter form data for API submission
+  const filterData = (data) => {
+    let formData = new FormData();
+    formData.append("name", data.name);
+    if (data.image && data.image[0]) {
+      formData.append("image", data.image[0]); // Add new image if uploaded
+    }
+    return formData;
+  };
+
+  // Fetch the single perfume note data
+  const getSingleNote = () => {
+    setIsLoading(true);
+    axios
+      .get(`${import.meta.env.VITE_API_URL}/note/${id}`)
+      .then((res) => {
+        const result = res?.data?.data;
+        setValue("name", result?.name);  // Set the note name in the form
+        setDefaultImage(result?.image);  // Set the existing image as default
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setIsLoading(false);
+        toast.error("Server Issue, Try again later", {
+          style: {
+            background: "red",
+            color: "white",
+          },
+        });
+      });
+  };
 
   useEffect(() => {
-    console.log(state);
-  }, [state]);
-  
+    getSingleNote();
+  }, []);  // Fetch note data when component is mounted
+
+  // Handle form submission
+  const onSubmit = (data) => {
+    console.log(data)
+    setIsLoading(true);
+    const formData = filterData(data);
+
+    // Send PUT request to update the perfume note
+    axios
+      .patch(`${import.meta.env.VITE_API_URL}/note/${id}`, formData)
+      .then((res) => {
+        setIsLoading(false);
+        navigate('/perfumenotes')
+        toast.success("Note updated successfully", {
+          style: {
+            background: "green",
+            color: "white",
+          },
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+        setIsLoading(false);
+        toast.error("Failed to update note", {
+          style: {
+            background: "red",
+            color: "white",
+          },
+        });
+      });
+  };
+
+  // Handle new image selection and update preview
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setPreviewImage(imageUrl);  // Update preview image with the new one
+    }
+  };
+
   return (
     <div>
-      <section class="bg-white ">
-        <div class="max-w-2xl px-4 py-8 mx-auto lg:py-16">
-          <h2 class="mb-4 text-xl font-bold text-gray-900 ">
-            Coming Soon
+      <section className="bg-white">
+        <div className="max-w-2xl px-4 py-8 mx-auto lg:py-16">
+          <h2 className="mb-4 text-xl font-bold text-gray-900">
+            Update Perfume Notes
           </h2>
-          {/* <form action="#">
-            <div class="grid gap-4 mb-4 sm:grid-cols-2 sm:gap-6 sm:mb-5">
-              <div class="sm:col-span-2">
-                <label
-                  for="name"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Product Name
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  id="name"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                  value="Apple iMac 27&ldquo;"
-                  placeholder="Type product name"
-                  required=""
-                />
-              </div>
-              <div class="w-full">
-                <label
-                  for="brand"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Brand
-                </label>
-                <input
-                  type="text"
-                  name="brand"
-                  id="brand"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                  value="Apple"
-                  placeholder="Product brand"
-                  required=""
-                />
-              </div>
-              <div class="w-full">
-                <label
-                  for="price"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Price
-                </label>
-                <input
-                  type="number"
-                  name="price"
-                  id="price"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                  value="2999"
-                  placeholder="$299"
-                  required=""
-                />
-              </div>
-              <div>
-                <label
-                  for="category"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Category
-                </label>
-                <select
-                  id="category"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                >
-                  <option selected="">Electronics</option>
-                  <option value="TV">TV/Monitors</option>
-                  <option value="PC">PC</option>
-                  <option value="GA">Gaming/Console</option>
-                  <option value="PH">Phones</option>
-                </select>
-              </div>
-              <div>
-                <label
-                  for="item-weight"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Item Weight (kg)
-                </label>
-                <input
-                  type="number"
-                  name="item-weight"
-                  id="item-weight"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                  value="15"
-                  placeholder="Ex. 12"
-                  required=""
-                />
-              </div>
-              <div class="sm:col-span-2">
-                <label
-                  for="description"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Description
-                </label>
-                <textarea
-                  id="description"
-                  rows="8"
-                  class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                  placeholder="Write a product description here..."
-                >
-                  Standard glass, 3.8GHz 8-core 10th-generation Intel Core i7
-                  processor, Turbo Boost up to 5.0GHz, 16GB 2666MHz DDR4 memory,
-                  Radeon Pro 5500 XT with 8GB of GDDR6 memory, 256GB SSD
-                  storage, Gigabit Ethernet, Magic Mouse 2, Magic Keyboard - US
-                </textarea>
+
+          <Toaster />
+
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="grid gap-4 mb-4 sm:grid-cols-2 sm:gap-6 sm:mb-5">
+              <div className="sm:col-span-2">
+                <div className="w-full flex justify-end py-2"></div>
+
+                <div className="relative overflow-x-auto">
+                  <table className="w-full text-sm text-left rtl:text-right text-gray-500">
+                    <thead className="text-xs text-gray-700 bg-gray-50">
+                      <tr>
+                        <th scope="col" className="px-1 pt-2 pb-1">
+                          Note Name
+                        </th>
+                        <th scope="col" className="px-1 pt-2 pb-1">
+                          Image
+                        </th>
+                        <th scope="col" className="px-1 pt-2 pb-1"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="bg-white border-b">
+                        <td
+                          scope="row"
+                          className="px-1 py-4 font-medium text-gray-900 whitespace-nowrap"
+                        >
+                          <input
+                            type="text"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                            placeholder="E.g, Wood, lavender etc"
+                            {...register("name", { required: true })}
+                          />
+                        </td>
+                        <td className="px-1 py-4">
+                          {/* Show default image or new preview image */}
+                          {previewImage ? (
+                            <div className="mb-4">
+                              <img
+                                src={previewImage}
+                                alt="New Preview"
+                                className="h-20 w-20 object-cover rounded-lg"
+                              />
+                            </div>
+                          ) : (
+                            defaultImage && (
+                              <div className="mb-4">
+                                <img
+                                  src={defaultImage}
+                                  alt="Default"
+                                  className="h-20 w-20 object-cover rounded-lg"
+                                />
+                              </div>
+                            )
+                          )}
+
+                          <input
+                            type="file"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                            accept=".jpg, .jpeg, .png, .webp"
+                            {...register("image")}
+                            onChange={handleImageChange} // Update image on selection
+                          />
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
-            <div class="flex items-center space-x-4">
+
+            <div className="flex justify-center items-center space-x-4 w-full">
               <button
                 type="submit"
-                class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                className="w-1/3 text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text- px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
               >
-                Update product
-              </button>
-              <button
-                type="button"
-                class="text-red-600 inline-flex items-center hover:text-white border border-red-600 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900"
-              >
-                <svg
-                  class="w-5 h-5 mr-1 -ml-1"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                    clip-rule="evenodd"
-                  ></path>
-                </svg>
-                Delete
+                {isLoading ? "Saving..." : "Save"}
               </button>
             </div>
-          </form> */}
+          </form>
         </div>
       </section>
     </div>

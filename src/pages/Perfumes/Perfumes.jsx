@@ -14,7 +14,7 @@ const PerfumeNotes = () => {
   const search = searchParams.get('search');
   const getPerfumes = () => {
     axios
-      .get(`${import.meta.env.VITE_API_URL}/perfume/?Page=${page}&Search=${search||''}`)
+      .get(`${import.meta.env.VITE_API_URL}/perfume/?Page=${page}&Search=${search || ''}`)
       .then((res) => {
         console.log(res)
         setPerfumeData(res?.data);
@@ -27,7 +27,7 @@ const PerfumeNotes = () => {
   }
   useEffect(() => {
     getPerfumes()
-  }, [search,page]);
+  }, [search, page]);
 
   const deleteItem = (item) => {
     if (window.confirm(`Are you sure you want to delete perfume:- ${item.perfume}`)) {
@@ -53,11 +53,11 @@ const PerfumeNotes = () => {
       })
     }
   }
-  
 
-  useEffect(()=>{
-  console.log("perfumeData",perfumeData);
-  },[perfumeData])
+
+  useEffect(() => {
+    console.log("perfumeData", perfumeData);
+  }, [perfumeData])
 
   return (
     <div>
@@ -105,8 +105,8 @@ const PerfumeNotes = () => {
                       scope="row"
                       className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap "
                     >
-                      <div className="ps-3">
-                        <img src={item.banner} width={"100px"} />
+                      <div className="ps-3  w-full">
+                        <img src={item.banner} className="w-full h-20 object-contain" />
                       </div>
                     </th>
                     <td className="px-6 py-4">{item.perfume}</td>
@@ -141,13 +141,13 @@ const PerfumeNotes = () => {
           )}
         </div>
 
-{  perfumeData &&  <Pagination
+        {perfumeData && <Pagination
           searchParams={searchParams}
           setSearchParams={setSearchParams}
           totalPages={
             perfumeData.totalPage}
         />}
-      
+
       </div>
     </div>
   );

@@ -106,7 +106,7 @@ export default function ModalWrapper({ children, isShowing, setIsShowing }) {
                         {/*    <!-- Modal --> */}
                         <div
                             ref={wrapperRef}
-                            className="flex max-h-[90vh] w-11/12 max-w-xl flex-col gap-6 overflow-hidden rounded bg-white p-6 text-slate-500 shadow-xl shadow-slate-700/10"
+                            className="flex max-h-[90vh] w-11/12 max-w-3xl flex-col gap-6 overflow-hidden rounded bg-white p-6 text-slate-500 shadow-xl shadow-slate-700/10"
                             id="modal"
                             role="document"
                         >
@@ -143,7 +143,7 @@ export default function ModalWrapper({ children, isShowing, setIsShowing }) {
                                 </button>
                             </header>
                             {/*        <!-- Modal body --> */}
-                            <div id="content-3a" className="flex-1 overflow-auto">
+                            <div id="content-3a" className="flex-1 overflow-auto ">
 
                                 {children}
 

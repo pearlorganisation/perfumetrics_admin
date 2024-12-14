@@ -78,7 +78,7 @@ const PerfumeBrands = () => {
                 </thead>
                 <tbody>
                     {
-                        isLoading ? <div className='h-[40vh] border grid place-items-center w-full'>Loading...</div> : Array.isArray(brands.data) && brands.data?.length > 0 && brands.data?.map((brand) => (
+                        Array.isArray(brands.data) && brands.data?.length > 0 && brands.data?.map((brand) => (
                             <tr key={brand._id}>
                                 <td className="py-2 px-4 border-b border-gray-200">{brand._id}</td>
                                 <td className="py-2 px-4 border-b border-gray-200">{brand.brand}</td>

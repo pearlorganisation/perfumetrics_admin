@@ -58,6 +58,7 @@ import RequestViewReview from "./pages/RequestAReview/RequestViewReview";
 import RequestAReview from "./pages/RequestAReview/RequestAReview";
 import AddCountryISO from "./pages/CountryISOCode/AddCountryISO";
 import CountryISO from "./pages/CountryISOCode/CountryISO";
+import SaleOff from "./pages/SaleOff/SaleOff";
 
 
 const isUserLoggedIn = localStorage.getItem("isusrlgd");
@@ -289,6 +290,12 @@ const App = () => {
           path: "/countryISO",
           element: <CountryISO />,
         },
+        // sale off
+        {
+          path: "/saleOff",
+          element: <SaleOff />,
+        },
+        // sale off
 
 
 
@@ -309,7 +316,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <div className="">
-        <Toaster richColors containerClassName="overflow-auto" />
+        <Toaster richColors />
         <RouterProvider router={router} />;
       </div>
     </Provider>

@@ -6,8 +6,9 @@ import Select from "react-select";
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { IoClose } from "react-icons/io5";
+import { toast } from 'sonner';
 
-const AddFragram = ({ setIsShowing }) => {
+const AddSaleOff = ({ setIsShowing }) => {
     const dispatch = useDispatch()
     const { perfumeId } = useParams()
     const [brandsData, setBrandsData] = useState([])
@@ -67,15 +68,15 @@ const AddFragram = ({ setIsShowing }) => {
 
         try {
             setIsLoading(true)
-            const result = await axios.post(`${import.meta.env.VITE_API_URL}/fragrams?perfumeId=${perfumeId}`, formData)
+            const result = await axios.post(`${import.meta.env.VITE_API_URL}/salesOff`, formData)
             setIsLoading(false)
             setIsShowing(false)
 
             console.log(result, "relatedFragrams")
         } catch (error) {
             setIsLoading(false)
-
-            console.log(error.message)
+            toast.error(error?.response?.data?.message || "Error on Adding Sales Off", { position: 'top-center' })
+            console.log(error?.response?.data?.message)
         }
 
     }
@@ -83,19 +84,17 @@ const AddFragram = ({ setIsShowing }) => {
     const onSubmit = (data) => {
         const formData = new FormData()
         formData.append("title", data?.title)
-        formData.append("postBy", data?.postBy)
         formData.append("links", JSON.stringify(data?.links))
         formData.append("rating", data?.rating)
-        formData.append("perfumeId", perfumeId)
         formData.append("banner", data?.banner[0])
 
         postRelatedFragram(formData)
 
-        console.log(data, perfumeId); // Handle form submission
+        console.log(data, "data"); // Handle form submission
     };
     return (
         <div className="w-full text-center space-y-5  bg-white  shadow overflow-hidden sm:rounded-md">
-            <h1 className="text-3xl">Add  Fragram </h1>
+            <h1 className="text-3xl">Add  Sale Off </h1>
 
             <form onSubmit={handleSubmit(onSubmit)}>
                 {/* Perfume Title */}
@@ -113,11 +112,11 @@ const AddFragram = ({ setIsShowing }) => {
                         <div className="flex flex-wrap items-stretch w-full mb-4 relative">
                             <input
                                 type="text"
-                                {...register('postBy', { required: 'Post By is required' })}
+                                {...register('quantity', { required: 'Quantity is required' })}
                                 className="flex-shrink flex-grow flex-auto leading-normal w-px border border-green-200 h-10 rounded px-3 focus:border-blue focus:shadow"
-                                placeholder="Post By"
+                                placeholder="Quantity"
                             />
-                            {errors.postBy && <p className="text-red-500">{errors.postBy.message}</p>}
+                            {errors.quantity && <p className="text-red-500">{errors.quantity.message}</p>}
                         </div>
                         <div className="flex flex-wrap items-stretch w-full mb-4 relative">
                             <input
@@ -153,6 +152,28 @@ const AddFragram = ({ setIsShowing }) => {
                                         {errors.links?.[index]?.link && (
                                             <p className="text-red-500">
                                                 {errors.links[index].link.message}
+                                            </p>
+                                        )}
+                                    </div>
+
+                                    <div className='col-span-2 space-y-1'>
+                                        <label
+                                            htmlFor={`links.${index}.price`}
+                                            className="block text-sm font-medium text-gray-700"
+                                        >
+                                            Price
+                                        </label>
+                                        <input
+                                            type="text"
+                                            {...register(`links.${index}.price`, {
+                                                required: 'Price is required',
+                                            })}
+                                            placeholder="Price"
+                                            className="w-full px-3 py-2 border rounded focus:ring focus:ring-blue-500"
+                                        />
+                                        {errors.links?.[index]?.price && (
+                                            <p className="text-red-500">
+                                                {errors.links[index].price.message}
                                             </p>
                                         )}
                                     </div>
@@ -289,4 +310,6 @@ const AddFragram = ({ setIsShowing }) => {
     );
 };
 
-export default AddFragram;
+
+
+export default AddSaleOff

@@ -1,4 +1,4 @@
-import {  Skeleton } from "@mui/material";
+import { Skeleton } from "@mui/material";
 import Pagination from "../../components/Pagination/Pagination";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -17,30 +17,29 @@ const NewArrival = () => {
   const [isShowing, setIsShowing] = useState(false)
 
 
-  function fetchNewArrival({page,search})
-  {
+  function fetchNewArrival({ page, search }) {
     axios
-    .get(`${import.meta.env.VITE_API_URL}/newArrival/admin?Search=${search||''}&Page=${page||1}`)
-    .then((res) => {
-      console.log(res)
-      setPerfumeData(res.data);
-      setIsLoading(false);
-    })
-    .catch((err) => {
-      console.log(err);
-      setIsLoading(false);
-    });
+      .get(`${import.meta.env.VITE_API_URL}/newArrival/admin?Search=${search || ''}&Page=${page || 1}`)
+      .then((res) => {
+        console.log(res)
+        setPerfumeData(res.data);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
   }
 
 
   useEffect(() => {
     fetchNewArrival({})
-  },[]);
+  }, []);
 
 
   useEffect(() => {
-    fetchNewArrival({search,page})
-  }, [search,page]);
+    fetchNewArrival({ search, page })
+  }, [search, page]);
 
   const deleteItem = (item) => {
     if (window.confirm(`Are you sure you want to remove perfume:- ${item._id}`)) {
@@ -72,23 +71,23 @@ const NewArrival = () => {
   return (
     <div>
       <Toaster />
-       
+
       <div className="p-10 ">
         <div className="text-center text-3xl font-medium">New Arrival Perfume</div>
         <div className="grid grid-cols-2 justify-center items-center space-y-4 md:space-y-0 pb-8">
           <div className="">
-            <SearchBar/>
+            <SearchBar />
           </div>
-        <div className="flex items-center justify-end flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-8 bg-white ">
-          <Link
-            to="/newArrival/add"
-            className="bg-blue-600 rounded-md text-white px-3 py-1 font-semibold "
-          >
-            Add
-          </Link>
+          <div className="flex items-center justify-end flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-8 bg-white ">
+            <Link
+              to="/newArrival/add"
+              className="bg-blue-600 rounded-md text-white px-3 py-1 font-semibold "
+            >
+              Add
+            </Link>
+          </div>
         </div>
-        </div>
-        
+
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
           {isLoading && (
             <>
@@ -114,14 +113,14 @@ const NewArrival = () => {
                 </tr>
               </thead>
               <tbody>
-                {perfumeData.data &&perfumeData.data.map((item, idx) => (
+                {perfumeData.data && perfumeData.data.map((item, idx) => (
                   <tr key={idx} className="bg-white border-b   hover:bg-gray-50 ">
                     <th
                       scope="row"
                       className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap "
                     >
                       <div className="ps-3">
-                        <img src={item.banner} width={"100px"} />
+                        <img className="size-32 object-contain" src={item.banner} />
                       </div>
                     </th>
                     <td className="px-6 py-4">{item.perfumeName}</td>
@@ -153,11 +152,11 @@ const NewArrival = () => {
         </div>
 
       </div>
-      {perfumeData &&<Pagination
-          searchParams={searchParams}
-          setSearchParams={setSearchParams}
-          totalPages={perfumeData.totalPage}
-        />}
+      {perfumeData && <Pagination
+        searchParams={searchParams}
+        setSearchParams={setSearchParams}
+        totalPages={perfumeData.totalPage}
+      />}
       {isShowing && <ModalWrapper isShowing={isShowing} setIsShowing={setIsShowing}> <AddNewArrival setIsShowing={setIsShowing} /> </ModalWrapper>}
     </div>
   );

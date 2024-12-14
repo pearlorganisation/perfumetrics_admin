@@ -172,6 +172,8 @@ const AddPerfume = () => {
     formData.append("middleNote", JSON.stringify(midNote));
     formData.append("baseNote", JSON.stringify(baseNote));
     formData.append("perfume", data.perfume);
+    formData.append("brandAltAttribute", data.brandAltAttribute);
+    formData.append("mainImageAltAttribute", data.mainImageAltAttribute);
     formData.append("description", data.description);
     formData.append("details", data.details);
     formData.append("mainAccords", JSON.stringify(filteredAccords));
@@ -315,8 +317,24 @@ const AddPerfume = () => {
                   />
                 </div>
               </div>
+              <div className="">
+                <label
+                  htmlFor="name"
+                  className="block mb-2 text-sm font-medium text-gray-900 "
+                >
+                  MainImageAltAttribute
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5      "
+                  placeholder="Type product name"
+                  {...register("mainImageAltAttribute", { required: true })}
+                />
+              </div>
 
-              <div className="col-span-2 sm:col-span-1">
+              <div className="col-span-2 space-y-4   ">
                 {logo && (
                   <div className="w-[250px] h-[250px] border border-red-300">
                     <img src={URL.createObjectURL(logo)} className="h-full" />
@@ -342,7 +360,25 @@ const AddPerfume = () => {
                     accept=".jpg, .jpeg, .png, .webp"
                     required
                   />
+
                 </div>
+                <div className="">
+                  <label
+                    htmlFor="name"
+                    className="block mb-2 text-sm font-medium text-gray-900 "
+                  >
+                    BrandAltAttribute
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    id="name"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5      "
+                    placeholder="Type product name"
+                    {...register("brandAltAttribute", { required: true })}
+                  />
+                </div>
+
               </div>
               <div className="sm:col-span-2">
                 <label

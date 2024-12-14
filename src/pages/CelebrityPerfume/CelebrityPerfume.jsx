@@ -36,7 +36,7 @@ const CelebrityPerfume = () => {
         getCelebrityPerfume({ page, search })
     }, [search, page]);
 
-    const deleteItem = (item) => { 
+    const deleteItem = (item) => {
         if (window.confirm(`Are you sure you want to delete Celebrity Perfume:- ${item.title}`)) {
             axios.delete(`${import.meta.env.VITE_API_URL}/celebrityPerfumes/${item._id}`).then((res) => {
 
@@ -102,9 +102,9 @@ const CelebrityPerfume = () => {
                                     <th scope="col" className="px-6 py-3">
                                         Name
                                     </th>
-                                    <th scope="col" className="px-6 py-3">
+                                    {/* <th scope="col" className="px-6 py-3">
                                         Content
-                                    </th>
+                                    </th> */}
 
                                     <th scope="col" className="col-span-2 px-6 py-3 text-center">
                                         Actions
@@ -123,7 +123,7 @@ const CelebrityPerfume = () => {
                                             </div>
                                         </th>
                                         <td className="px-6 py-4">{item?.title}</td>
-                                        <td className="px-6 py-4">{parse(item?.content)}</td>
+                                        {/* <td className="px-6 py-4">{parse(item?.content)}</td> */}
 
 
                                         <td className="px-6 py-4 space-x-3 flex justify-center items-center">
