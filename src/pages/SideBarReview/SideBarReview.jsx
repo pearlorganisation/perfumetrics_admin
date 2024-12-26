@@ -100,7 +100,7 @@ const SideBarReview = () => {
                                             </div>
                                         </th>
                                         <td className="px-6 py-4">{item?.title}</td>
-                                        <td className="px-6 py-4">{item?.postBy}</td>
+                                        <td className="px-6 py-4">{item?.reviewBy}</td>
 
                                         {/* <td className="px-6 py-4">
                                             <Link

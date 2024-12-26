@@ -179,6 +179,17 @@ const Sidebar = () => {
               </span>
             </Link>
           </li>
+          <li>
+            <Link
+              to="/sideBarReview"
+              className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
+            >
+              <CategoryIcon />
+              <span className="flex-1 ms-3 whitespace-nowrap">
+                Side Bar Review
+              </span>
+            </Link>
+          </li>
 
 
 

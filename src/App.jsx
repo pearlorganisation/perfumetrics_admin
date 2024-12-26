@@ -295,6 +295,10 @@ const App = () => {
           path: "/saleOff",
           element: <SaleOff />,
         },
+        {
+          path: "/sideBarReview",
+          element: <SideBarReview />,
+        },
         // sale off
 
 
