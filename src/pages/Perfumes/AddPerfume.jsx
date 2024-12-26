@@ -179,11 +179,13 @@ const AddPerfume = () => {
     formData.append("mainAccords", JSON.stringify(filteredAccords));
     formData.append("pros", JSON.stringify(filteredPros));
     formData.append("cons", JSON.stringify(filteredCons));
+    formData.append("keywords", JSON.stringify(data?.keywords?.split(',')));
 
     formData.append("banner", banner);
     formData.append("logo", logo);
     formData.append('brand', brandId)
     formData.append('video', video)
+    formData.append('slug', data.slug);
     formData.append('ratingFragrams', JSON.stringify({
       longitivity: Number(data.longitivity),
       gender: data?.gender?.value,
@@ -333,7 +335,38 @@ const AddPerfume = () => {
                   {...register("mainImageAltAttribute", { required: true })}
                 />
               </div>
-
+              <div className="">
+                <label
+                  htmlFor="name"
+                  className="block mb-2 text-sm font-medium text-gray-900 "
+                >
+                  Slug
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5      "
+                  placeholder="Enter Slug For Perfume Do Not Add `/ ` inside the slug"
+                  {...register("slug", { required: true })}
+                />
+              </div>
+              <div className="">
+                <label
+                  htmlFor="keyword"
+                  className="block mb-2 text-sm font-medium text-gray-900 "
+                >
+                  Keywords (SEO)
+                </label>
+                <input
+                  type="text"
+                  name="keywords"
+                  id="keywords"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5      "
+                  placeholder="To Add Multiple Keywords Give ',' between key1,key2"
+                  {...register("keywords", { required: true })}
+                />
+              </div>
               <div className="col-span-2 space-y-4   ">
                 {logo && (
                   <div className="w-[250px] h-[250px] border border-red-300">

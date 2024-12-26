@@ -79,10 +79,10 @@ const UpdatePerfume = () => {
       perfume: state?.perfume,
       brandAltAttribute: state.brandAltAttribute,
       mainImageAltAttribute: state.mainImageAltAttribute,
-
+      keywords:(state?.keywords.toString()),
       detail: state?.details,
       description: state?.description,
-
+      slug:state?.slug,
       gender: gender.find(el => el.value === state?.ratingFragrams?.gender,
 
       ),
@@ -215,15 +215,15 @@ const UpdatePerfume = () => {
 
   const filterData = (data) => {
 
-    console.log("data submittion", data);
-
+    console.log("data submittion", data.keywords.split(','));
+    
     let formData = new FormData();
 
     let topNote = data?.topNote?.map((item) => item.value) || state?.topNotemap?.((item) => item._id);
     let midNote = data?.midNote?.map((item) => item.value) || state?.midNotemap?.((item) => item._id);
     let baseNote = data?.baseNote?.map((item) => item.value) || state?.baseNotemap?.((item) => item._id);
 
-    console.log("dfdsfsda", baseNote);
+    // console.log("dfdsfsda", baseNote);
 
     let filteredAccords = accords.map((item) => {
       delete item.id;
@@ -239,8 +239,8 @@ const UpdatePerfume = () => {
       delete item.id;
       return { title: item.cons || item?.title };
     });
-    console.log("puschase links", purchaseLinks)
-    const map = new Map()
+    // console.log("puschase links", purchaseLinks)
+    // const map = new Map()
 
     formData.append("purchaseLinks", JSON.stringify(purchaseLinks));
 
@@ -255,6 +255,8 @@ const UpdatePerfume = () => {
     formData.append("mainAccords", JSON.stringify(filteredAccords));
     formData.append("pros", JSON.stringify(filteredPros));
     formData.append("cons", JSON.stringify(filteredCons));
+    formData.append("slug", data.slug);
+    formData.append("keywords", JSON.stringify(data?.keywords?.split(',')));
 
     formData.append("banner", banner);
     formData.append("logo", logo);
@@ -409,6 +411,38 @@ const UpdatePerfume = () => {
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5      "
                   placeholder="Type product name"
                   {...register("mainImageAltAttribute", { required: true })}
+                />
+              </div>
+              <div className="">
+                <label
+                  htmlFor="name"
+                  className="block mb-2 text-sm font-medium text-gray-900 "
+                >
+                  Slug
+                </label>
+                <input
+                  type="text"
+                  name="Slug"
+                  id="Slug"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5      "
+                  placeholder="Enter Slug For Perfume Do Not Add `/ ` inside the slug"
+                  {...register("slug", { required: true })}
+                />
+              </div>
+              <div className="">
+                <label
+                  htmlFor="keyword"
+                  className="block mb-2 text-sm font-medium text-gray-900 "
+                >
+                  Keywords (SEO)
+                </label>
+                <input
+                  type="text"
+                  name="keywords"
+                  id="keywords"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5      "
+                  placeholder="To Add Multiple Keywords Give ',' between key1,key2"
+                  {...register("keywords", { required: true })}
                 />
               </div>
 
