@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 
 const AddSideBarReview = ({ setIsShowing }) => {
     const dispatch = useDispatch()
-    const { perfumeId } = useParams()
+    // const { perfumeId } = useParams()
 
     const [isLoading, setIsLoading] = useState(false)
 
@@ -54,11 +54,11 @@ const AddSideBarReview = ({ setIsShowing }) => {
         formData.append("reviewBy", data?.reviewBy)
         formData.append("description", data?.description)
         formData.append("banner", data?.file[0])
-        formData.append("perfumeId", perfumeId)
+        formData.append("link", data?.link)
 
         postSideBarReview(formData)
 
-        console.log(data, perfumeId); // Handle form submission
+        // console.log(data, perfumeId); // Handle form submission
     };
     return (
         <div className="w-full text-center space-y-5  bg-white  shadow overflow-hidden sm:rounded-md">
@@ -75,6 +75,15 @@ const AddSideBarReview = ({ setIsShowing }) => {
                                 placeholder="Title"
                             />
                             {errors.perfumeName && <p className="text-red-500">{errors.perfumeName.message}</p>}
+                        </div>
+                        <div className="flex flex-wrap items-stretch w-full mb-4 relative">
+                            <input
+                                type="text"
+                                {...register('link', { required: 'Link is required' })}
+                                className="flex-shrink flex-grow flex-auto leading-normal w-px border border-green-200 h-10 border-grey-light rounded rounded-l-none px-3 relative focus:border-blue focus:shadow"
+                                placeholder="Link"
+                            />
+                            {errors.link && <p className="text-red-500">{errors.link.message}</p>}
                         </div>
                         <div className="flex flex-wrap items-stretch w-full mb-4 relative">
                             <textarea
