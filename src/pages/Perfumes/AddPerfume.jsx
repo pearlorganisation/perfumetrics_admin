@@ -6,22 +6,19 @@ import { Toaster, toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBrands } from "../../features/actions/brandsAction";
-import ct from 'countries-and-timezones';
-
+import ct from "countries-and-timezones";
 
 const AddPerfume = () => {
-  const tmz = Intl.DateTimeFormat().resolvedOptions().timeZone
+  const tmz = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const timezone = ct.getTimezone(tmz);
   const [countryISOData, setCountryISOData] = useState(null);
 
   console.log(timezone?.countries[0], "timezone");
 
-
-
-  const { brands } = useSelector(state => state.brand)
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const [brandsData, setBrandsData] = useState([])
+  const { brands } = useSelector((state) => state.brand);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [brandsData, setBrandsData] = useState([]);
 
   const [banner, setBanner] = useState(null);
   const [logo, setLogo] = useState(null);
@@ -33,7 +30,7 @@ const AddPerfume = () => {
   const [purchaseLinks, setPurchaseLinks] = useState([]);
   const [pros, setPros] = useState([]);
   const [cons, setCons] = useState([]);
-  const [gendeR, setGender] = useState('');
+  const [gendeR, setGender] = useState("");
   const [video, setVideo] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -42,7 +39,7 @@ const AddPerfume = () => {
     axios
       .get(`${import.meta.env.VITE_API_URL}/countryISOcodes`)
       .then((res) => {
-        console.log(res)
+        console.log(res);
         setCountryISOData(res?.data.data);
 
         setIsLoading(false);
@@ -51,9 +48,9 @@ const AddPerfume = () => {
         console.log(err);
         setIsLoading(false);
       });
-  }
+  };
   useEffect(() => {
-    getCountryISO()
+    getCountryISO();
   }, []);
   const {
     control,
@@ -64,11 +61,10 @@ const AddPerfume = () => {
     reset,
   } = useForm();
 
-
   const addAccord = () => {
     setAccords((prev) => {
       let id = (prev[prev?.length - 1]?.id || 0) + 1;
-      let newAccord = { id: id, name: "", percentage: 0, color: '#000000' };
+      let newAccord = { id: id, name: "", percentage: 0, color: "#000000" };
       return [...prev, newAccord];
     });
   };
@@ -84,7 +80,7 @@ const AddPerfume = () => {
   const addPurchaseLink = () => {
     setPurchaseLinks((prev) => {
       let id = (prev[prev?.length - 1]?.id || 0) + 1;
-      let purchaseLink = { id: id, link: "", company: "" };
+      let purchaseLink = { id: id, link: "", company: "", price: "" };
       return [...prev, purchaseLink];
     });
   };
@@ -143,12 +139,11 @@ const AddPerfume = () => {
 
   const filterData = (data) => {
     let formData = new FormData();
+    const purchaseLinkImages = purchaseLinks.map((el) => el?.companyImage);
 
     let topNote = data?.topNote.map((item) => item.value);
     let midNote = data?.midNote.map((item) => item.value);
     let baseNote = data?.baseNote.map((item) => item.value);
-
-
 
     let filteredAccords = accords.map((item) => {
       delete item.id;
@@ -164,10 +159,8 @@ const AddPerfume = () => {
       delete item.id;
       return { title: item.cons };
     });
-    const map = new Map()
 
     formData.append("purchaseLinks", JSON.stringify(purchaseLinks));
-
     formData.append("topNote", JSON.stringify(topNote));
     formData.append("middleNote", JSON.stringify(midNote));
     formData.append("baseNote", JSON.stringify(baseNote));
@@ -179,26 +172,31 @@ const AddPerfume = () => {
     formData.append("mainAccords", JSON.stringify(filteredAccords));
     formData.append("pros", JSON.stringify(filteredPros));
     formData.append("cons", JSON.stringify(filteredCons));
-    formData.append("keywords", JSON.stringify(data?.keywords?.split(',')));
+    formData.append("keywords", JSON.stringify(data?.keywords?.split(",")));
 
     formData.append("banner", banner);
     formData.append("logo", logo);
-    formData.append('brand', brandId)
-    formData.append('video', video)
-    formData.append('slug', data.slug);
-    formData.append('ratingFragrams', JSON.stringify({
-      longitivity: Number(data.longitivity),
-      gender: data?.gender?.value,
-      sillage: Number(data?.sillage),
-      pricing: Number(data?.pricing),
-      overall: Number(data?.overall),
-      compliment: Number(data?.compliment)
-    }))
+    formData.append("brand", brandId);
+    formData.append("video", video);
+    formData.append("slug", data.slug);
+    formData.append(
+      "ratingFragrams",
+      JSON.stringify({
+        longitivity: Number(data.longitivity),
+        gender: data?.gender?.value,
+        sillage: Number(data?.sillage),
+        pricing: Number(data?.pricing),
+        overall: Number(data?.overall),
+        compliment: Number(data?.compliment),
+      })
+    );
 
     for (let i = 0; i < gallery.length; i++) {
       formData.append("gallery", gallery[i]);
     }
-
+    purchaseLinkImages.forEach((el) => {
+      formData.append("companyImages", el);
+    })
 
 
     // Do a bit of work to convert the entries to a plain JS object
@@ -210,7 +208,7 @@ const AddPerfume = () => {
   };
 
   const onSubmit = async (data) => {
-    if (isLoading) return
+    if (isLoading) return;
     toast("saving");
     let tempAccords = [...accords];
     let totalPercentage = 0;
@@ -227,15 +225,19 @@ const AddPerfume = () => {
     }
 
     let formData = filterData(data);
-    setIsLoading(true)
-    console.log(formData)
+    console.log(formData, "formData!!");
+    setIsLoading(true);
+
     try {
       setIsLoading(true);
 
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/perfume`, formData);
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/perfume`,
+        formData
+      );
 
       setIsLoading(false);
-      navigate('/perfumes');
+      navigate("/perfumes");
       toast.success("Saved successfully", {
         position: "top-center",
         style: {
@@ -243,7 +245,6 @@ const AddPerfume = () => {
           color: "white",
         },
       });
-
     } catch (err) {
       console.error(err);
       setIsLoading(false);
@@ -257,33 +258,30 @@ const AddPerfume = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchBrands({ limit: "infinite" }))
-    addAccord()
-    addPurchaseLink()
+    dispatch(fetchBrands({ limit: "infinite" }));
+    addAccord();
+    addPurchaseLink();
     addCons();
     addPros();
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (brands?.data?.length > 0) {
-      const temp = brands?.data?.map(item => {
+      const temp = brands?.data?.map((item) => {
         return {
           value: item?._id,
-          label: item?.brand
-        }
-      })
-      setBrandsData(temp)
+          label: item?.brand,
+        };
+      });
+      setBrandsData(temp);
     }
-  }, [brands])
+  }, [brands]);
 
   const gender = [
-    { value: 'M', label: 'Male' },
-    { value: 'F', label: 'Female' },
-    { value: 'O', label: 'Unisex' },
-
-  ]
-
-
+    { value: "M", label: "Male" },
+    { value: "F", label: "Female" },
+    { value: "O", label: "Unisex" },
+  ];
 
   return (
     <>
@@ -374,8 +372,6 @@ const AddPerfume = () => {
                   </div>
                 )}
 
-
-
                 <div>
                   <label
                     className="block mb-2 text-sm font-medium text-gray-900 "
@@ -393,7 +389,6 @@ const AddPerfume = () => {
                     accept=".jpg, .jpeg, .png, .webp"
                     required
                   />
-
                 </div>
                 <div className="">
                   <label
@@ -411,7 +406,6 @@ const AddPerfume = () => {
                     {...register("brandAltAttribute", { required: true })}
                   />
                 </div>
-
               </div>
               <div className="sm:col-span-2">
                 <label
@@ -422,14 +416,12 @@ const AddPerfume = () => {
                 </label>
                 <Select
                   options={brandsData}
-
                   onChange={(val) => {
-                    setBrandId(val?.value)
+                    setBrandId(val?.value);
                   }}
                   required
                 // closeMenuOnSelect={true}
                 />
-
               </div>
               <div className="sm:col-span-2">
                 <div>
@@ -450,7 +442,6 @@ const AddPerfume = () => {
                       });
                     }}
                     accept=".jpg, .jpeg, .png, .webp"
-
                   />
                 </div>
                 {gallery && gallery?.length > 0 && (
@@ -583,7 +574,7 @@ const AddPerfume = () => {
                             <td className="px-1 py-4">
                               <input
                                 type="number"
-                                onWheel={event => event.currentTarget.blur()}
+                                onWheel={(event) => event.currentTarget.blur()}
                                 min={0}
                                 max={100}
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
@@ -682,6 +673,12 @@ const AddPerfume = () => {
                           <th scope="col" className="px-1 pt-2 pb-1">
                             Country
                           </th>
+                          <th scope="col" className="px-1 pt-2 pb-1">
+                            Price
+                          </th>
+                          <th scope="col" className="px-1 pt-2 pb-1">
+                            Image For Linked Url (Amazon.in Image)
+                          </th>
 
                           <th scope="col" className="px-1 pt-2 pb-1"></th>
                         </tr>
@@ -741,8 +738,11 @@ const AddPerfume = () => {
                             <td
                               className="px-1 py-4"
                             >
-                              <Select
+                              {countryISOData && <Select
+                                defaultValue={countryISOData.find(it => it?.value === item?.country)}
+                                value={countryISOData.find(it => it?.value === item?.country)}
                                 options={countryISOData}
+                                // defaultValue={ }
                                 onChange={(selectedOption) => {
                                   setPurchaseLinks((prev) => {
                                     // Clone the previous array
@@ -763,13 +763,59 @@ const AddPerfume = () => {
                                     return tempArr;
                                   });
                                 }}
-                                // value={selectedCountry}
-                                // onChange={handleCountrySelect}
+
                                 placeholder="Select a country"
+                              />}
+                            </td>
+                            <td className="px-1 py-4">
+                              <input
+                                type="text"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                placeholder="$ Price"
+                                onChange={(e) => {
+                                  setPurchaseLinks((prev) => {
+                                    let tempArr = [...prev];
+                                    let idx = tempArr.findIndex((ele) => {
+                                      return ele.id === item.id;
+                                    });
+
+                                    let row = tempArr[idx];
+                                    tempArr.slice(idx, 1);
+
+                                    row.price = e.target.value;
+                                    tempArr[idx] = row;
+                                    return tempArr;
+                                  });
+                                }}
+                                required
                               />
                             </td>
+                            <td>
+                              <div>
+                                <input
+                                  className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none "
+                                  id="file_input"
+                                  type="file"
+                                  accept=".jpg, .jpeg, .png, .webp"
+                                  onChange={(e) => {
+                                    setPurchaseLinks((prev) => {
+                                      let tempArr = [...prev];
+                                      let idx = tempArr.findIndex((ele) => {
+                                        return ele.id === item.id;
+                                      });
 
+                                      let row = tempArr[idx];
+                                      tempArr.slice(idx, 1);
 
+                                      row.companyImage = e.target.files[0];
+                                      tempArr[idx] = row;
+                                      return tempArr;
+                                    });
+                                  }}
+                                  required
+                                />
+                              </div>
+                            </td>
 
                             <td className="px-1 py-4">
                               <button
@@ -987,12 +1033,11 @@ const AddPerfume = () => {
                     validate: (value) =>
                       value && value.length <= 4
                         ? true
-                        : `You can select up to ${4} items only.`
+                        : `You can select up to ${4} items only.`,
                   }}
                   render={({ field }) => (
                     <Select
                       {...field}
-
                       options={noteData.map((note) => ({
                         value: note._id,
                         label: note.name,
@@ -1001,13 +1046,13 @@ const AddPerfume = () => {
                       onChange={(selected) => {
                         field.onChange(selected);
                       }}
-
                     />
-
                   )}
                 />
                 {errors.topNote && (
-                  <p className="" style={{ color: 'red' }}>{errors.topNote.message}</p>
+                  <p className="" style={{ color: "red" }}>
+                    {errors.topNote.message}
+                  </p>
                 )}
 
                 <div className="w-full flex justify-between py-2">
@@ -1025,7 +1070,7 @@ const AddPerfume = () => {
                     validate: (value) =>
                       value && value.length <= 4
                         ? true
-                        : `You can select up to ${4} items only.`
+                        : `You can select up to ${4} items only.`,
                   }}
                   render={({ field }) => (
                     <Select
@@ -1042,7 +1087,9 @@ const AddPerfume = () => {
                   )}
                 />
                 {errors.midNote && (
-                  <p className="" style={{ color: 'red' }}>{errors.midNote.message}</p>
+                  <p className="" style={{ color: "red" }}>
+                    {errors.midNote.message}
+                  </p>
                 )}
 
                 <div className="w-full flex justify-between py-2">
@@ -1060,7 +1107,7 @@ const AddPerfume = () => {
                     validate: (value) =>
                       value && value.length <= 4
                         ? true
-                        : `You can select up to ${4} items only.`
+                        : `You can select up to ${4} items only.`,
                   }}
                   render={({ field }) => (
                     <Select
@@ -1077,7 +1124,9 @@ const AddPerfume = () => {
                   )}
                 />
                 {errors.baseNote && (
-                  <p className="" style={{ color: 'red' }}>{errors.baseNote.message}</p>
+                  <p className="" style={{ color: "red" }}>
+                    {errors.baseNote.message}
+                  </p>
                 )}
               </div>
 
@@ -1178,11 +1227,7 @@ const AddPerfume = () => {
                     name="gender"
                     control={control}
                     render={({ field }) => (
-                      <Select
-                        {...field}
-                        options={gender}
-                        required
-                      />
+                      <Select {...field} options={gender} required />
                     )}
                   />
                 </div>
@@ -1223,21 +1268,22 @@ const AddPerfume = () => {
               </div>
             </div>
 
-
             <div className="flex justify-center items-center space-x-4 w-full">
-              {
-                isLoading ? <button
+              {isLoading ? (
+                <button
                   type="button"
                   className="w-1/3 text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-base px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                 >
                   Loading...
-                </button> : <button
+                </button>
+              ) : (
+                <button
                   type="submit"
                   className="w-1/3 text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-base px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                 >
                   Save
                 </button>
-              }
+              )}
             </div>
           </form>
         </div>
