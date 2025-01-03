@@ -59,9 +59,22 @@ const UpdatePerfume = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [linkImages, setLinkImages] = useState();
   const [defaultTopNote, setDefaultTopNote] = useState([]);
-
+  const [brandLinkedImages,setBrandLinkedImages] = useState(null);
   const accordsRef = useRef(null);
+  const getBrandLinkedImages = () => {
+    axios
+      .get(`${import.meta.env.VITE_API_URL}/url-Image`)
+      .then((res) => {
+        console.log(res);
+        setBrandLinkedImages(res?.data.data);
 
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
+  };
   const {
     control,
     register,
@@ -100,6 +113,18 @@ const UpdatePerfume = () => {
       }),
     },
   });
+
+  function getDefaultValueForImageLinks(label)
+  {
+     const imgData = brandLinkedImages.find((el)=> el.brand == label);
+    return {
+      label:imgData.brand,
+      value:{
+        imageUrl:imgData.brand,
+        companyName:imgData.companyName
+      }
+    } 
+  }
 
   useEffect(() => {
     setAccords(state.mainAccords);
@@ -373,6 +398,7 @@ const UpdatePerfume = () => {
 
   useEffect(() => {
     dispatch(fetchBrands({ limit: "infinite" }));
+    getBrandLinkedImages();
     // addAccord()
     // addPurchaseLink()
     // addCons();
@@ -1015,30 +1041,44 @@ const UpdatePerfume = () => {
                               required
                             />
                           </td>
-                          <td className="px-1 py-4">
-                            <input
-                              type="text"
-                              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                              placeholder="Company Name"
-                              defaultValue={item?.company}
-                              onChange={(e) => {
-                                setPurchaseLinks((prev) => {
-                                  let tempArr = [...prev];
-                                  let idx = tempArr.findIndex((ele) => {
-                                    return ele?._id === item?._id;
+                          <td
+                              className="px-1 py-4"
+                            >
+                              {brandLinkedImages && <Select
+                                className="w-28"
+                                
+                                value={ getDefaultValueForImageLinks(item.company.companyName)}
+                                options={brandLinkedImages.map((el)=>{
+                                  return{
+                                    label:el.brand,
+                                    value:{imageUrl:el.imageUrl,companyName:el?.brand}
+                                  }
+                                })}
+                                // defaultValue={ }
+                                onChange={(selectedOption) => {
+                                  setPurchaseLinks((prev) => {
+                                    // Clone the previous array
+                                    let tempArr = [...prev];
+
+                                    // Find the index of the item you want to update
+                                    let idx = tempArr.findIndex((ele) => ele.id === item.id);
+
+                                    // Make sure the item exists
+                                    if (idx !== -1) {
+                                      // Update the relevant field with the selected value
+                                      tempArr[idx] = {
+                                        ...tempArr[idx],
+                                        company: selectedOption.value, // Assuming company field gets the selected value
+                                      };
+                                    }
+
+                                    return tempArr;
                                   });
+                                }}
 
-                                  let row = tempArr[idx];
-                                  tempArr.slice(idx, 1);
-
-                                  row.company = e.target.value;
-                                  tempArr[idx] = row;
-                                  return tempArr;
-                                });
-                              }}
-                              required
-                            />
-                          </td>
+                                placeholder="Select a company"
+                              />}
+                            </td>
                           <td className="px-1 py-4 ">
                             {countryISOData && (
                               <Select
@@ -1100,83 +1140,7 @@ const UpdatePerfume = () => {
                               required
                             />
                           </td>
-                          <td>
-                            <div className="flex flex-col justify-center items-center">
-                              {linkImages &&
-                              linkImages?.length > 0 &&
-                              linkImages[idx]?.imageUrl ? (
-                                <div className="flex justify-center items-centerw-[50px] h-[50px] border border-gray-300">
-                                  <img
-                                    src={linkImages?.[idx]?.imageUrl}
-                                    className="h-full"
-                                  />
-                                </div>
-                              ) : (
-                                 linkImages[idx] &&linkImages?.[idx]?.newImage ? <div className="flex justify-center items-centerw-[50px] h-[50px] border border-gray-300">
-                                  <img
-                                    src={URL?.createObjectURL(linkImages?.[idx]?.newImage)}
-                                    className="h-full"
-                                  />
-                                </div> :
-                                <div>
-                                  Insert Image
-                                </div>
-                              )}
-                              <div>
-                                <input
-                                  className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none "
-                                  id="file_input"
-                                  type="file"
-                                  accept=".jpg, .jpeg, .png, .webp"
-                                  onChange={(e) => {
-                                    setPurchaseLinks((prev) => {
-                                      let tempArr = [...prev];
-                                      let idx = tempArr.findIndex((ele) => {
-                                        return ele?._id === item?._id;
-                                      });
-
-                                      let row = tempArr[idx];
-                                      tempArr.slice(idx, 1);
-
-                                      // row.companyImage = e.target.files[0];
-                                     
-                                      tempArr[idx] = row;
-                                      return tempArr;
-                                    });
-                                    setLinkImages((prev)=>{
-                                      const existingData = prev.find((el)=> el?._id == item?._id);
-
-                                      let previousData = [];
-                                      if(existingData)
-                                      {
-
-                                        delete existingData.imageUrl ;
-                                        existingData.newImage = e.target.files[0];
-
-                                        previousData = [...prev];
-                                        console.log("previousData",existingData);
-
-                                      }
-                                      // else
-                                      // {
-                                      //    previousData = [...prev,{
-                                      //     _id:'new'+idx,
-                                      //     newImage:e.target.files[0]
-                                          
-                                      //   }]
-                                      // }
-                                      console.log("previousData",existingData);
-
-                                       console.log("previousData",previousData);
-                                       return previousData;
-
-                                    });
-                                  }}
-                                  required
-                                />
-                              </div>
-                            </div>
-                          </td>
+                         
 
                           <td className="px-1 py-4">
                             <button
