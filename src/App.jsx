@@ -59,6 +59,8 @@ import RequestAReview from "./pages/RequestAReview/RequestAReview";
 import AddCountryISO from "./pages/CountryISOCode/AddCountryISO";
 import CountryISO from "./pages/CountryISOCode/CountryISO";
 import SaleOff from "./pages/SaleOff/SaleOff";
+import ContactUserDetail from "./pages/ContactUs/ContactUserDetail";
+import ContactUserDataView from "./pages/ContactUs/ContactUserDataView";
 
 
 const isUserLoggedIn = localStorage.getItem("isusrlgd");
@@ -299,6 +301,14 @@ const App = () => {
           path: "/sideBarReview",
           element: <SideBarReview />,
         },
+        {
+          path: "/contact-us",
+          element: <ContactUserDetail />,
+        },
+        {
+          path:"/contact-us/view/:id",
+          element:<ContactUserDataView/>
+        }
         // sale off
 
 

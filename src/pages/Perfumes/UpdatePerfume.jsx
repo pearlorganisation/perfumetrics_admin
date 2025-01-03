@@ -6,8 +6,7 @@ import { Toaster, toast } from "sonner";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBrands } from "../../features/actions/brandsAction";
-import ct from 'countries-and-timezones';
-
+import ct from "countries-and-timezones";
 
 const UpdatePerfume = () => {
   const { state } = useLocation();
@@ -17,7 +16,7 @@ const UpdatePerfume = () => {
     axios
       .get(`${import.meta.env.VITE_API_URL}/countryISOcodes`)
       .then((res) => {
-        console.log(res)
+        console.log(res);
         setCountryISOData(res?.data.data);
 
         setIsLoading(false);
@@ -26,29 +25,25 @@ const UpdatePerfume = () => {
         console.log(err);
         setIsLoading(false);
       });
-  }
+  };
   useEffect(() => {
-    getCountryISO()
+    getCountryISO();
   }, []);
 
-  const tmz = Intl.DateTimeFormat().resolvedOptions().timeZone
+  const tmz = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const timezone = ct.getTimezone(tmz);
   console.log(timezone?.countries[0], "timezone");
 
-
-
-
-  const { brands } = useSelector(state => state.brand)
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const [brandsData, setBrandsData] = useState([])
-  const { perfumeId } = useParams()
+  const { brands } = useSelector((state) => state.brand);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [brandsData, setBrandsData] = useState([]);
+  const { perfumeId } = useParams();
   const gender = [
-    { value: 'M', label: 'Male' },
-    { value: 'F', label: 'Female' },
-    { value: 'O', label: 'Unisex' },
-
-  ]
+    { value: "M", label: "Male" },
+    { value: "F", label: "Female" },
+    { value: "O", label: "Unisex" },
+  ];
   const [banner, setBanner] = useState(null);
   const [logo, setLogo] = useState(null);
   const [brandId, setBrandId] = useState(null);
@@ -59,10 +54,10 @@ const UpdatePerfume = () => {
   const [purchaseLinks, setPurchaseLinks] = useState([]);
   const [pros, setPros] = useState(null);
   const [cons, setCons] = useState(null);
-  const [gendeR, setGender] = useState('');
+  const [gendeR, setGender] = useState("");
   const [video, setVideo] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [linkImages, setLinkImages] = useState();
   const [defaultTopNote, setDefaultTopNote] = useState([]);
 
   const accordsRef = useRef(null);
@@ -79,68 +74,77 @@ const UpdatePerfume = () => {
       perfume: state?.perfume,
       brandAltAttribute: state.brandAltAttribute,
       mainImageAltAttribute: state.mainImageAltAttribute,
-      keywords:(state?.keywords.toString()),
+      keywords: state?.keywords.toString(),
       detail: state?.details,
       description: state?.description,
-      slug:state?.slug,
-      gender: gender.find(el => el.value === state?.ratingFragrams?.gender,
-
-      ),
+      slug: state?.slug,
+      gender: gender.find((el) => el.value === state?.ratingFragrams?.gender),
       overall: state?.ratingFragrams?.overall,
-      midNote: state?.middleNote
-
-        ?.map(ite => {
-          return {
-            label: ite?.name,
-            value: ite._id
-          }
-        }),
+      midNote: state?.middleNote?.map((ite) => {
+        return {
+          label: ite?.name,
+          value: ite._id,
+        };
+      }),
       baseNote: state?.baseNote?.map((el) => {
         return {
           label: el.name,
-          value: el._id
-        }
+          value: el._id,
+        };
       }),
       topNote: state?.topNote?.map((el) => {
         return {
           label: el.name,
-          value: el._id
-        }
-      })
-
-    }
+          value: el._id,
+        };
+      }),
+    },
   });
 
-
-
   useEffect(() => {
-
     setAccords(state.mainAccords);
-    setPurchaseLinks(state.purchaseLinks);
-    setPros(state.pros)
-    setCons(state.cons)
+    const map = new Map();
+    let linksData = [];
+    let linkImagesData = [];
+    Object.keys(state.mapOfLinks).forEach((el) => {
+      map.set(el, state.mapOfLinks.IN);
+    });
 
-    console.log(state, "perfume")
-  }, [state])
+    linksData = Array.from(map.keys()).flatMap((key) => {
+      return map.get(key).map((el) => {
+        linkImagesData.push({
+          _id: el?._id || "Something went wrong with id",
+          imageUrl: el?.companyImage || "Something went wrong with url",
+        });
+        return {
+          ...el,
+          country: key,
+        };
+      });
+    });
+
+    setLinkImages(linkImagesData);
+    setPurchaseLinks(linksData);
+    setPros(state.pros);
+    setCons(state.cons);
+
+    console.log(state, "perfume");
+  }, [state]);
 
   useEffect(() => {
+    console.log(pros, cons);
 
-    console.log(pros, cons)
-
-    console.log(noteData, "noteData")
-  }, [noteData, state])
-
+    console.log(noteData, "noteData");
+  }, [noteData, state]);
 
   useEffect(() => {
     console.log("defaultTopNote", defaultTopNote);
-  }, [purchaseLinks])
-
-
+  }, [purchaseLinks]);
 
   const addAccord = () => {
     setAccords((prev) => {
       let id = (prev[prev?.length - 1]?.id || 0) + 1;
-      let newAccord = { id: id, name: "", percentage: 0, color: '#000000' };
+      let newAccord = { id: id, name: "", percentage: 0, color: "#000000" };
       return [...prev, newAccord];
     });
   };
@@ -156,15 +160,29 @@ const UpdatePerfume = () => {
   const addPurchaseLink = () => {
     setPurchaseLinks((prev) => {
       let id = (prev[prev?.length - 1]?.id || 0) + 1;
-      let purchaseLink = { id: id, link: "", company: "" };
+      let purchaseLink = {
+        link: "",
+        company: "",
+        price: "",
+        _id: "new" + id,
+        companyImage: "",
+        country: "IN",
+      };
       return [...prev, purchaseLink];
     });
   };
 
   const removePurchaseLink = (id) => {
+    setLinkImages((prev) => {
+      let currArray = [...prev];
+      currArray = currArray?.filter((e) => e?._id !== id);
+
+      return currArray;
+    });
     setPurchaseLinks((prev) => {
       let purchaseLinks = [...prev];
-      let res = purchaseLinks?.filter((e) => e.id !== id);
+
+      let res = purchaseLinks?.filter((e) => e?._id !== id);
       return res;
     });
   };
@@ -214,16 +232,17 @@ const UpdatePerfume = () => {
   }, []);
 
   const filterData = (data) => {
-
-    console.log("data submittion", data.keywords.split(','));
-    
     let formData = new FormData();
 
-    let topNote = data?.topNote?.map((item) => item.value) || state?.topNotemap?.((item) => item._id);
-    let midNote = data?.midNote?.map((item) => item.value) || state?.midNotemap?.((item) => item._id);
-    let baseNote = data?.baseNote?.map((item) => item.value) || state?.baseNotemap?.((item) => item._id);
-
-    // console.log("dfdsfsda", baseNote);
+    let topNote =
+      data?.topNote?.map((item) => item.value) ||
+      state?.topNotemap?.((item) => item._id);
+    let midNote =
+      data?.midNote?.map((item) => item.value) ||
+      state?.midNotemap?.((item) => item._id);
+    let baseNote =
+      data?.baseNote?.map((item) => item.value) ||
+      state?.baseNotemap?.((item) => item._id);
 
     let filteredAccords = accords.map((item) => {
       delete item.id;
@@ -239,8 +258,6 @@ const UpdatePerfume = () => {
       delete item.id;
       return { title: item.cons || item?.title };
     });
-    // console.log("puschase links", purchaseLinks)
-    // const map = new Map()
 
     formData.append("purchaseLinks", JSON.stringify(purchaseLinks));
 
@@ -256,26 +273,30 @@ const UpdatePerfume = () => {
     formData.append("pros", JSON.stringify(filteredPros));
     formData.append("cons", JSON.stringify(filteredCons));
     formData.append("slug", data.slug);
-    formData.append("keywords", JSON.stringify(data?.keywords?.split(',')));
+    formData.append("keywords", JSON.stringify(data?.keywords?.split(",")));
 
     formData.append("banner", banner);
     formData.append("logo", logo);
-    formData.append('brand', brandId || { label: state?.brand?.brand, value: state?.brand?._id }.value)
-    formData.append('video', video)
-    formData.append('ratingFragrams', JSON.stringify({
-      longitivity: Number(data.longitivity),
-      gender: data?.gender?.value,
-      sillage: Number(data?.sillage),
-      pricing: Number(data?.pricing),
-      overall: Number(data?.overall),
-      compliment: Number(data?.compliment)
-    }))
+    formData.append(
+      "brand",
+      brandId || { label: state?.brand?.brand, value: state?.brand?._id }.value
+    );
+    formData.append("video", video);
+    formData.append(
+      "ratingFragrams",
+      JSON.stringify({
+        longitivity: Number(data.longitivity),
+        gender: data?.gender?.value,
+        sillage: Number(data?.sillage),
+        pricing: Number(data?.pricing),
+        overall: Number(data?.overall),
+        compliment: Number(data?.compliment),
+      })
+    );
 
     for (let i = 0; i < gallery.length; i++) {
       formData.append("gallery", gallery[i]);
     }
-
-
 
     // Do a bit of work to convert the entries to a plain JS object
     const value = Object.fromEntries(formData.entries());
@@ -286,7 +307,7 @@ const UpdatePerfume = () => {
   };
 
   const onSubmit = async (data) => {
-    if (isLoading) return
+    if (isLoading) return;
     toast("saving");
     let tempAccords = [...accords];
     let totalPercentage = 0;
@@ -303,15 +324,18 @@ const UpdatePerfume = () => {
     }
 
     let formData = filterData(data);
-    setIsLoading(true)
-    console.log(formData)
+    setIsLoading(true);
+    console.log(formData);
     try {
       setIsLoading(true);
 
-      const res = await axios.patch(`${import.meta.env.VITE_API_URL}/perfume/${perfumeId}`, formData);
+      const res = await axios.patch(
+        `${import.meta.env.VITE_API_URL}/perfume/${perfumeId}`,
+        formData
+      );
 
       setIsLoading(false);
-      navigate('/perfumes');
+      navigate("/perfumes");
       toast.success("Updated successfully", {
         position: "top-center",
         style: {
@@ -319,7 +343,6 @@ const UpdatePerfume = () => {
           color: "white",
         },
       });
-
     } catch (err) {
       console.error(err);
       setIsLoading(false);
@@ -333,39 +356,37 @@ const UpdatePerfume = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchBrands({ limit: "infinite" }))
+    dispatch(fetchBrands({ limit: "infinite" }));
     // addAccord()
     // addPurchaseLink()
     // addCons();
     // addPros();
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (brands?.data?.length > 0) {
-      const temp = brands?.data?.map(item => {
+      const temp = brands?.data?.map((item) => {
         return {
           value: item?._id,
-          label: item?.brand
-        }
-      })
-      setBrandsData(temp)
+          label: item?.brand,
+        };
+      });
+      setBrandsData(temp);
     }
-  }, [brands])
-
-
+  }, [brands]);
 
   useEffect(() => {
-    console.log(brandsData?.find(item => item?.value === state?.brand))
-    console.log(state?.mainAccords, "state?.mainAccords || []")
-  }, [brandsData])
-
-
+    console.log(brandsData?.find((item) => item?.value === state?.brand));
+    console.log(state?.mainAccords, "state?.mainAccords || []");
+  }, [brandsData]);
 
   return (
     <>
       <section className="bg-white ">
         <div className="max-w-4xl px-4 py-8 mx-auto lg:py-16">
-          <h2 className="mb-4 text-xl font-bold text-gray-900 ">Update Perfume</h2>
+          <h2 className="mb-4 text-xl font-bold text-gray-900 ">
+            Update Perfume
+          </h2>
           <Toaster />
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="grid gap-4 mb-4 sm:grid-cols-2 sm:gap-6 sm:mb-5">
@@ -374,9 +395,11 @@ const UpdatePerfume = () => {
                   <div className="flex justify-center items-centerw-[250px] h-[250px] border border-gray-300">
                     <img src={URL.createObjectURL(banner)} className="h-full" />
                   </div>
-                ) : <div className="flex justify-center items-centerw-[250px] h-[250px] border border-gray-300">
-                  <img src={state?.banner} className="h-full" />
-                </div>}
+                ) : (
+                  <div className="flex justify-center items-centerw-[250px] h-[250px] border border-gray-300">
+                    <img src={state?.banner} className="h-full" />
+                  </div>
+                )}
 
                 <div>
                   <label
@@ -393,7 +416,6 @@ const UpdatePerfume = () => {
                       setBanner(e.target.files[0]);
                     }}
                     accept=".jpg, .jpeg, .png, .webp"
-
                   />
                 </div>
               </div>
@@ -451,11 +473,11 @@ const UpdatePerfume = () => {
                   <div className="w-[250px] h-[250px] border border-red-300">
                     <img src={URL.createObjectURL(logo)} className="h-full" />
                   </div>
-                ) : <div className="w-[250px] h-[250px] border border-red-300">
-                  <img src={state?.logo} className="h-full" />
-                </div>}
-
-
+                ) : (
+                  <div className="w-[250px] h-[250px] border border-red-300">
+                    <img src={state?.logo} className="h-full" />
+                  </div>
+                )}
 
                 <div className="">
                   <label
@@ -472,7 +494,6 @@ const UpdatePerfume = () => {
                       setLogo(e.target.files[0]);
                     }}
                     accept=".jpg, .jpeg, .png, .webp"
-
                   />
                 </div>
                 <div className="">
@@ -501,15 +522,16 @@ const UpdatePerfume = () => {
                 </label>
                 <Select
                   options={brandsData}
-
                   onChange={(val) => {
-                    setBrandId(val?.value)
+                    setBrandId(val?.value);
                   }}
-                  defaultValue={{ label: state?.brand?.brand, value: state?.brand?._id }}
+                  defaultValue={{
+                    label: state?.brand?.brand,
+                    value: state?.brand?._id,
+                  }}
 
                 // closeMenuOnSelect={true}
                 />
-
               </div>
               <div className="sm:col-span-2">
                 <div>
@@ -530,7 +552,6 @@ const UpdatePerfume = () => {
                       });
                     }}
                     accept=".jpg, .jpeg, .png, .webp"
-
                   />
                 </div>
                 {gallery && gallery?.length > 0 ? (
@@ -558,30 +579,29 @@ const UpdatePerfume = () => {
                       </div>
                     ))}
                   </div>
-                ) : <div className="w-full flex flex-wrap gap-2 py-2">
-                  {state?.gallery?.map((item, idx) => (
-                    <div key={`gallery${idx}`}>
-                      <div className="h-[200px] border rounded-sm flex items-center justify-center box-border">
-                        <img
-                          src={item?.path}
-                          className="h-full"
-                        />
+                ) : (
+                  <div className="w-full flex flex-wrap gap-2 py-2">
+                    {state?.gallery?.map((item, idx) => (
+                      <div key={`gallery${idx}`}>
+                        <div className="h-[200px] border rounded-sm flex items-center justify-center box-border">
+                          <img src={item?.path} className="h-full" />
+                        </div>
+                        <button
+                          type="button"
+                          className="w-full bg-red-500 hover:bg-white hover:text-black hover:shadow-[0_0_0_2px#ff0000] text-white rounded-sm p-2.5 px-2 transition duration-300"
+                          onClick={() => {
+                            setGallery((prev) => {
+                              let tempArr = [...prev];
+                              return tempArr.filter((ele) => ele !== item);
+                            });
+                          }}
+                        >
+                          Remove
+                        </button>
                       </div>
-                      <button
-                        type="button"
-                        className="w-full bg-red-500 hover:bg-white hover:text-black hover:shadow-[0_0_0_2px#ff0000] text-white rounded-sm p-2.5 px-2 transition duration-300"
-                        onClick={() => {
-                          setGallery((prev) => {
-                            let tempArr = [...prev];
-                            return tempArr.filter((ele) => ele !== item);
-                          });
-                        }}
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  ))}
-                </div>}
+                    ))}
+                  </div>
+                )}
               </div>
               <div className="sm:col-span-2">
                 <label
@@ -666,7 +686,9 @@ const UpdatePerfume = () => {
                                 type="text"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                 placeholder="E.g, Wood, lavender etc"
-                                defaultValue={item?.name || 'Something went wrong'}
+                                defaultValue={
+                                  item?.name || "Something went wrong"
+                                }
                                 onChange={(e) => {
                                   setAccords((prev) => {
                                     let tempArr = [...prev];
@@ -681,13 +703,12 @@ const UpdatePerfume = () => {
                                     return tempArr;
                                   });
                                 }}
-
                               />
                             </td>
                             <td className="px-1 py-4">
                               <input
                                 type="number"
-                                onWheel={event => event.currentTarget.blur()}
+                                onWheel={(event) => event.currentTarget.blur()}
                                 min={0}
                                 max={100}
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
@@ -708,7 +729,6 @@ const UpdatePerfume = () => {
                                     return tempArr;
                                   });
                                 }}
-
                               />
                             </td>
                             <td className="px-1 py-4">
@@ -716,7 +736,7 @@ const UpdatePerfume = () => {
                                 type="color"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  block w-full h-[42px]"
                                 placeholder="John"
-                                defaultValue={item?.color || '#ffffff'}
+                                defaultValue={item?.color || "#ffffff"}
                                 onChange={(e) => {
                                   setAccords((prev) => {
                                     let tempArr = [...prev];
@@ -731,7 +751,6 @@ const UpdatePerfume = () => {
                                     return tempArr;
                                   });
                                 }}
-
                               />
                             </td>
                             <td className="px-1 py-4">
@@ -771,7 +790,7 @@ const UpdatePerfume = () => {
                     Add Link
                   </button>
                 </div>
-                {purchaseLinks && purchaseLinks?.length > 0 && (
+                {/* {purchaseLinks && purchaseLinks?.length > 0 && (
                   <div className="relative over">
                     <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
                       <thead className="text-xs text-gray-700 bg-gray-50 ">
@@ -804,7 +823,7 @@ const UpdatePerfume = () => {
                                 type="text"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                 placeholder="https://xyz.xyz/xyzzz"
-                                defaultValue={item.link}
+                                defaultValue={item?.link}
                                 onChange={(e) => {
                                   setPurchaseLinks((prev) => {
                                     let tempArr = [...prev];
@@ -819,7 +838,7 @@ const UpdatePerfume = () => {
                                     return tempArr;
                                   });
                                 }}
-
+                                required
                               />
                             </td>
                             <td className="px-1 py-4">
@@ -827,7 +846,7 @@ const UpdatePerfume = () => {
                                 type="text"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                 placeholder="Company Name"
-                                defaultValue={item.company}
+                                defaultValue={item?.company}
                                 onChange={(e) => {
                                   setPurchaseLinks((prev) => {
                                     let tempArr = [...prev];
@@ -843,7 +862,7 @@ const UpdatePerfume = () => {
                                     return tempArr;
                                   });
                                 }}
-
+                                required
                               />
                             </td>
                             <td
@@ -874,13 +893,62 @@ const UpdatePerfume = () => {
                                     return tempArr;
                                   });
                                 }}
-                                // value={selectedCountry}
-                                // onChange={handleCountrySelect}
+
                                 placeholder="Select a country"
                               />}
                             </td>
+                            <td className="px-1 py-4">
+                              <input
+                                type="text"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                placeholder="$ Price"
+                                defaultValue={item?.price}
 
+                                onChange={(e) => {
+                                  setPurchaseLinks((prev) => {
+                                    let tempArr = [...prev];
+                                    let idx = tempArr.findIndex((ele) => {
+                                      return ele.id === item.id;
+                                    });
 
+                                    let row = tempArr[idx];
+                                    tempArr.slice(idx, 1);
+
+                                    row.price = e.target.value;
+                                    tempArr[idx] = row;
+                                    return tempArr;
+                                  });
+                                }}
+                                required
+                              />
+                            </td>
+                            <td>
+                              <div>
+                                {item.companyImage ? <img src={item.companyImage} /> :
+                                  <input
+                                  className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none "
+                                  id="file_input"
+                                  type="file"
+                                  accept=".jpg, .jpeg, .png, .webp"
+                                  onChange={(e) => {
+                                    setPurchaseLinks((prev) => {
+                                      let tempArr = [...prev];
+                                      let idx = tempArr.findIndex((ele) => {
+                                        return ele.id === item.id;
+                                      });
+  
+                                      let row = tempArr[idx];
+                                      tempArr.slice(idx, 1);
+  
+                                      row.companyImage = e.target.files[0];
+                                      tempArr[idx] = row;
+                                      return tempArr;
+                                    });
+                                  }}
+                                  required
+                                />}
+                              </div>
+                            </td>
 
                             <td className="px-1 py-4">
                               <button
@@ -898,7 +966,210 @@ const UpdatePerfume = () => {
                       </tbody>
                     </table>
                   </div>
-                )}
+                )} */}
+                <tbody>
+                  {purchaseLinks &&
+                    purchaseLinks.map((item, idx) => {
+                      return (
+                        <tr className="bg-white border-b " key={item?.id}>
+                          <td className="px-1 py-4">{idx + 1}</td>
+                          <td
+                            scope="row"
+                            className="px-1 py-4 font-medium text-gray-900 whitespace-nowrap "
+                          >
+                            <input
+                              type="text"
+                              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                              placeholder="https://xyz.xyz/xyzzz"
+                              defaultValue={item?.link}
+                              onChange={(e) => {
+                                setPurchaseLinks((prev) => {
+                                  let tempArr = [...prev];
+                                  let idx = tempArr.findIndex((ele) => {
+                                    return ele?._id === item?._id;
+                                  });
+
+                                  let row = tempArr[idx];
+                                  tempArr.slice(idx, 1);
+                                  row.link = e.target.value;
+                                  tempArr[idx] = row;
+                                  return tempArr;
+                                });
+                              }}
+                              required
+                            />
+                          </td>
+                          <td className="px-1 py-4">
+                            <input
+                              type="text"
+                              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                              placeholder="Company Name"
+                              defaultValue={item?.company}
+                              onChange={(e) => {
+                                setPurchaseLinks((prev) => {
+                                  let tempArr = [...prev];
+                                  let idx = tempArr.findIndex((ele) => {
+                                    return ele?._id === item?._id;
+                                  });
+
+                                  let row = tempArr[idx];
+                                  tempArr.slice(idx, 1);
+
+                                  row.company = e.target.value;
+                                  tempArr[idx] = row;
+                                  return tempArr;
+                                });
+                              }}
+                              required
+                            />
+                          </td>
+                          <td className="px-1 py-4">
+                            {countryISOData && (
+                              <Select
+                                defaultValue={countryISOData.find(
+                                  (it) => it?.value === item?.country
+                                )}
+                                value={countryISOData.find(
+                                  (it) => it?.value === item?.country
+                                )}
+                                options={countryISOData}
+                                // defaultValue={ }
+                                onChange={(selectedOption) => {
+                                  setPurchaseLinks((prev) => {
+                                    // Clone the previous array
+                                    let tempArr = [...prev];
+
+                                    // Find the index of the item you want to update
+                                    let idx = tempArr.findIndex(
+                                      (ele) => ele?._id === item?._id
+                                    );
+
+                                    // Make sure the item exists
+                                    if (idx !== -1) {
+                                      // Update the relevant field with the selected value
+                                      tempArr[idx] = {
+                                        ...tempArr[idx],
+                                        country: selectedOption.value, // Assuming company field gets the selected value
+                                      };
+                                    }
+
+                                    return tempArr;
+                                  });
+                                }}
+                                placeholder="Select a country"
+                              />
+                            )}
+                          </td>
+                          <td className="px-1 py-4">
+                            <input
+                              type="text"
+                              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                              placeholder="$ Price"
+                              defaultValue={item?.price}
+                              onChange={(e) => {
+                                setPurchaseLinks((prev) => {
+                                  let tempArr = [...prev];
+                                  let idx = tempArr.findIndex((ele) => {
+                                    return ele?._id === item?._id;
+                                  });
+
+                                  let row = tempArr[idx];
+                                  tempArr.slice(idx, 1);
+
+                                  row.price = e.target.value;
+                                  tempArr[idx] = row;
+                                  return tempArr;
+                                });
+                              }}
+                              required
+                            />
+                          </td>
+                          <td>
+                            <>
+                              {linkImages &&
+                                linkImages?.length > 0 &&
+                                linkImages[idx]?.imageUrl ? (
+                                <div className="flex justify-center items-centerw-[250px] h-[250px] border border-gray-300">
+                                  <img
+                                    src={linkImages?.[idx]?.imageUrl}
+                                    className="h-full"
+                                  />
+                                </div>
+                              ) : (
+                                linkImages[idx] && <div className="flex justify-center items-centerw-[250px] h-[250px] border border-gray-300">
+                                  <img
+                                    src={URL?.createObjectURL(linkImages?.[idx]?.newImage)}
+                                    className="h-full"
+                                  />
+                                </div>
+                              )}
+                              <div>
+                                <input
+                                  className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none "
+                                  id="file_input"
+                                  type="file"
+                                  accept=".jpg, .jpeg, .png, .webp"
+                                  onChange={(e) => {
+                                    setPurchaseLinks((prev) => {
+                                      let tempArr = [...prev];
+                                      let idx = tempArr.findIndex((ele) => {
+                                        return ele?._id === item?._id;
+                                      });
+
+                                      let row = tempArr[idx];
+                                      tempArr.slice(idx, 1);
+
+                                      // row.companyImage = e.target.files[0];
+
+                                      tempArr[idx] = row;
+                                      return tempArr;
+                                    });
+                                    setLinkImages((prev) => {
+                                      const existingData = prev.find((el) => el?._id == item?._id);
+
+                                      let previousData = [];
+                                      if (existingData) {
+
+                                        delete existingData.imageUrl;
+                                        existingData.newImage = e.target.files[0];
+
+                                        previousData = [...prev, existingData];
+                                        console.log("previousData", existingData);
+
+                                      }
+                                      else {
+                                        previousData = [...prev, {
+                                          _id: 'new' + idx,
+                                          newImage: e.target.files[0]
+
+                                        }]
+                                      }
+
+                                      return previousData;
+
+                                    });
+                                  }}
+                                  required
+                                />
+                              </div>
+                            </>
+                          </td>
+
+                          <td className="px-1 py-4">
+                            <button
+                              type="button"
+                              className="bg-red-500 hover:bg-white hover:text-black hover:shadow-[0_0_0_2px#ff0000] text-white rounded-sm p-2.5 px-2 transition duration-300"
+                              onClick={() => {
+                                removePurchaseLink(item?._id);
+                              }}
+                            >
+                              Remove
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                </tbody>
               </div>
 
               {/* pros */}
@@ -1100,18 +1371,16 @@ const UpdatePerfume = () => {
                     validate: (value) =>
                       value && value.length <= 4
                         ? true
-                        : `You can select up to ${4} items only.`
+                        : `You can select up to ${4} items only.`,
                   }}
                   render={({ field }) => (
                     <Select
                       {...field}
-
-
-                      defaultValue={state.topNote?.map(ite => {
+                      defaultValue={state.topNote?.map((ite) => {
                         return {
                           label: ite?.name,
-                          value: ite._id
-                        }
+                          value: ite._id,
+                        };
                       })}
                       options={noteData.map((note) => ({
                         value: note._id,
@@ -1125,7 +1394,9 @@ const UpdatePerfume = () => {
                   )}
                 />
                 {errors.topNote && (
-                  <p className="" style={{ color: 'red' }}>{errors.topNote.message}</p>
+                  <p className="" style={{ color: "red" }}>
+                    {errors.topNote.message}
+                  </p>
                 )}
 
                 <div className="w-full flex justify-between py-2">
@@ -1143,19 +1414,17 @@ const UpdatePerfume = () => {
                     validate: (value) =>
                       value && value.length <= 4
                         ? true
-                        : `You can select up to ${4} items only.`
+                        : `You can select up to ${4} items only.`,
                   }}
                   render={({ field }) => (
                     <Select
                       {...field}
-                      defaultValue={state.middleNote
-
-                        ?.map(ite => {
-                          return {
-                            label: ite?.name,
-                            value: ite._id
-                          }
-                        })}
+                      defaultValue={state.middleNote?.map((ite) => {
+                        return {
+                          label: ite?.name,
+                          value: ite._id,
+                        };
+                      })}
                       options={noteData.map((note) => ({
                         value: note._id,
                         label: note.name,
@@ -1168,7 +1437,9 @@ const UpdatePerfume = () => {
                   )}
                 />
                 {errors.midNote && (
-                  <p className="" style={{ color: 'red' }}>{errors.midNote.message}</p>
+                  <p className="" style={{ color: "red" }}>
+                    {errors.midNote.message}
+                  </p>
                 )}
 
                 <div className="w-full flex justify-between py-2">
@@ -1186,18 +1457,17 @@ const UpdatePerfume = () => {
                     validate: (value) =>
                       value && value.length <= 4
                         ? true
-                        : `You can select up to ${4} items only.`
+                        : `You can select up to ${4} items only.`,
                   }}
                   render={({ field }) => (
                     <Select
                       {...field}
-                      defaultValue={state.baseNote
-                        ?.map(ite => {
-                          return {
-                            label: ite?.name,
-                            value: ite._id
-                          }
-                        })}
+                      defaultValue={state.baseNote?.map((ite) => {
+                        return {
+                          label: ite?.name,
+                          value: ite._id,
+                        };
+                      })}
                       options={noteData.map((note) => ({
                         value: note._id,
                         label: note.name,
@@ -1210,7 +1480,9 @@ const UpdatePerfume = () => {
                   )}
                 />
                 {errors.baseNote && (
-                  <p className="" style={{ color: 'red' }}>{errors.baseNote.message}</p>
+                  <p className="" style={{ color: "red" }}>
+                    {errors.baseNote.message}
+                  </p>
                 )}
               </div>
 
@@ -1317,16 +1589,14 @@ const UpdatePerfume = () => {
                     control={control}
                     render={({ field: { onChange, value, ref } }) => (
                       <Select
-                        onChange={selected => {
+                        onChange={(selected) => {
                           onChange(selected); // Use `selected` if you need the whole object
                         }}
-                        value={gender.find(el => el.value === value
-                        )}
+                        value={gender.find((el) => el.value === value)}
                         options={gender}
-                        defaultValue={gender.find(el => el.value === state?.ratingFragrams?.gender,
-
+                        defaultValue={gender.find(
+                          (el) => el.value === state?.ratingFragrams?.gender
                         )}
-
                       />
                     )}
                   />
@@ -1370,21 +1640,22 @@ const UpdatePerfume = () => {
               </div>
             </div>
 
-
             <div className="flex justify-center items-center space-x-4 w-full">
-              {
-                isLoading ? <button
+              {isLoading ? (
+                <button
                   type="button"
                   className="w-1/3 text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-base px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                 >
                   Loading...
-                </button> : <button
+                </button>
+              ) : (
+                <button
                   type="submit"
                   className="w-1/3 text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-base px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                 >
                   Save
                 </button>
-              }
+              )}
             </div>
           </form>
         </div>
@@ -1392,8 +1663,5 @@ const UpdatePerfume = () => {
     </>
   );
 };
-
-
-
 
 export default UpdatePerfume;
