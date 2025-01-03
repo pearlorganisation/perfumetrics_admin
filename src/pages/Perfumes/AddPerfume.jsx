@@ -23,7 +23,7 @@ const AddPerfume = () => {
   const [banner, setBanner] = useState(null);
   const [logo, setLogo] = useState(null);
   const [brandId, setBrandId] = useState(null);
-
+  const [brandLinkedImages,setBrandLinkedImages] = useState(null);
   const [gallery, setGallery] = useState([]);
   const [accords, setAccords] = useState([]);
   const [noteData, setNoteData] = useState([]);
@@ -49,8 +49,23 @@ const AddPerfume = () => {
         setIsLoading(false);
       });
   };
+  const getBrandLinkedImages = () => {
+    axios
+      .get(`${import.meta.env.VITE_API_URL}/url-Image`)
+      .then((res) => {
+        console.log(res);
+        setBrandLinkedImages(res?.data.data);
+
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
+  };
   useEffect(() => {
     getCountryISO();
+    getBrandLinkedImages();
   }, []);
   const {
     control,
@@ -676,9 +691,7 @@ const AddPerfume = () => {
                           <th scope="col" className="px-1 pt-2 pb-1">
                             Price
                           </th>
-                          <th scope="col" className="px-1 pt-2 pb-1">
-                            Image For Linked Url (Amazon.in Image)
-                          </th>
+
 
                           <th scope="col" className="px-1 pt-2 pb-1"></th>
                         </tr>
@@ -712,7 +725,7 @@ const AddPerfume = () => {
                                 required
                               />
                             </td>
-                            <td className="px-1 py-4">
+                            {/* <td className="px-1 py-4">
                               <input
                                 type="text"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
@@ -734,6 +747,43 @@ const AddPerfume = () => {
                                 }}
                                 required
                               />
+                            </td> */}
+                            <td
+                              className="px-1 py-4"
+                            >
+                              {brandLinkedImages && <Select
+                                // defaultValue={brandLinkedImages.find(it => it?.value === item?.country)}
+                                // value={countryISOData.find(it => it?.value === item?.country)}
+                                options={brandLinkedImages.map((el)=>{
+                                  return{
+                                    label:el.brand,
+                                    value:{imageUrl:el.imageUrl,companyName:el.brand}
+                                  }
+                                })}
+                                // defaultValue={ }
+                                onChange={(selectedOption) => {
+                                  setPurchaseLinks((prev) => {
+                                    // Clone the previous array
+                                    let tempArr = [...prev];
+
+                                    // Find the index of the item you want to update
+                                    let idx = tempArr.findIndex((ele) => ele.id === item.id);
+
+                                    // Make sure the item exists
+                                    if (idx !== -1) {
+                                      // Update the relevant field with the selected value
+                                      tempArr[idx] = {
+                                        ...tempArr[idx],
+                                        company: selectedOption.value, // Assuming company field gets the selected value
+                                      };
+                                    }
+
+                                    return tempArr;
+                                  });
+                                }}
+
+                                placeholder="Select a company"
+                              />}
                             </td>
                             <td
                               className="px-1 py-4"
@@ -790,7 +840,7 @@ const AddPerfume = () => {
                                 required
                               />
                             </td>
-                            <td>
+                            {/* <td>
                               <div>
                                 <input
                                   className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none "
@@ -815,7 +865,7 @@ const AddPerfume = () => {
                                   required
                                 />
                               </div>
-                            </td>
+                            </td> */}
 
                             <td className="px-1 py-4">
                               <button

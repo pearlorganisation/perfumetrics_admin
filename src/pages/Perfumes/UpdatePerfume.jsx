@@ -158,8 +158,9 @@ const UpdatePerfume = () => {
   };
 
   const addPurchaseLink = () => {
+    let id;
     setPurchaseLinks((prev) => {
-      let id = (prev[prev?.length - 1]?.id || 0) + 1;
+      id = (prev[prev?.length - 1]?.id || 0) + 1;
       let purchaseLink = {
         link: "",
         company: "",
@@ -168,17 +169,32 @@ const UpdatePerfume = () => {
         companyImage: "",
         country: "IN",
       };
+
+
       return [...prev, purchaseLink];
     });
+    setLinkImages((prev) => {
+      const temp = [...prev];
+      temp.push({
+        _id: `new` + id,
+        newImage: null
+      });
+      return [...temp];
+    })
   };
 
-  const removePurchaseLink = (id) => {
+  const removePurchaseLink = (id, idx) => {
+
+    console.log("idasdfsadas", id);
+    // if(id == /^new/)
+    // {
     setLinkImages((prev) => {
       let currArray = [...prev];
-      currArray = currArray?.filter((e) => e?._id !== id);
-
-      return currArray;
+      currArray = currArray?.filter((el) => el._id == id);
+      console.log("sadsada", currArray);
+      return [...currArray];
     });
+    // }
     setPurchaseLinks((prev) => {
       let purchaseLinks = [...prev];
 
@@ -222,7 +238,7 @@ const UpdatePerfume = () => {
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_API_URL}/note?Limit="infinte"`)
+      .get(`${import.meta.env.VITE_API_URL}/note?Limit="infinite"`)
       .then((res) => {
         setNoteData(res?.data?.data);
       })
@@ -1023,7 +1039,7 @@ const UpdatePerfume = () => {
                               required
                             />
                           </td>
-                          <td className="px-1 py-4">
+                          <td className="px-1 py-4 ">
                             {countryISOData && (
                               <Select
                                 defaultValue={countryISOData.find(
@@ -1033,7 +1049,7 @@ const UpdatePerfume = () => {
                                   (it) => it?.value === item?.country
                                 )}
                                 options={countryISOData}
-                                // defaultValue={ }
+                                className="w-28"
                                 onChange={(selectedOption) => {
                                   setPurchaseLinks((prev) => {
                                     // Clone the previous array
@@ -1085,23 +1101,26 @@ const UpdatePerfume = () => {
                             />
                           </td>
                           <td>
-                            <>
+                            <div className="flex flex-col justify-center items-center">
                               {linkImages &&
                                 linkImages?.length > 0 &&
                                 linkImages[idx]?.imageUrl ? (
-                                <div className="flex justify-center items-centerw-[250px] h-[250px] border border-gray-300">
+                                <div className="flex justify-center items-centerw-[50px] h-[50px] border border-gray-300">
                                   <img
                                     src={linkImages?.[idx]?.imageUrl}
                                     className="h-full"
                                   />
                                 </div>
                               ) : (
-                                linkImages[idx] && <div className="flex justify-center items-centerw-[250px] h-[250px] border border-gray-300">
+                                linkImages[idx] && linkImages?.[idx]?.newImage ? <div className="flex justify-center items-centerw-[50px] h-[50px] border border-gray-300">
                                   <img
                                     src={URL?.createObjectURL(linkImages?.[idx]?.newImage)}
                                     className="h-full"
                                   />
-                                </div>
+                                </div> :
+                                  <div>
+                                    Insert Image
+                                  </div>
                               )}
                               <div>
                                 <input
@@ -1133,18 +1152,21 @@ const UpdatePerfume = () => {
                                         delete existingData.imageUrl;
                                         existingData.newImage = e.target.files[0];
 
-                                        previousData = [...prev, existingData];
+                                        previousData = [...prev];
                                         console.log("previousData", existingData);
 
                                       }
-                                      else {
-                                        previousData = [...prev, {
-                                          _id: 'new' + idx,
-                                          newImage: e.target.files[0]
+                                      // else
+                                      // {
+                                      //    previousData = [...prev,{
+                                      //     _id:'new'+idx,
+                                      //     newImage:e.target.files[0]
 
-                                        }]
-                                      }
+                                      //   }]
+                                      // }
+                                      console.log("previousData", existingData);
 
+                                      console.log("previousData", previousData);
                                       return previousData;
 
                                     });
@@ -1152,7 +1174,7 @@ const UpdatePerfume = () => {
                                   required
                                 />
                               </div>
-                            </>
+                            </div>
                           </td>
 
                           <td className="px-1 py-4">
@@ -1160,7 +1182,7 @@ const UpdatePerfume = () => {
                               type="button"
                               className="bg-red-500 hover:bg-white hover:text-black hover:shadow-[0_0_0_2px#ff0000] text-white rounded-sm p-2.5 px-2 transition duration-300"
                               onClick={() => {
-                                removePurchaseLink(item?._id);
+                                removePurchaseLink(item?._id, linkImages?.[idx]?._id);
                               }}
                             >
                               Remove
