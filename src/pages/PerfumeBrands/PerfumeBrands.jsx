@@ -24,6 +24,10 @@ const PerfumeBrands = () => {
     };
 
     const handleUpdateBrand = (id, updatedName) => {
+        if(updatedName.split() == '')
+        {
+          return ;
+        }
         dispatch(updateBrands({ id: id, data: { brand: updatedName } }))
     };
     useEffect(() => {
