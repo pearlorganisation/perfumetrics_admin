@@ -192,12 +192,23 @@ const Sidebar = () => {
           </li>
           <li>
             <Link
-              to="/contact-us"
+              to="/sideBarReview"
               className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
             >
               <CategoryIcon />
               <span className="flex-1 ms-3 whitespace-nowrap">
                 Contacts Details
+              </span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/brandImageLink"
+              className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
+            >
+              <CategoryIcon />
+              <span className="flex-1 ms-3 whitespace-nowrap">
+                Add Brand  Links
               </span>
             </Link>
           </li>

@@ -61,6 +61,8 @@ import CountryISO from "./pages/CountryISOCode/CountryISO";
 import SaleOff from "./pages/SaleOff/SaleOff";
 import ContactUserDetail from "./pages/ContactUs/ContactUserDetail";
 import ContactUserDataView from "./pages/ContactUs/ContactUserDataView";
+import BrandImagesLinkPage from "./pages/BrandImagesLinkPage/BrandImagesLinkPage";
+import AddBrandLinkPage from "./pages/BrandImagesLinkPage/AddBrandLinkPage";
 
 
 const isUserLoggedIn = localStorage.getItem("isusrlgd");
@@ -308,6 +310,14 @@ const App = () => {
         {
           path:"/contact-us/view/:id",
           element:<ContactUserDataView/>
+        },
+        {
+          path:"/brandImageLink",
+          element:<BrandImagesLinkPage/>
+        },
+        {
+          path:"/addbrandImageLink",
+          element:<AddBrandLinkPage/>
         }
         // sale off
 
