@@ -1,17 +1,17 @@
 import Select from "react-select";
 import axios from "axios";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect,  useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Toaster, toast } from "sonner";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBrands } from "../../features/actions/brandsAction";
 import ct from "countries-and-timezones";
+import { v4 as uuidv4 } from 'uuid';
 
 const UpdatePerfume = () => {
   const { state } = useLocation();
   const [countryISOData, setCountryISOData] = useState(null);
-
   const getCountryISO = () => {
     axios
       .get(`${import.meta.env.VITE_API_URL}/countryISOcodes`)
@@ -132,7 +132,7 @@ const UpdatePerfume = () => {
     let linksData = [];
     let linkImagesData = [];
     Object.keys(state.mapOfLinks).forEach((el) => {
-      map.set(el, state.mapOfLinks.IN);
+      map.set(el, state.mapOfLinks[`${el}`]);
     });
 
     linksData = Array.from(map.keys()).flatMap((key) => {
@@ -156,15 +156,7 @@ const UpdatePerfume = () => {
     console.log(state, "perfume");
   }, [state]);
 
-  useEffect(() => {
-    console.log(pros, cons);
 
-    console.log(noteData, "noteData");
-  }, [noteData, state]);
-
-  useEffect(() => {
-    console.log("defaultTopNote", defaultTopNote);
-  }, [purchaseLinks]);
 
   const addAccord = () => {
     setAccords((prev) => {
@@ -183,9 +175,9 @@ const UpdatePerfume = () => {
   };
 
   const addPurchaseLink = () => {
-    let id ;
+  
     setPurchaseLinks((prev) => {
-      id = (prev[prev?.length - 1]?.id || 0) + 1;
+      let id = uuidv4();
       let purchaseLink = {
         link: "",
         company: "",
@@ -196,35 +188,19 @@ const UpdatePerfume = () => {
       };
 
      
-      return [...prev, purchaseLink];
+      return [...prev,purchaseLink];
     });
-    setLinkImages((prev)=>{
-      const temp = [...prev];
-      temp.push({
-       _id:`new`+id,
-       newImage:null
-      });
-      return [...temp];
-    })
+    
   };
 
-  const removePurchaseLink = (id,idx) => {
-    
-    console.log("idasdfsadas",id);
-    // if(id == /^new/)
-    // {
-      setLinkImages((prev) => {
-        let currArray = [...prev];
-        currArray = currArray?.filter((el)=> el._id == id);
-        console.log("sadsada",currArray);
-        return [...currArray];
-      });
-    // }
+  const removePurchaseLink = (id) => {
+
+    alert(id);
     setPurchaseLinks((prev) => {
       let purchaseLinks = [...prev];
-      
+       
       let res = purchaseLinks?.filter((e) => e?._id !== id);
-      return res;
+      return [...res];
     });
   };
 
@@ -417,10 +393,10 @@ const UpdatePerfume = () => {
     }
   }, [brands]);
 
-  useEffect(() => {
-    console.log(brandsData?.find((item) => item?.value === state?.brand));
-    console.log(state?.mainAccords, "state?.mainAccords || []");
-  }, [brandsData]);
+  // useEffect(() => {
+  //   console.log(brandsData?.find((item) => item?.value === state?.brand));
+  //   console.log(state?.mainAccords, "state?.mainAccords || []");
+  // }, [brandsData]);
 
   return (
     <>
@@ -1013,7 +989,7 @@ const UpdatePerfume = () => {
                   {purchaseLinks &&
                     purchaseLinks.map((item, idx) => {
                       return (
-                        <tr className="bg-white border-b " key={item?.id}>
+                        <tr className="bg-white border-b " key={item?._id}>
                           <td className="px-1 py-4">{idx + 1}</td>
                           <td
                             scope="row"
@@ -1047,11 +1023,11 @@ const UpdatePerfume = () => {
                               {brandLinkedImages && <Select
                                 className="w-28"
                                 
-                                value={ getDefaultValueForImageLinks(item.company.companyName)}
+                                defaultValue={ item.company.companyName ? getDefaultValueForImageLinks(item.company.companyName):''}
                                 options={brandLinkedImages.map((el)=>{
                                   return{
-                                    label:el.brand,
-                                    value:{imageUrl:el.imageUrl,companyName:el?.brand}
+                                    label:el?.brand,
+                                    value:{imageUrl:el?.imageUrl,companyName:el?.brand}
                                   }
                                 })}
                                 // defaultValue={ }
@@ -1059,17 +1035,15 @@ const UpdatePerfume = () => {
                                   setPurchaseLinks((prev) => {
                                     // Clone the previous array
                                     let tempArr = [...prev];
-
+                                     console.log("selectedOption",selectedOption)
                                     // Find the index of the item you want to update
-                                    let idx = tempArr.findIndex((ele) => ele.id === item.id);
+                                    let idx = tempArr.findIndex((ele) => ele._id === item._id);
 
                                     // Make sure the item exists
                                     if (idx !== -1) {
                                       // Update the relevant field with the selected value
-                                      tempArr[idx] = {
-                                        ...tempArr[idx],
-                                        company: selectedOption.value, // Assuming company field gets the selected value
-                                      };
+                                      
+                                      tempArr[idx].company = selectedOption.value;
                                     }
 
                                     return tempArr;
@@ -1147,7 +1121,7 @@ const UpdatePerfume = () => {
                               type="button"
                               className="bg-red-500 hover:bg-white hover:text-black hover:shadow-[0_0_0_2px#ff0000] text-white rounded-sm p-2.5 px-2 transition duration-300"
                               onClick={() => {
-                                removePurchaseLink(item?._id,linkImages?.[idx]?._id);
+                                removePurchaseLink(item?._id);
                               }}
                             >
                               Remove
@@ -1160,7 +1134,7 @@ const UpdatePerfume = () => {
               </div>
 
               {/* pros */}
-              {/* <div className="col-span-2">
+              <div className="col-span-2">
                 <div className="col-span-2 md:col-span-1">
                   <div className="w-full flex justify-between pb-1">
                     <label
@@ -1332,7 +1306,7 @@ const UpdatePerfume = () => {
                     </div>
                   )}
                 </div>
-              </div> */}
+              </div>
 
               <div className="col-span-2">
                 <div className="w-full border border-b border-x-0 border-t-0 mb-2">
