@@ -207,8 +207,9 @@ const UpdatePerfume = () => {
 
   const addPros = () => {
     setPros((prev) => {
-      let id = (prev[prev?.length - 1]?.id || 0) + 1;
-      let newPro = { id: id, pros: "" };
+      // let id = (prev[prev?.length - 1]?.id || 0) + 1;
+      let id = uuidv4();
+      let newPro = { _id: id, pros: "" };
       return [...prev, newPro];
     });
   };
@@ -216,7 +217,7 @@ const UpdatePerfume = () => {
   const removePros = (id) => {
     setPros((prev) => {
       let pros = [...prev];
-      let res = pros?.filter((e) => e.id !== id);
+      let res = pros?.filter((e) => e._id !== id);
       console.log(res);
       return res;
     });
@@ -224,8 +225,9 @@ const UpdatePerfume = () => {
 
   const addCons = () => {
     setCons((prev) => {
-      let id = (prev[prev?.length - 1]?.id || 0) + 1;
-      let newCon = { id: id, cons: "" };
+      // let id = (prev[prev?.length - 1]?.id || 0) + 1;
+      let id = uuidv4();
+      let newCon = { _id: id, cons: "" };
       return [...prev, newCon];
     });
   };
@@ -233,7 +235,7 @@ const UpdatePerfume = () => {
   const removeCons = (id) => {
     setCons((prev) => {
       let cons = [...prev];
-      let res = cons?.filter((e) => e.id !== id);
+      let res = cons?.filter((e) => e._id !== id);
       return res;
     });
   };
@@ -1173,7 +1175,7 @@ const UpdatePerfume = () => {
                           {pros.map((item, idx) => (
                             <tr
                               className="bg-white border-b "
-                              key={`pro${item?.id}`}
+                              key={`pro${idx}`}
                             >
                               <td className="px-1 py-4">{idx + 1}</td>
                               <td
@@ -1208,7 +1210,7 @@ const UpdatePerfume = () => {
                                   type="button"
                                   className="bg-red-500 hover:bg-white hover:text-black hover:shadow-[0_0_0_2px#ff0000] text-white rounded-sm p-2.5 px-2 transition duration-300"
                                   onClick={() => {
-                                    removePros(item?.id);
+                                    removePros(item?._id);
                                   }}
                                 >
                                   Remove
@@ -1259,7 +1261,7 @@ const UpdatePerfume = () => {
                           {cons.map((item, idx) => (
                             <tr
                               className="bg-white border-b "
-                              key={`pro${item?.id}`}
+                              key={`pro${idx}`}
                             >
                               <td className="px-1 py-4">{idx + 1}</td>
                               <td
@@ -1294,7 +1296,7 @@ const UpdatePerfume = () => {
                                   type="button"
                                   className="bg-red-500 hover:bg-white hover:text-black hover:shadow-[0_0_0_2px#ff0000] text-white rounded-sm p-2.5 px-2 transition duration-300"
                                   onClick={() => {
-                                    removeCons(item?.id);
+                                    removeCons(item?._id);
                                   }}
                                 >
                                   Remove
