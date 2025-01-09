@@ -23,7 +23,7 @@ const AddPerfume = () => {
   const [banner, setBanner] = useState(null);
   const [logo, setLogo] = useState(null);
   const [brandId, setBrandId] = useState(null);
-  const [brandLinkedImages,setBrandLinkedImages] = useState(null);
+  const [brandLinkedImages, setBrandLinkedImages] = useState(null);
   const [gallery, setGallery] = useState([]);
   const [accords, setAccords] = useState([]);
   const [noteData, setNoteData] = useState([]);
@@ -351,7 +351,7 @@ const AddPerfume = () => {
               <div className="">
                 <label
                   htmlFor="name"
-                  className="block mb-2 text-sm font-medium text-gray-900 "
+                  className="block mb-2 text-sm font-medium text-gray-900"
                 >
                   Slug
                 </label>
@@ -359,10 +359,19 @@ const AddPerfume = () => {
                   type="text"
                   name="name"
                   id="name"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5      "
-                  placeholder="Enter Slug For Perfume Do Not Add `/ ` inside the slug"
-                  {...register("slug", { required: true })}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                  placeholder="Enter Slug For Perfume Do Not Add `/` or special characters"
+                  {...register("slug", {
+                    required: "Slug is required",
+                    pattern: {
+                      value: /^[a-zA-Z0-9-_]+$/,
+                      message: "Slug can only contain letters, numbers, hyphens, and underscores",
+                    },
+                  })}
                 />
+                {errors.slug && (
+                  <p className="mt-2 text-sm text-red-600">{errors.slug.message}</p>
+                )}
               </div>
               <div className="">
                 <label
@@ -754,10 +763,10 @@ const AddPerfume = () => {
                               {brandLinkedImages && <Select
                                 // defaultValue={brandLinkedImages.find(it => it?.value === item?.country)}
                                 // value={countryISOData.find(it => it?.value === item?.country)}
-                                options={brandLinkedImages.map((el)=>{
-                                  return{
-                                    label:el.brand,
-                                    value:{imageUrl:el.imageUrl,companyName:el.brand}
+                                options={brandLinkedImages.map((el) => {
+                                  return {
+                                    label: el.brand,
+                                    value: { imageUrl: el.imageUrl, companyName: el.brand }
                                   }
                                 })}
                                 // defaultValue={ }

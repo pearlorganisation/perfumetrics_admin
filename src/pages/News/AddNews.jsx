@@ -3,7 +3,6 @@ import { useForm, Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 import { Toaster, toast } from "sonner";
-import { ClipLoader } from "react-spinners";
 import TextEditor from "../../components/TextEditor/TextEditor";
 import Select from "react-select"; // Importing React-Select
 import axios from "axios";
@@ -93,7 +92,13 @@ const AddNews = () => {
                     {/* Title */}
                     <label className="font-medium">Title</label>
                     <input
-                        {...register("title", { required: "Title is required" })}
+                        {...register('title', {
+                            required: 'Title name is required',
+                            pattern: {
+                                value: /^[a-zA-Z0-9-_ ]+$/,
+                                message: 'Title name can only contain letters, numbers, hyphens, and underscores',
+                            },
+                        })}
                         type="text"
                         className="w-full mt-2 me-50 px-5 py-2 text-gray-500 border-slate-300 bg-transparent outline-none border focus:border-teal-400 shadow-sm rounded-lg"
                         placeholder="Enter a title for your blog"
