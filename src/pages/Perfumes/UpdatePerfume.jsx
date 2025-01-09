@@ -159,8 +159,9 @@ const UpdatePerfume = () => {
 
   const addAccord = () => {
     setAccords((prev) => {
-      let id = (prev[prev?.length - 1]?.id || 0) + 1;
-      let newAccord = { id: id, name: "", percentage: 0, color: "#000000" };
+      // let id = (prev[prev?.length - 1]?.id || 0) + 1;
+      let id = uuidv4();
+      let newAccord = { _id: id, name: "", percentage: 0, color: "#000000" };
       return [...prev, newAccord];
     });
   };
@@ -168,7 +169,7 @@ const UpdatePerfume = () => {
   const removeAccord = (id) => {
     setAccords((prev) => {
       let accords = [...prev];
-      let res = accords?.filter((e) => e.id !== id);
+      let res = accords?.filter((e) => e._id !== id);
       return res;
     });
   };
@@ -205,8 +206,9 @@ const UpdatePerfume = () => {
 
   const addPros = () => {
     setPros((prev) => {
-      let id = (prev[prev?.length - 1]?.id || 0) + 1;
-      let newPro = { id: id, pros: "" };
+      // let id = (prev[prev?.length - 1]?.id || 0) + 1;
+      let id = uuidv4();
+      let newPro = { _id: id, pros: "" };
       return [...prev, newPro];
     });
   };
@@ -214,7 +216,7 @@ const UpdatePerfume = () => {
   const removePros = (id) => {
     setPros((prev) => {
       let pros = [...prev];
-      let res = pros?.filter((e) => e.id !== id);
+      let res = pros?.filter((e) => e._id !== id);
       console.log(res);
       return res;
     });
@@ -222,8 +224,9 @@ const UpdatePerfume = () => {
 
   const addCons = () => {
     setCons((prev) => {
-      let id = (prev[prev?.length - 1]?.id || 0) + 1;
-      let newCon = { id: id, cons: "" };
+      // let id = (prev[prev?.length - 1]?.id || 0) + 1;
+      let id = uuidv4();
+      let newCon = { _id: id, cons: "" };
       return [...prev, newCon];
     });
   };
@@ -231,7 +234,7 @@ const UpdatePerfume = () => {
   const removeCons = (id) => {
     setCons((prev) => {
       let cons = [...prev];
-      let res = cons?.filter((e) => e.id !== id);
+      let res = cons?.filter((e) => e._id !== id);
       return res;
     });
   };
@@ -693,7 +696,7 @@ const UpdatePerfume = () => {
                       </thead>
                       <tbody>
                         {accords.map((item, idx) => (
-                          <tr className="bg-white border-b " key={item?.id}>
+                          <tr className="bg-white border-b " key={item?._id}>
                             <td className="px-1 py-4">{idx + 1}</td>
                             <td
                               scope="row"
@@ -704,7 +707,7 @@ const UpdatePerfume = () => {
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                 placeholder="E.g, Wood, lavender etc"
                                 defaultValue={
-                                  item?.name || "Something went wrong"
+                                  item?.name || "Please Add Enter Accord Value"
                                 }
                                 onChange={(e) => {
                                   setAccords((prev) => {
@@ -775,7 +778,7 @@ const UpdatePerfume = () => {
                                 type="button"
                                 className="bg-red-500 hover:bg-white hover:text-black hover:shadow-[0_0_0_2px#ff0000] text-white rounded-sm p-2.5 px-2 transition duration-300"
                                 onClick={() => {
-                                  removeAccord(item?.id);
+                                  removeAccord(item?._id);
                                 }}
                               >
                                 Remove
@@ -1171,7 +1174,7 @@ const UpdatePerfume = () => {
                           {pros.map((item, idx) => (
                             <tr
                               className="bg-white border-b "
-                              key={`pro${item?.id}`}
+                              key={`pro${idx}`}
                             >
                               <td className="px-1 py-4">{idx + 1}</td>
                               <td
@@ -1206,7 +1209,7 @@ const UpdatePerfume = () => {
                                   type="button"
                                   className="bg-red-500 hover:bg-white hover:text-black hover:shadow-[0_0_0_2px#ff0000] text-white rounded-sm p-2.5 px-2 transition duration-300"
                                   onClick={() => {
-                                    removePros(item?.id);
+                                    removePros(item?._id);
                                   }}
                                 >
                                   Remove
@@ -1257,7 +1260,7 @@ const UpdatePerfume = () => {
                           {cons.map((item, idx) => (
                             <tr
                               className="bg-white border-b "
-                              key={`pro${item?.id}`}
+                              key={`pro${idx}`}
                             >
                               <td className="px-1 py-4">{idx + 1}</td>
                               <td
@@ -1292,7 +1295,7 @@ const UpdatePerfume = () => {
                                   type="button"
                                   className="bg-red-500 hover:bg-white hover:text-black hover:shadow-[0_0_0_2px#ff0000] text-white rounded-sm p-2.5 px-2 transition duration-300"
                                   onClick={() => {
-                                    removeCons(item?.id);
+                                    removeCons(item?._id);
                                   }}
                                 >
                                   Remove
