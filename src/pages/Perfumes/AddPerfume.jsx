@@ -364,7 +364,7 @@ const AddPerfume = () => {
                   {...register("slug", {
                     required: "Slug is required",
                     pattern: {
-                      value: /^[a-zA-Z0-9-_]+$/,
+                      value: /^[a-zA-Z0-9-_ ]+$/,
                       message: "Slug can only contain letters, numbers, hyphens, and underscores",
                     },
                   })}
