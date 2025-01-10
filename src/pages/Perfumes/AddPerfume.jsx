@@ -246,10 +246,11 @@ const AddPerfume = () => {
     try {
       setIsLoading(true);
 
-      const res = await axios.post(
+      const { data } = await axios.post(
         `${import.meta.env.VITE_API_URL}/perfume`,
         formData
       );
+
 
       setIsLoading(false);
       navigate("/perfumes");
@@ -263,7 +264,7 @@ const AddPerfume = () => {
     } catch (err) {
       console.error(err);
       setIsLoading(false);
-      toast.error("Server down, please try again later", {
+      toast.error(err?.response?.data?.message || "Server down, please try again later", {
         style: {
           background: "red",
           color: "white",
@@ -359,6 +360,7 @@ const AddPerfume = () => {
                   type="text"
                   name="name"
                   id="name"
+                  maxLength='200'
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                   placeholder="Enter Slug For Perfume Do Not Add `/` or special characters"
                   {...register("slug", {
@@ -522,6 +524,8 @@ const AddPerfume = () => {
                 <input
                   type="text"
                   name="name"
+                  minLength='3'
+                  maxLength='250'
                   id="name"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5      "
                   placeholder="Type product name"
@@ -576,6 +580,8 @@ const AddPerfume = () => {
                             >
                               <input
                                 type="text"
+                                minLength='3'
+                                maxLength='100'
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                 placeholder="E.g, Wood, lavender etc"
                                 onChange={(e) => {
@@ -943,6 +949,8 @@ const AddPerfume = () => {
                               >
                                 <input
                                   type="text"
+                                  minLength='20'
+                                  maxLength='120'
                                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                   placeholder="A Pro of this perfume"
                                   onChange={(e) => {
@@ -1028,6 +1036,8 @@ const AddPerfume = () => {
                               >
                                 <input
                                   type="text"
+                                  minLength='20'
+                                  maxLength='120'
                                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                                   placeholder="A Con of this perfume"
                                   onChange={(e) => {
@@ -1197,6 +1207,8 @@ const AddPerfume = () => {
                   Description
                 </label>
                 <textarea
+                  maxLength='1000'
+                  minLength='3'
                   id="description"
                   rows="8"
                   className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500      "
@@ -1213,6 +1225,8 @@ const AddPerfume = () => {
                   Details
                 </label>
                 <textarea
+                  maxLength='1000'
+                  minLength='3'
                   id="description"
                   rows="8"
                   className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500      "
