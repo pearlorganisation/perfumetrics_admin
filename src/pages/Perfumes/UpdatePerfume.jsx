@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchBrands } from "../../features/actions/brandsAction";
 import ct from "countries-and-timezones";
 import { v4 as uuidv4 } from 'uuid';
+import TextEditor from "../../components/TextEditor/TextEditor";
 
 const UpdatePerfume = () => {
   const { state } = useLocation();
@@ -88,7 +89,7 @@ const UpdatePerfume = () => {
       brandAltAttribute: state.brandAltAttribute,
       mainImageAltAttribute: state.mainImageAltAttribute,
       keywords: state?.keywords.toString(),
-      detail: state?.details,
+      details: state?.details,
       description: state?.description,
       slug: state?.slug,
       gender: gender.find((el) => el.value === state?.ratingFragrams?.gender),
@@ -1448,39 +1449,45 @@ const UpdatePerfume = () => {
                   </p>
                 )}
               </div>
-
               <div className="sm:col-span-2">
-                <label
-                  htmlFor="description"
-                  className="block mb-2 text-sm font-medium text-gray-900 "
-                >
-                  Description
-                </label>
-                <textarea
-                  id="description"
-                  defaultValue={state?.description}
-                  rows="8"
-                  className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500      "
-                  placeholder="Write a product description here..."
-                  {...register("description", { required: true })}
-                ></textarea>
+                <label className="font-medium">Description</label>
+                <Controller
+                  name={`description`}
+                  control={control}
+                  render={({ field }) => (
+                    <TextEditor
+                      onChange={(data) => field.onChange(data)} // Pass onChange handler from field
+                      value={field.value} // Pass value from field to TextEditor
+                    />
+                  )}
+                  rules={{ required: true }}
+                />
+
+                {errors.description && (
+                  <span className="fw-normal fs-6 text-red-500">
+                    Description is required
+                  </span>
+                )}
               </div>
-
               <div className="sm:col-span-2">
-                <label
-                  htmlFor="description"
-                  className="block mb-2 text-sm font-medium text-gray-900 "
-                >
-                  Details
-                </label>
-                <textarea
-                  id="description"
-                  rows="8"
-                  className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500      "
-                  placeholder="Write a product details here..."
-                  defaultValue={state?.details}
-                  {...register("details", { required: true })}
-                ></textarea>
+                <label className="font-medium">Details</label>
+                <Controller
+                  name={`details`}
+                  control={control}
+                  render={({ field }) => (
+                    <TextEditor
+                      onChange={(data) => field.onChange(data)} // Pass onChange handler from field
+                      value={field.value} // Pass value from field to TextEditor
+                    />
+                  )}
+                  rules={{ required: true }}
+                />
+
+                {errors.details && (
+                  <span className="fw-normal fs-6 text-red-500">
+                    Details is required
+                  </span>
+                )}
               </div>
             </div>
             <div>

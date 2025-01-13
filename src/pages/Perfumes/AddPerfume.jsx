@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBrands } from "../../features/actions/brandsAction";
 import ct from "countries-and-timezones";
+import TextEditor from "../../components/TextEditor/TextEditor";
 
 const AddPerfume = () => {
   const tmz = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -1199,7 +1200,7 @@ const AddPerfume = () => {
                 )}
               </div>
 
-              <div className="sm:col-span-2">
+              {/* <div className="sm:col-span-2">
                 <label
                   htmlFor="description"
                   className="block mb-2 text-sm font-medium text-gray-900 "
@@ -1215,9 +1216,50 @@ const AddPerfume = () => {
                   placeholder="Write a product description here..."
                   {...register("description", { required: true })}
                 ></textarea>
-              </div>
+              </div> */}
 
               <div className="sm:col-span-2">
+                <label className="font-medium">Description</label>
+                <Controller
+                  name={`description`}
+                  control={control}
+                  render={({ field }) => (
+                    <TextEditor
+                      onChange={(data) => field.onChange(data)} // Pass onChange handler from field
+                      value={field.value} // Pass value from field to TextEditor
+                    />
+                  )}
+                  rules={{ required: true }}
+                />
+
+                {errors.description && (
+                  <span className="fw-normal fs-6 text-red-500">
+                    Description is required
+                  </span>
+                )}
+              </div>
+              <div className="sm:col-span-2">
+                <label className="font-medium">Details</label>
+                <Controller
+                  name={`details`}
+                  control={control}
+                  render={({ field }) => (
+                    <TextEditor
+                      onChange={(data) => field.onChange(data)} // Pass onChange handler from field
+                      value={field.value} // Pass value from field to TextEditor
+                    />
+                  )}
+                  rules={{ required: true }}
+                />
+
+                {errors.details && (
+                  <span className="fw-normal fs-6 text-red-500">
+                    Details is required
+                  </span>
+                )}
+              </div>
+
+              {/* <div className="sm:col-span-2">
                 <label
                   htmlFor="description"
                   className="block mb-2 text-sm font-medium text-gray-900 "
@@ -1233,7 +1275,8 @@ const AddPerfume = () => {
                   placeholder="Write a product details here..."
                   {...register("details", { required: true })}
                 ></textarea>
-              </div>
+              </div> */}
+
             </div>
             <div>
               <div className="text-2xl font-medium">Fragram Ratings</div>
