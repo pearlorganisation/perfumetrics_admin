@@ -1175,7 +1175,8 @@ const UpdatePerfume = () => {
                           {pros.map((item, idx) => (
                             <tr
                               className="bg-white border-b "
-                              key={`pro${idx}`}
+                              // key={`pro${idx}`}
+                              key={item?._id}
                             >
                               <td className="px-1 py-4">{idx + 1}</td>
                               <td
@@ -1191,7 +1192,7 @@ const UpdatePerfume = () => {
                                     setPros((prev) => {
                                       let tempArr = [...prev];
                                       let idx = tempArr.findIndex((ele) => {
-                                        return ele.id === item.id;
+                                        return ele._id === item._id;
                                       });
 
                                       let row = tempArr[idx];
@@ -1261,7 +1262,7 @@ const UpdatePerfume = () => {
                           {cons.map((item, idx) => (
                             <tr
                               className="bg-white border-b "
-                              key={`pro${idx}`}
+                              key ={item?._id}
                             >
                               <td className="px-1 py-4">{idx + 1}</td>
                               <td
@@ -1277,7 +1278,7 @@ const UpdatePerfume = () => {
                                     setCons((prev) => {
                                       let tempArr = [...prev];
                                       let idx = tempArr.findIndex((ele) => {
-                                        return ele.id === item.id;
+                                        return ele._id === item._id;
                                       });
 
                                       let row = tempArr[idx];
