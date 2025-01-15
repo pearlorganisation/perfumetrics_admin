@@ -39,6 +39,7 @@ const UpdateNews = () => {
                 setNewsData(res?.data?.data);
                 setValue("title", res?.data?.data?.title)
                 setValue("content", res?.data?.data?.description)
+                setValue("slug", res?.data?.data?.slug)
                 setPreviewImage(res?.data?.data?.image);
 
             })
@@ -80,6 +81,7 @@ const UpdateNews = () => {
         }
         formData.append("content", data.content);
         formData.append("title", data.title);
+        formData.append("slug", data.slug);
         console.log(data, "data")
         updateCelebrityPerfume(formData)
         // api call here
@@ -121,7 +123,22 @@ const UpdateNews = () => {
                     {errors.title && (
                         <span className="text-red-500">Title is required</span>
                     )}
-
+                    <label className="font-medium">Slug</label>
+                    <input
+                        {...register('slug', {
+                            required: 'Slug  is required',
+                            pattern: {
+                                value: /^[a-zA-Z0-9-_ ]+$/,
+                                message: 'Slug name can only contain letters, numbers, hyphens, and underscores',
+                            },
+                        })}
+                        type="text"
+                        className="w-full mt-2 me-50 px-5 py-2 text-gray-500 border-slate-300 bg-transparent outline-none border focus:border-teal-400 shadow-sm rounded-lg"
+                        placeholder="Enter a Slug"
+                    />
+                    {errors.slug && (
+                        <span className="text-red-500">{errors.slug.message}</span>
+                    )}
 
                     <div className="flex-1 items-center mx-auto gap-2 mb-3 space-y-4 sm:flex sm:space-y-0">
                         {previewImage && (

@@ -58,6 +58,7 @@ const AddNews = () => {
         formData.append("title", data.title);
         formData.append("user", data.user);
         formData.append("details", data.details);
+        formData.append("slug", data.slug);
         // formData.append("type", data.type?.value); // Save the selected category
         // api call here
         postNewsBlog(formData);
@@ -101,10 +102,26 @@ const AddNews = () => {
                         })}
                         type="text"
                         className="w-full mt-2 me-50 px-5 py-2 text-gray-500 border-slate-300 bg-transparent outline-none border focus:border-teal-400 shadow-sm rounded-lg"
-                        placeholder="Enter a title for your blog"
+                        placeholder="Enter a Slug for your blog"
                     />
                     {errors.title && (
                         <span className="text-red-500">{errors.title.message}</span>
+                    )}
+                    <label className="font-medium">Slug</label>
+                    <input
+                        {...register('slug', {
+                            required: 'Slug  is required',
+                            pattern: {
+                                value: /^[a-zA-Z0-9-_ ]+$/,
+                                message: 'Slug name can only contain letters, numbers, hyphens, and underscores',
+                            },
+                        })}
+                        type="text"
+                        className="w-full mt-2 me-50 px-5 py-2 text-gray-500 border-slate-300 bg-transparent outline-none border focus:border-teal-400 shadow-sm rounded-lg"
+                        placeholder="Enter a Slug"
+                    />
+                    {errors.slug && (
+                        <span className="text-red-500">{errors.slug.message}</span>
                     )}
 
 
