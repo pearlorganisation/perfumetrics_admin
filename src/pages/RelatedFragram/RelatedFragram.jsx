@@ -5,12 +5,15 @@ import { Link, useParams } from "react-router-dom";
 import { Toaster, toast } from "sonner";
 import ModalWrapper from "../../components/Modal/ModalWrapper";
 import AddRelatedFragram from "./AddRelatedFragram";
+import UpdateRelatedFragram from "./UpdateRelatedFragram";
 
 const RelatedFragram = () => {
     const { perfumeId } = useParams()
     const [perfumeData, setPerfumeData] = useState(null);
+    const [singlePerfumeData, setSinglePerfumeData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isShowing, setIsShowing] = useState(false)
+    const [isEditShowing, setEditShowing] = useState(false)
 
     const getRelatedFragram = (perfumeId) => {
         axios
@@ -114,7 +117,19 @@ const RelatedFragram = () => {
                                             >
                                                 View/edit
                                             </Link>
-                                        </td> */}
+                                            </td> */}
+                                        <td className="px-6 py-4">
+                                            <button
+                                                className="font-medium text-red-600  hover:underline"
+                                                onClick={() => {
+                                                    setSinglePerfumeData(item)
+                                                    setEditShowing(true)
+
+                                                }}
+                                            >
+                                                Edit
+                                            </button>
+                                        </td>
                                         <td className="px-6 py-4">
                                             <button
                                                 className="font-medium text-red-600  hover:underline"
@@ -134,6 +149,7 @@ const RelatedFragram = () => {
             </div>
 
             {isShowing && <ModalWrapper isShowing={isShowing} setIsShowing={setIsShowing}> <AddRelatedFragram setIsShowing={setIsShowing} /> </ModalWrapper>}
+            {isEditShowing && <ModalWrapper isShowing={isEditShowing} setIsShowing={setEditShowing}> <UpdateRelatedFragram data={singlePerfumeData} setIsShowing={setEditShowing} /> </ModalWrapper>}
         </div>
     );
 };
