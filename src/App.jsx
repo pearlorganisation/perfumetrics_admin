@@ -14,7 +14,8 @@ import Layout from "./components/Layout/Layout";
 // import ComingSoon from "./pages/NotFound/ComingSoon";
 import NotFound from "./pages/NotFound/NotFound";
 import Perfumes from "./pages/Perfumes/Perfumes";
-import AddPerfume from "./pages/Perfumes/AddPerfume";
+// import AddPerfume from "./pages/Perfumes/AddPerfume";
+
 import UpdatePerfume from "./pages/Perfumes/UpdatePerfume";
 
 import PerfumeNotes from "./pages/PerfumeNotes/PerfumeNotes";
@@ -63,6 +64,8 @@ import ContactUserDetail from "./pages/ContactUs/ContactUserDetail";
 import ContactUserDataView from "./pages/ContactUs/ContactUserDataView";
 import BrandImagesLinkPage from "./pages/BrandImagesLinkPage/BrandImagesLinkPage";
 import AddBrandLinkPage from "./pages/BrandImagesLinkPage/AddBrandLinkPage";
+import AddTempPerfume  from "./pages/Perfumes/TempPerfume/AddPerfume";
+import AddPerfume  from "./pages/Perfumes/AddPerfume";
 
 
 const isUserLoggedIn = localStorage.getItem("isusrlgd");
@@ -94,7 +97,13 @@ const App = () => {
         },
         {
           path: "/perfume/add",
+          // element: <AddPerfume />,
           element: <AddPerfume />,
+        },
+        {
+          path: "/perfume/tempadd",
+          element: <AddTempPerfume />,
+
         },
         {
           path: "/perfume/update/:perfumeId",

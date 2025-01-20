@@ -72,6 +72,12 @@ const PerfumeNotes = () => {
           >
             Add
           </Link>
+          <Link
+            to="/perfume/tempadd"
+            className="bg-blue-600 rounded-md text-white px-3 py-1 font-semibold "
+          >
+            Temp Add
+          </Link>
         </div>
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
           {isLoading && (
