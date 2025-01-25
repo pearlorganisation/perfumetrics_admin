@@ -111,10 +111,10 @@ const AddNews = () => {
                     <input
                         {...register('slug', {
                             required: 'Slug  is required',
-                            pattern: {
-                                value: /^[a-zA-Z0-9-_ ]+$/,
-                                message: 'Slug name can only contain letters, numbers, hyphens, and underscores',
-                            },
+                            // pattern: {
+                            //     value: /^[a-zA-Z0-9-_ ]+$/,
+                            //     message: 'Slug name can only contain letters, numbers, hyphens, and underscores',
+                            // },
                         })}
                         type="text"
                         className="w-full mt-2 me-50 px-5 py-2 text-gray-500 border-slate-300 bg-transparent outline-none border focus:border-teal-400 shadow-sm rounded-lg"

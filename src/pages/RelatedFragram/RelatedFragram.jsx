@@ -110,21 +110,13 @@ const RelatedFragram = () => {
                                         <td className="px-6 py-4">{item.brand?.brand}</td>
 
 
-                                        {/* <td className="px-6 py-4">
-                                            <Link
-                                                to={`#`}
-                                                className="font-medium text-blue-600  hover:underline"
-                                            >
-                                                View/edit
-                                            </Link>
-                                            </td> */}
+
                                         <td className="px-6 py-4">
                                             <button
                                                 className="font-medium text-red-600  hover:underline"
                                                 onClick={() => {
-                                                    setSinglePerfumeData(item)
-                                                    setEditShowing(true)
-
+                                                    setSinglePerfumeData(item);
+                                                    setEditShowing(true);
                                                 }}
                                             >
                                                 Edit

@@ -7,7 +7,8 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { IoClose } from "react-icons/io5";
 
-const AddFragram = ({ setIsShowing }) => {
+const UpdateFragram = ({ setIsShowing, data }) => {
+    console.log(data, "data")
     const dispatch = useDispatch()
     const { perfumeId } = useParams()
     const [brandsData, setBrandsData] = useState([])
@@ -17,10 +18,18 @@ const AddFragram = ({ setIsShowing }) => {
 
     const { register, handleSubmit, control, formState: { errors } } = useForm({
         defaultValues: {
-            links: [{ link: '', country: '' }]
+            title: data?.title,
+            postBy: data?.postBy,
+            rating: data?.rating,
+            links: data?.mapOfLinks
+                ? Object.entries(data?.mapOfLinks).map(([country, link,]) => {
+                    console.log(country, link, "o chutiye")
+                    return ({ country, link })
+                })
+                : [{ link: '', country: '', price: '', Quantity: '' }],
         }
     });
-    const [imagePreview, setImagePreview] = useState(null); // State to store the image preview URL
+    const [imagePreview, setImagePreview] = useState(data?.banner); // State to store the image preview URL
     const { fields, append, remove } = useFieldArray({
         control,
         name: "links",
@@ -67,11 +76,10 @@ const AddFragram = ({ setIsShowing }) => {
             setBrandsData(temp)
         }
     }, [brands])
-    const postRelatedFragram = async (formData) => {
-
+    const updateFragram = async (formData) => {
         try {
             setIsLoading(true)
-            const result = await axios.post(`${import.meta.env.VITE_API_URL}/fragrams?perfumeId=${perfumeId}`, formData)
+            const result = await axios.patch(`${import.meta.env.VITE_API_URL}/fragrams/single/${data?._id}`, formData)
             setIsLoading(false)
             setIsShowing(false)
 
@@ -93,13 +101,13 @@ const AddFragram = ({ setIsShowing }) => {
         formData.append("perfumeId", perfumeId)
         formData.append("banner", data?.banner[0])
 
-        postRelatedFragram(formData)
+        updateFragram(formData)
 
         console.log(data, perfumeId); // Handle form submission
     };
     return (
         <div className="w-full text-center space-y-5  bg-white  shadow overflow-hidden sm:rounded-md">
-            <h1 className="text-3xl">Add  Fragram </h1>
+            <h1 className="text-3xl">Add  Fragramsss </h1>
 
             <form onSubmit={handleSubmit(onSubmit)}>
                 {/* Perfume Title */}
@@ -247,7 +255,7 @@ const AddFragram = ({ setIsShowing }) => {
                             type="file"
                             id="file"
                             className="sr-only"
-                            {...register('banner', { required: 'File is required' })}
+                            {...register('banner')}
                             onChange={handleFileChange}
                         />
                         <label
@@ -293,4 +301,4 @@ const AddFragram = ({ setIsShowing }) => {
     );
 };
 
-export default AddFragram;
+export default UpdateFragram;

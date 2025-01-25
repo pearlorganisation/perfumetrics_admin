@@ -6,12 +6,16 @@ import { Toaster, toast } from "sonner";
 import ModalWrapper from "../../components/Modal/ModalWrapper";
 import AddRelatedFragram from "./AddFragram";
 import AddFragram from "./AddFragram";
+import UpdateFragram from "./UpdateFragram";
 
 const Fragram = () => {
     const { perfumeId } = useParams()
     const [perfumeData, setPerfumeData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isShowing, setIsShowing] = useState(false)
+    const [isEditShowing, setEditShowing] = useState(false)
+    const [singlePerfumeData, setSinglePerfumeData] = useState(null);
+
 
     const getRelatedFragram = (perfumeId) => {
         axios
@@ -103,14 +107,18 @@ const Fragram = () => {
                                         <td className="px-6 py-4">{item?.title}</td>
                                         <td className="px-6 py-4">{item?.postBy}</td>
 
-                                        {/* <td className="px-6 py-4">
-                                            <Link
-                                                to={`/perfume/update/${item?._id}`}
-                                                className="font-medium text-blue-600  hover:underline"
-                                            >
-                                                View/edit
-                                            </Link>
-                                        </td> */}
+                                        <td className="px-6 text-blue-600 py-4 font-bold">
+                                            <button
+                                                onClick={() => {
+                                                    setEditShowing(true)
+                                                    setSinglePerfumeData(item)
+                                                }}
+                                                type="button"> View/Edit</button>
+
+
+
+
+                                        </td>
                                         <td className="px-6 py-4">
                                             <button
                                                 className="font-medium text-red-600  hover:underline"
@@ -130,6 +138,7 @@ const Fragram = () => {
             </div>
 
             {isShowing && <ModalWrapper isShowing={isShowing} setIsShowing={setIsShowing}> <AddFragram setIsShowing={setIsShowing} /> </ModalWrapper>}
+            {isEditShowing && <ModalWrapper isShowing={isEditShowing} setIsShowing={setEditShowing}> <UpdateFragram setIsShowing={isEditShowing} data={singlePerfumeData} /> </ModalWrapper>}
         </div>
     );
 };

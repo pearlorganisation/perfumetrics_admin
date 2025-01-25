@@ -35,7 +35,7 @@ const AddRelatedFragram = ({ setIsShowing }) => {
         formState: { errors },
     } = useForm({
         defaultValues: {
-            links: [], // Dynamic fields default
+            links: [{ link: '', country: '' }], // Dynamic fields default
         },
     });
 
@@ -202,7 +202,7 @@ const AddRelatedFragram = ({ setIsShowing }) => {
                                                     options={countryISOData} // Assuming `countryISOData` is your options array for countries
                                                     getOptionLabel={(e) => e.label} // Use this to get the label for display in Select
                                                     getOptionValue={(e) => e.value} // Use this to get the value for the selected option
-                                                    value={countryISOData.find((option) => option.value === field.value) || null} // Ensure the correct option object is selected
+                                                    value={countryISOData?.find((option) => option.value === field.value) || null} // Ensure the correct option object is selected
                                                     onChange={(selectedOption) => {
                                                         field.onChange(selectedOption?.value || null); // Update form value with selected option's value
                                                     }}

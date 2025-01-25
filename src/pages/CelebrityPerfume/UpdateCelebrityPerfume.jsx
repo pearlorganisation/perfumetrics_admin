@@ -7,12 +7,10 @@ import JoditEditor from "jodit-react";
 import axios from "axios";
 
 const UpdateCelebrityPerfume = () => {
-    const [blogData, setBlogData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [bannerName, setBannerName] = useState({});
     const [selectedBanner, setSelectedBanner] = useState(null);
     const [previewImage, setPreviewImage] = useState(null);
-    const { blogId } = useParams();
     const { celebrityPerfumeId } = useParams()
     const [celebrityPerfume, setCelebrityPerfume] = useState(null);
     const navigate = useNavigate()
@@ -26,17 +24,18 @@ const UpdateCelebrityPerfume = () => {
         setValue, // Allows you to manually set field values
         reset,
     } = useForm({
-        defaultValues: {},
+
     });
 
     const getCelebrityPerfume = (celebrityPerfumeId) => {
         axios
-            .get(`${import.meta.env.VITE_API_URL}/celebrityPerfumes/${celebrityPerfumeId}`)
+            .get(`${import.meta.env.VITE_API_URL}/celebrityPerfumes/admin/${celebrityPerfumeId}`)
             .then((res) => {
                 console.log(res)
+                reset(res?.data?.data);
                 setCelebrityPerfume(res?.data?.data);
-                setValue("title", res?.data?.data?.title)
-                setValue("content", res?.data?.data?.content)
+                // setValue("title", res?.data?.data?.title)
+                // setValue("content", res?.data?.data?.content)
                 setPreviewImage(res?.data?.data?.banner);
 
             })
@@ -96,7 +95,7 @@ const UpdateCelebrityPerfume = () => {
             <Toaster />
             <div className=" flex justify-center">
                 <h3 className="text-gray-600 text-2xl font-semibold sm:text-3xl">
-                    Update blog
+                    Update Celebrity Perfume
                 </h3>
             </div>
             <div className="bg-white rounded-lg shadow p-4 py-6  sm:rounded-lg sm:max-w-5xl mt-8 mx-auto">

@@ -15,7 +15,11 @@ const AddPerfumeCategory = ({ setIsShowing }) => {
   const [isLoading, setIsLoading] = useState(false)
   const { brands, isDeleted, isUpdated } = useSelector(state => state.brand)
 
-  const { register, handleSubmit, control, formState: { errors } } = useForm();
+  const { register, handleSubmit, control, formState: { errors } } = useForm({
+    defaultValues: {
+      links: [{ link: '', country: '' }]
+    }
+  });
   const [imagePreview, setImagePreview] = useState(null); // State to store the image preview URL
 
 
@@ -199,7 +203,7 @@ const AddPerfumeCategory = ({ setIsShowing }) => {
                           options={countryISOData} // Assuming `countryISOData` is your options array for countries
                           getOptionLabel={(e) => e.label} // Use this to get the label for display in Select
                           getOptionValue={(e) => e.value} // Use this to get the value for the selected option
-                          value={countryISOData.find((option) => option.value === field.value) || null} // Ensure the correct option object is selected
+                          value={countryISOData?.find((option) => option.value === field.value) || null} // Ensure the correct option object is selected
                           onChange={(selectedOption) => {
                             field.onChange(selectedOption?.value || null); // Update form value with selected option's value
                           }}

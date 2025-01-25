@@ -7,40 +7,26 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { IoClose } from "react-icons/io5";
 
-const AddFragram = ({ setIsShowing }) => {
+const UpdatePerfumeCategory = ({ setEditShowing, data, getPerfumeCategory }) => {
     const dispatch = useDispatch()
     const { perfumeId } = useParams()
+    const [perfumeData, setPerfumeData] = useState(null);
     const [brandsData, setBrandsData] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const { brands, isDeleted, isUpdated } = useSelector(state => state.brand)
 
-
     const { register, handleSubmit, control, formState: { errors } } = useForm({
         defaultValues: {
-            links: [{ link: '', country: '' }]
+            perfumeName: data?.perfumeName,
+            links: data?.mapOfLinks
+                ? Object.entries(data?.mapOfLinks).map(([country, link,]) => {
+                    console.log(country, link, "o chutiye")
+                    return ({ country, link: link?.link, price: link?.price, Quantity: link?.Quantity })
+                })
+                : [{ link: '', country: '', price: '', Quantity: '' }],
         }
     });
-    const [imagePreview, setImagePreview] = useState(null); // State to store the image preview URL
-    const { fields, append, remove } = useFieldArray({
-        control,
-        name: "links",
-    });
-    const [countryISOData, setCountryISOData] = useState(null);
-    const getCountryISO = () => {
-        axios
-            .get(`${import.meta.env.VITE_API_URL}/countryISOcodes`)
-            .then((res) => {
-                console.log(res)
-                setCountryISOData(res?.data.data);
-
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    }
-    useEffect(() => {
-        getCountryISO()
-    }, []);
+    const [imagePreview, setImagePreview] = useState(data?.banner); // State to store the image preview URL
 
 
 
@@ -67,13 +53,15 @@ const AddFragram = ({ setIsShowing }) => {
             setBrandsData(temp)
         }
     }, [brands])
-    const postRelatedFragram = async (formData) => {
+    const updatePerfumeCategory = async (formData) => {
 
         try {
             setIsLoading(true)
-            const result = await axios.post(`${import.meta.env.VITE_API_URL}/fragrams?perfumeId=${perfumeId}`, formData)
+            const result = await axios.patch(`${import.meta.env.VITE_API_URL}/perfumeCategories/single/${data?._id}`, formData)
+            setPerfumeData(result?.data?.data)
             setIsLoading(false)
-            setIsShowing(false)
+            getPerfumeCategory()
+            setEditShowing(false)
 
             console.log(result, "relatedFragrams")
         } catch (error) {
@@ -86,20 +74,36 @@ const AddFragram = ({ setIsShowing }) => {
 
     const onSubmit = (data) => {
         const formData = new FormData()
-        formData.append("title", data?.title)
-        formData.append("postBy", data?.postBy)
-        formData.append("links", JSON.stringify(data?.links))
-        formData.append("rating", data?.rating)
+        formData.append("perfumeName", data?.perfumeName)
         formData.append("perfumeId", perfumeId)
+        formData.append("links", JSON.stringify(data?.links))
         formData.append("banner", data?.banner[0])
-
-        postRelatedFragram(formData)
-
+        updatePerfumeCategory(formData)
         console.log(data, perfumeId); // Handle form submission
     };
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: "links",
+    });
+    const [countryISOData, setCountryISOData] = useState(null);
+    const getCountryISO = () => {
+        axios
+            .get(`${import.meta.env.VITE_API_URL}/countryISOcodes`)
+            .then((res) => {
+                console.log(res)
+                setCountryISOData(res?.data.data);
+
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+    useEffect(() => {
+        getCountryISO()
+    }, []);
     return (
         <div className="w-full text-center space-y-5  bg-white  shadow overflow-hidden sm:rounded-md">
-            <h1 className="text-3xl">Add  Fragram </h1>
+            <h1 className="text-3xl">Update Perfume Category </h1>
 
             <form onSubmit={handleSubmit(onSubmit)}>
                 {/* Perfume Title */}
@@ -108,30 +112,14 @@ const AddFragram = ({ setIsShowing }) => {
                         <div className="flex flex-wrap items-stretch w-full mb-4 relative">
                             <input
                                 type="text"
-                                {...register('title', { required: 'Title is required' })}
+                                {...register('perfumeName', { required: 'Perfume Name is required' })}
                                 className="flex-shrink flex-grow flex-auto leading-normal w-px border border-green-200 h-10 rounded px-3 focus:border-blue focus:shadow"
-                                placeholder="Title"
+                                placeholder="Perfume Name"
                             />
-                            {errors.title && <p className="text-red-500">{errors.title.message}</p>}
+                            {errors.perfumeName && <p className="text-red-500">{errors.perfumeName.message}</p>}
                         </div>
-                        <div className="flex flex-wrap items-stretch w-full mb-4 relative">
-                            <input
-                                type="text"
-                                {...register('postBy', { required: 'Post By is required' })}
-                                className="flex-shrink flex-grow flex-auto leading-normal w-px border border-green-200 h-10 rounded px-3 focus:border-blue focus:shadow"
-                                placeholder="Post By"
-                            />
-                            {errors.postBy && <p className="text-red-500">{errors.postBy.message}</p>}
-                        </div>
-                        <div className="flex flex-wrap items-stretch w-full mb-4 relative">
-                            <input
-                                type="text"
-                                {...register('rating', { required: 'Rating is required' })}
-                                className="flex-shrink flex-grow flex-auto leading-normal w-px border border-green-200 h-10 rounded px-3 focus:border-blue focus:shadow"
-                                placeholder="Rating"
-                            />
-                            {errors.rating && <p className="text-red-500">{errors.rating.message}</p>}
-                        </div>
+
+
 
 
 
@@ -161,27 +149,48 @@ const AddFragram = ({ setIsShowing }) => {
                                         )}
                                     </div>
 
-                                    {/* <div className='space-y-1'>
+                                    <div className='space-y-1'>
                                         <label
-                                            htmlFor={`links.${index}.company`}
+                                            htmlFor={`links.${index}.price`}
                                             className="block text-sm font-medium text-gray-700"
                                         >
-                                            Company Name
+                                            Price
                                         </label>
                                         <input
                                             type="text"
-                                            {...register(`links.${index}.company`, {
-                                                required: 'Company name is required',
+                                            {...register(`links.${index}.price`, {
+                                                required: 'Price is required',
                                             })}
-                                            placeholder="Company Name"
+                                            placeholder="Price"
                                             className="w-full px-3 py-2 border rounded focus:ring focus:ring-blue-500"
                                         />
-                                        {errors.links?.[index]?.company && (
+                                        {errors.links?.[index]?.price && (
                                             <p className="text-red-500">
-                                                {errors.links[index].company.message}
+                                                {errors.links[index].price.message}
                                             </p>
                                         )}
-                                    </div> */}
+                                    </div>
+                                    <div className='space-y-1'>
+                                        <label
+                                            htmlFor={`links.${index}.Quantity`}
+                                            className="block text-sm font-medium text-gray-700"
+                                        >
+                                            Quantity
+                                        </label>
+                                        <input
+                                            type="text"
+                                            {...register(`links.${index}.Quantity`, {
+                                                required: 'Quantity is required',
+                                            })}
+                                            placeholder="Quantity"
+                                            className="w-full px-3 py-2 border rounded focus:ring focus:ring-blue-500"
+                                        />
+                                        {errors.links?.[index]?.Quantity && (
+                                            <p className="text-red-500">
+                                                {errors.links[index].Quantity.message}
+                                            </p>
+                                        )}
+                                    </div>
 
                                     <div className='space-y-1 col-span-2'>
                                         <label
@@ -247,7 +256,7 @@ const AddFragram = ({ setIsShowing }) => {
                             type="file"
                             id="file"
                             className="sr-only"
-                            {...register('banner', { required: 'File is required' })}
+                            {...register('banner', { required: { value: false, message: 'File is required' } })}
                             onChange={handleFileChange}
                         />
                         <label
@@ -293,4 +302,4 @@ const AddFragram = ({ setIsShowing }) => {
     );
 };
 
-export default AddFragram;
+export default UpdatePerfumeCategory;

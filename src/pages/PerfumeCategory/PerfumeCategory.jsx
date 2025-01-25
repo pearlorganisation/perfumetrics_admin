@@ -6,13 +6,16 @@ import { Toaster, toast } from "sonner";
 import ModalWrapper from "../../components/Modal/ModalWrapper";
 import AddBrandsFragram from "./AddPerfumeCategory";
 import AddPerfumeCategory from "./AddPerfumeCategory";
+import UpdatePerfumeCategory from "./UpdatePerfumeCategory";
 
 const PerfumeCategory = () => {
   const [perfumeData, setPerfumeData] = useState(null);
+  const [singlePerfumeData, setSinglePerfumeData] = useState(null);
   const { perfumeId } = useParams()
   console.log(perfumeId)
   const [isLoading, setIsLoading] = useState(false);
   const [isShowing, setIsShowing] = useState(false)
+  const [isEditShowing, setEditShowing] = useState(false)
 
   const getPerfumeCategory = () => {
     axios
@@ -85,9 +88,7 @@ const PerfumeCategory = () => {
                   <th scope="col" className="px-6 py-3">
                     Perfume Name
                   </th>
-                  <th scope="col" className="px-6 py-3">
-                    Quantity
-                  </th>
+
 
                   <th scope="col" className="col-span-2 px-6 py-3">
                     Actions
@@ -107,7 +108,6 @@ const PerfumeCategory = () => {
                     </th>
                     <td className="px-6 py-4">{item?.perfumeName}</td>
                     <td className="px-6 py-4">{item?.perfume?.perfume}</td>
-                    <td className="px-6 py-4">{item?.priceMl}</td>
 
                     {/* <td className="px-6 py-4">
                       <Link
@@ -117,7 +117,16 @@ const PerfumeCategory = () => {
                         View/edit
                       </Link>
                     </td> */}
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-4 space-x-6">
+                      <button
+                        className="font-medium text-blue-600  hover:underline"
+                        onClick={() => {
+                          setEditShowing(true)
+                          setSinglePerfumeData(item)
+                        }}
+                      >
+                        Edit
+                      </button>
                       <button
                         className="font-medium text-red-600  hover:underline"
                         onClick={() => {
@@ -136,6 +145,7 @@ const PerfumeCategory = () => {
       </div>
 
       {isShowing && <ModalWrapper isShowing={isShowing} setIsShowing={setIsShowing}> <AddPerfumeCategory setIsShowing={setIsShowing} /> </ModalWrapper>}
+      {isEditShowing && <ModalWrapper isShowing={isEditShowing} setIsShowing={setEditShowing}> <UpdatePerfumeCategory setEditShowing={setEditShowing} data={singlePerfumeData} getPerfumeCategory={getPerfumeCategory} /> </ModalWrapper>}
     </div>
   );
 };
