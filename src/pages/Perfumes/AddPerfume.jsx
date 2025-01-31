@@ -741,29 +741,7 @@ const AddPerfume = () => {
                                 required
                               />
                             </td>
-                            {/* <td className="px-1 py-4">
-                              <input
-                                type="text"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                placeholder="Company Name"
-                                onChange={(e) => {
-                                  setPurchaseLinks((prev) => {
-                                    let tempArr = [...prev];
-                                    let idx = tempArr.findIndex((ele) => {
-                                      return ele.id === item.id;
-                                    });
 
-                                    let row = tempArr[idx];
-                                    tempArr.slice(idx, 1);
-
-                                    row.company = e.target.value;
-                                    tempArr[idx] = row;
-                                    return tempArr;
-                                  });
-                                }}
-                                required
-                              />
-                            </td> */}
                             <td
                               className="px-1 py-4"
                             >
@@ -1200,23 +1178,7 @@ const AddPerfume = () => {
                 )}
               </div>
 
-              {/* <div className="sm:col-span-2">
-                <label
-                  htmlFor="description"
-                  className="block mb-2 text-sm font-medium text-gray-900 "
-                >
-                  Description
-                </label>
-                <textarea
-                  maxLength='1000'
-                  minLength='3'
-                  id="description"
-                  rows="8"
-                  className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500      "
-                  placeholder="Write a product description here..."
-                  {...register("description", { required: true })}
-                ></textarea>
-              </div> */}
+
 
               <div className="sm:col-span-2">
                 <label className="font-medium">Description</label>

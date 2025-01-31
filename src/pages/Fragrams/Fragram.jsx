@@ -47,7 +47,7 @@ const Fragram = () => {
 
     useEffect(() => {
         getRelatedFragram(perfumeId)
-    }, [isShowing, perfumeId]);
+    }, [isShowing, isEditShowing, perfumeId]);
 
 
 
@@ -138,7 +138,7 @@ const Fragram = () => {
             </div>
 
             {isShowing && <ModalWrapper isShowing={isShowing} setIsShowing={setIsShowing}> <AddFragram setIsShowing={setIsShowing} /> </ModalWrapper>}
-            {isEditShowing && <ModalWrapper isShowing={isEditShowing} setIsShowing={setEditShowing}> <UpdateFragram setIsShowing={isEditShowing} data={singlePerfumeData} /> </ModalWrapper>}
+            {isEditShowing && <ModalWrapper isShowing={isEditShowing} setIsShowing={setEditShowing}> <UpdateFragram setIsShowing={setEditShowing} data={singlePerfumeData} /> </ModalWrapper>}
         </div>
     );
 };

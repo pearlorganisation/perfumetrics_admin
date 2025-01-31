@@ -42,6 +42,8 @@ const UpdateFragram = ({ setIsShowing, data }) => {
                 console.log(res)
                 setCountryISOData(res?.data.data);
 
+
+
             })
             .catch((err) => {
                 console.log(err);
@@ -107,7 +109,7 @@ const UpdateFragram = ({ setIsShowing, data }) => {
     };
     return (
         <div className="w-full text-center space-y-5  bg-white  shadow overflow-hidden sm:rounded-md">
-            <h1 className="text-3xl">Add  Fragramsss </h1>
+            <h1 className="text-3xl">Update  Fragrams </h1>
 
             <form onSubmit={handleSubmit(onSubmit)}>
                 {/* Perfume Title */}
@@ -169,27 +171,7 @@ const UpdateFragram = ({ setIsShowing, data }) => {
                                         )}
                                     </div>
 
-                                    {/* <div className='space-y-1'>
-                                        <label
-                                            htmlFor={`links.${index}.company`}
-                                            className="block text-sm font-medium text-gray-700"
-                                        >
-                                            Company Name
-                                        </label>
-                                        <input
-                                            type="text"
-                                            {...register(`links.${index}.company`, {
-                                                required: 'Company name is required',
-                                            })}
-                                            placeholder="Company Name"
-                                            className="w-full px-3 py-2 border rounded focus:ring focus:ring-blue-500"
-                                        />
-                                        {errors.links?.[index]?.company && (
-                                            <p className="text-red-500">
-                                                {errors.links[index].company.message}
-                                            </p>
-                                        )}
-                                    </div> */}
+
 
                                     <div className='space-y-1 col-span-2'>
                                         <label

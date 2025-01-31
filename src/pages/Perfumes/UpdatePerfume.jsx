@@ -49,7 +49,7 @@ const UpdatePerfume = () => {
   const [logo, setLogo] = useState(null);
   const [brandId, setBrandId] = useState(null);
 
-  const [gallery, setGallery] = useState([]);
+  const [gallery, setGallery] = useState(state?.gallery || []);
   const [accords, setAccords] = useState([]);
   const [noteData, setNoteData] = useState([]);
   const [purchaseLinks, setPurchaseLinks] = useState([]);
@@ -61,6 +61,7 @@ const UpdatePerfume = () => {
   const [linkImages, setLinkImages] = useState();
   const [defaultTopNote, setDefaultTopNote] = useState([]);
   const [brandLinkedImages, setBrandLinkedImages] = useState(null);
+  const [removedImages, setRemovedImages] = useState([])
   const accordsRef = useRef(null);
   const getBrandLinkedImages = () => {
     axios
@@ -155,6 +156,7 @@ const UpdatePerfume = () => {
 
     console.log(state, "perfume");
   }, [state]);
+  console.log(state, "state")
 
 
 
@@ -315,8 +317,10 @@ const UpdatePerfume = () => {
     );
 
     for (let i = 0; i < gallery.length; i++) {
-      formData.append("gallery", gallery[i]);
+      gallery[i] instanceof File ? formData.append("gallery", gallery[i]) : null;
     }
+    formData.append("removeGallery", JSON.stringify(removedImages));
+
 
     // Do a bit of work to convert the entries to a plain JS object
     const value = Object.fromEntries(formData.entries());
@@ -396,10 +400,10 @@ const UpdatePerfume = () => {
     }
   }, [brands]);
 
-  // useEffect(() => {
-  //   console.log(brandsData?.find((item) => item?.value === state?.brand));
-  //   console.log(state?.mainAccords, "state?.mainAccords || []");
-  // }, [brandsData]);
+  useEffect(() => {
+    console.log(gallery, "setGallery")
+    console.log(removedImages, "removedImages")
+  }, [gallery, removedImages]);
 
   return (
     <>
@@ -575,54 +579,32 @@ const UpdatePerfume = () => {
                     accept=".jpg, .jpeg, .png, .webp"
                   />
                 </div>
-                {gallery && gallery?.length > 0 ? (
-                  <div className="w-full flex flex-wrap gap-2 py-2">
-                    {gallery?.map((item, idx) => (
-                      <div key={`gallery${idx}`}>
-                        <div className="h-[200px] border rounded-sm flex items-center justify-center box-border">
-                          <img
-                            src={URL.createObjectURL(item)}
-                            className="h-full"
-                          />
-                        </div>
-                        <button
-                          type="button"
-                          className="w-full bg-red-500 hover:bg-white hover:text-black hover:shadow-[0_0_0_2px#ff0000] text-white rounded-sm p-2.5 px-2 transition duration-300"
-                          onClick={() => {
-                            setGallery((prev) => {
-                              let tempArr = [...prev];
-                              return tempArr.filter((ele) => ele !== item);
-                            });
-                          }}
-                        >
-                          Remove
-                        </button>
+                {gallery && gallery?.length > 0 ? <div className="w-full flex flex-wrap gap-2 py-2">
+                  {gallery?.map((item, idx) => (
+                    <div key={`gallery${idx}`}>
+                      <div className="h-[200px] border rounded-sm flex items-center justify-center box-border">
+                        <img src={
+                          item instanceof File ? URL.createObjectURL(item) :
+                            item?.path} className="h-full" />
                       </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="w-full flex flex-wrap gap-2 py-2">
-                    {state?.gallery?.map((item, idx) => (
-                      <div key={`gallery${idx}`}>
-                        <div className="h-[200px] border rounded-sm flex items-center justify-center box-border">
-                          <img src={item?.path} className="h-full" />
-                        </div>
-                        <button
-                          type="button"
-                          className="w-full bg-red-500 hover:bg-white hover:text-black hover:shadow-[0_0_0_2px#ff0000] text-white rounded-sm p-2.5 px-2 transition duration-300"
-                          onClick={() => {
-                            setGallery((prev) => {
-                              let tempArr = [...prev];
-                              return tempArr.filter((ele) => ele !== item);
-                            });
-                          }}
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                      <button
+                        type="button"
+                        className="w-full bg-red-500 hover:bg-white hover:text-black hover:shadow-[0_0_0_2px#ff0000] text-white rounded-sm p-2.5 px-2 transition duration-300"
+                        onClick={() => {
+                          item instanceof File ? null : setRemovedImages(prev => {
+                            return [...prev, item]
+                          })
+                          setGallery((prev) => {
+                            let tempArr = [...prev];
+                            return tempArr.filter((ele) => ele !== item);
+                          });
+                        }}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ))}
+                </div> : 'No Gallery'}
               </div>
               <div className="sm:col-span-2">
                 <label
@@ -811,183 +793,7 @@ const UpdatePerfume = () => {
                     Add Link
                   </button>
                 </div>
-                {/* {purchaseLinks && purchaseLinks?.length > 0 && (
-                  <div className="relative over">
-                    <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
-                      <thead className="text-xs text-gray-700 bg-gray-50 ">
-                        <tr>
-                          <th scope="col" className="px-1 pt-2 pb-1">
-                            S.No.
-                          </th>
-                          <th scope="col" className="px-1 pt-2 pb-1">
-                            Link
-                          </th>
-                          <th scope="col" className="px-1 pt-2 pb-1">
-                            Company
-                          </th>
-                          <th scope="col" className="px-1 pt-2 pb-1">
-                            Country
-                          </th>
 
-                          <th scope="col" className="px-1 pt-2 pb-1"></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {purchaseLinks.map((item, idx) => (
-                          <tr className="bg-white border-b " key={item?.id}>
-                            <td className="px-1 py-4">{idx + 1}</td>
-                            <td
-                              scope="row"
-                              className="px-1 py-4 font-medium text-gray-900 whitespace-nowrap "
-                            >
-                              <input
-                                type="text"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                placeholder="https://xyz.xyz/xyzzz"
-                                defaultValue={item?.link}
-                                onChange={(e) => {
-                                  setPurchaseLinks((prev) => {
-                                    let tempArr = [...prev];
-                                    let idx = tempArr.findIndex((ele) => {
-                                      return ele.id === item.id;
-                                    });
-
-                                    let row = tempArr[idx];
-                                    tempArr.slice(idx, 1);
-                                    row.link = e.target.value;
-                                    tempArr[idx] = row;
-                                    return tempArr;
-                                  });
-                                }}
-                                required
-                              />
-                            </td>
-                            <td className="px-1 py-4">
-                              <input
-                                type="text"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                placeholder="Company Name"
-                                defaultValue={item?.company}
-                                onChange={(e) => {
-                                  setPurchaseLinks((prev) => {
-                                    let tempArr = [...prev];
-                                    let idx = tempArr.findIndex((ele) => {
-                                      return ele.id === item.id;
-                                    });
-
-                                    let row = tempArr[idx];
-                                    tempArr.slice(idx, 1);
-
-                                    row.company = e.target.value;
-                                    tempArr[idx] = row;
-                                    return tempArr;
-                                  });
-                                }}
-                                required
-                              />
-                            </td>
-                            <td
-                              className="px-1 py-4"
-                            >
-                              {countryISOData && <Select
-                                defaultValue={countryISOData.find(it => it?.value === item?.country)}
-                                value={countryISOData.find(it => it?.value === item?.country)}
-                                options={countryISOData}
-                                // defaultValue={ }
-                                onChange={(selectedOption) => {
-                                  setPurchaseLinks((prev) => {
-                                    // Clone the previous array
-                                    let tempArr = [...prev];
-
-                                    // Find the index of the item you want to update
-                                    let idx = tempArr.findIndex((ele) => ele.id === item.id);
-
-                                    // Make sure the item exists
-                                    if (idx !== -1) {
-                                      // Update the relevant field with the selected value
-                                      tempArr[idx] = {
-                                        ...tempArr[idx],
-                                        country: selectedOption.value, // Assuming company field gets the selected value
-                                      };
-                                    }
-
-                                    return tempArr;
-                                  });
-                                }}
-
-                                placeholder="Select a country"
-                              />}
-                            </td>
-                            <td className="px-1 py-4">
-                              <input
-                                type="text"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                placeholder="$ Price"
-                                defaultValue={item?.price}
-
-                                onChange={(e) => {
-                                  setPurchaseLinks((prev) => {
-                                    let tempArr = [...prev];
-                                    let idx = tempArr.findIndex((ele) => {
-                                      return ele.id === item.id;
-                                    });
-
-                                    let row = tempArr[idx];
-                                    tempArr.slice(idx, 1);
-
-                                    row.price = e.target.value;
-                                    tempArr[idx] = row;
-                                    return tempArr;
-                                  });
-                                }}
-                                required
-                              />
-                            </td>
-                            <td>
-                              <div>
-                                {item.companyImage ? <img src={item.companyImage} /> :
-                                  <input
-                                  className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none "
-                                  id="file_input"
-                                  type="file"
-                                  accept=".jpg, .jpeg, .png, .webp"
-                                  onChange={(e) => {
-                                    setPurchaseLinks((prev) => {
-                                      let tempArr = [...prev];
-                                      let idx = tempArr.findIndex((ele) => {
-                                        return ele.id === item.id;
-                                      });
-  
-                                      let row = tempArr[idx];
-                                      tempArr.slice(idx, 1);
-  
-                                      row.companyImage = e.target.files[0];
-                                      tempArr[idx] = row;
-                                      return tempArr;
-                                    });
-                                  }}
-                                  required
-                                />}
-                              </div>
-                            </td>
-
-                            <td className="px-1 py-4">
-                              <button
-                                type="button"
-                                className="bg-red-500 hover:bg-white hover:text-black hover:shadow-[0_0_0_2px#ff0000] text-white rounded-sm p-2.5 px-2 transition duration-300"
-                                onClick={() => {
-                                  removePurchaseLink(item?.id);
-                                }}
-                              >
-                                Remove
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )} */}
                 <tbody>
                   {purchaseLinks &&
                     purchaseLinks.map((item, idx) => {
@@ -1262,7 +1068,7 @@ const UpdatePerfume = () => {
                           {cons.map((item, idx) => (
                             <tr
                               className="bg-white border-b "
-                              key ={item?._id}
+                              key={item?._id}
                             >
                               <td className="px-1 py-4">{idx + 1}</td>
                               <td
