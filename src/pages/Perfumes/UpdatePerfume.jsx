@@ -164,7 +164,7 @@ const UpdatePerfume = () => {
     setAccords((prev) => {
       // let id = (prev[prev?.length - 1]?.id || 0) + 1;
       let id = uuidv4();
-      let newAccord = { _id: id, name: "", percentage: 0, color: "#000000" };
+      let newAccord = { _id: 'new'+id, name: "", percentage: 0, color: "#000000" };
       return [...prev, newAccord];
     });
   };
@@ -266,10 +266,12 @@ const UpdatePerfume = () => {
       data?.baseNote?.map((item) => item.value) ||
       state?.baseNotemap?.((item) => item._id);
 
-    let filteredAccords = accords.map((item) => {
-      delete item.id;
-      return item;
-    });
+      let filteredAccords = accords.map((item) => {
+        if (item?._id?.startsWith('new')) {
+          delete item._id;
+        }
+        return item;
+      });
 
     let filteredPros = pros.map((item) => {
       delete item.id;
@@ -332,12 +334,34 @@ const UpdatePerfume = () => {
 
   const onSubmit = async (data) => {
     if (isLoading) return;
-    toast("saving");
+  
     let tempAccords = [...accords];
     let totalPercentage = 0;
+    let flag =  false;
+    let total = 0;
+    for(let j = 0 ; j < tempAccords.length ; j++){
+      // console.log(tempAccords[0])
+      // console.log(tempAccords[1])
+      // console.log(tempAccords[2])
+      // console.log(tempAccords[i].percentage)
+      // console.log(tempAccords)
 
-    tempAccords.forEach((e) => (totalPercentage += e.percentage));
-    if (totalPercentage !== 100) {
+      // console.log(j);
+    if(tempAccords[j].percentage <= 0)
+      {
+        
+         flag = true
+         break;
+      }
+      total += tempAccords[j]?.percentage
+
+    }
+  if(flag){
+    toast.error("Few Accords Percentage is zero or less !!");
+    return 
+
+  }
+    if (total != 100) {
       toast.error("Total Accords percentage must be equal to 100", {
         style: {
           background: "red",
@@ -382,10 +406,7 @@ const UpdatePerfume = () => {
   useEffect(() => {
     dispatch(fetchBrands({ limit: "infinite" }));
     getBrandLinkedImages();
-    // addAccord()
-    // addPurchaseLink()
-    // addCons();
-    // addPros();
+
   }, []);
 
   useEffect(() => {
@@ -679,7 +700,7 @@ const UpdatePerfume = () => {
                       </thead>
                       <tbody>
                         {accords.map((item, idx) => (
-                          <tr className="bg-white border-b " key={item?._id}>
+                          <tr className="bg-white border-b " key={idx}>
                             <td className="px-1 py-4">{idx + 1}</td>
                             <td
                               scope="row"
@@ -696,7 +717,7 @@ const UpdatePerfume = () => {
                                   setAccords((prev) => {
                                     let tempArr = [...prev];
                                     let idx = tempArr.findIndex((ele) => {
-                                      return ele.id === item.id;
+                                      return ele._id === item._id;
                                     });
 
                                     let row = tempArr[idx];
@@ -721,7 +742,7 @@ const UpdatePerfume = () => {
                                   setAccords((prev) => {
                                     let tempArr = [...prev];
                                     let idx = tempArr.findIndex((ele) => {
-                                      return ele.id === item.id;
+                                      return ele._id === item._id;
                                     });
 
                                     let row = tempArr[idx];
@@ -744,7 +765,7 @@ const UpdatePerfume = () => {
                                   setAccords((prev) => {
                                     let tempArr = [...prev];
                                     let idx = tempArr.findIndex((ele) => {
-                                      return ele.id === item.id;
+                                      return ele._id === item._id;
                                     });
 
                                     let row = tempArr[idx];
@@ -981,8 +1002,7 @@ const UpdatePerfume = () => {
                           {pros.map((item, idx) => (
                             <tr
                               className="bg-white border-b "
-                              // key={`pro${idx}`}
-                              key={item?._id}
+                              key={idx}
                             >
                               <td className="px-1 py-4">{idx + 1}</td>
                               <td
@@ -1068,7 +1088,7 @@ const UpdatePerfume = () => {
                           {cons.map((item, idx) => (
                             <tr
                               className="bg-white border-b "
-                              key={item?._id}
+                              key={idx}
                             >
                               <td className="px-1 py-4">{idx + 1}</td>
                               <td
