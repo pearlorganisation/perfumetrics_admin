@@ -76,10 +76,10 @@ const AddPerfume = () => {
     getCountryISO();
     getBrandLinkedImages();
     getNotesData();
-    dispatch(fetchBrands({limit:'infinite'}));
+    dispatch(fetchBrands({ limit: 'infinite' }));
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     if (brands?.data?.length > 0) {
       const temp = brands?.data?.map((item) => {
         return {
@@ -89,33 +89,40 @@ const AddPerfume = () => {
       });
       setBrandsData(temp);
     }
-  },[brands]);
-  
-  function filteredData(data){
+  }, [brands]);
+
+  function filteredData(data) {
     console.log(data);
-    console.log("gallery",gallery);
-    console.log("logo",logo);
-    console.log("banner",banner);
+    console.log("gallery", gallery);
+    console.log("logo", logo);
+    console.log("banner", banner);
     let filteredAccords = data.accords.map((item) => {
       delete item.id;
       return item;
     });
     let filteredTopNotes = data.topNote.map((item) => {
-      
+
       return item.value;
     });
     let filteredMidNotes = data.midNote.map((item) => {
-      
+
       return item.value;
     });
     let filteredBottomNotes = data.baseNote.map((item) => {
-      
+
       return item.value;
     });
 
 
     const formData = new FormData();
-    formData.append("purchaseLinks", JSON.stringify(data.purchaseLinks));
+    const modifiedPurchaseLinks = data?.purchaseLinks?.map(item => {
+      return {
+        ...item,
+        company: item?.company?.value,
+        country: item?.country?.value,
+      }
+    })
+    formData.append("purchaseLinks", JSON.stringify(modifiedPurchaseLinks));
     formData.append("topNote", JSON.stringify(filteredTopNotes));
     formData.append("middleNote", JSON.stringify(filteredMidNotes));
     formData.append("baseNote", JSON.stringify(filteredBottomNotes));
@@ -157,15 +164,15 @@ const AddPerfume = () => {
     });
 
     console.log("FormData as JSON:", JSON.stringify(jsonObject, null, 2));
-   return formData
-    
+    return formData
+
   }
   const onSubmit = async (data) => {
     // if (isLoading) return;
     toast("saving");
     let tempAccords = [...data.accords];
     let totalPercentage = 0;
-    console.log("dattsdsad",data.accords);
+    console.log("dattsdsad", data.accords);
     tempAccords.forEach((e) => (totalPercentage += parseInt(e.percentage)));
     if (totalPercentage !== 100) {
       toast.error("Total Accords percentage must be equal to 100", {
@@ -178,7 +185,7 @@ const AddPerfume = () => {
     }
     const payload = filteredData(data);
     try {
-      // setIsLoading(true);
+
 
       const { data } = await axios.post(
         `${import.meta.env.VITE_API_URL}/perfume`,
@@ -197,7 +204,6 @@ const AddPerfume = () => {
       });
     } catch (err) {
       console.error(err);
-      // setIsLoading(false);
       toast.error(err?.response?.data?.message || "Server down, please try again later", {
         style: {
           background: "red",
@@ -214,7 +220,7 @@ const AddPerfume = () => {
       <h1 className="text-2xl font-bold mb-4">Add New Perfume</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <ImageUpload label="Upload Main Pic" required={true} onChange={setBanner} />
-        <ImageUpload label="Upload Brand Logo"  required={true} onChange={setLogo} />
+        <ImageUpload label="Upload Brand Logo" required={true} onChange={setLogo} />
         <ImageUpload
           label="Upload Gallery Pics"
           onChange={(files) => setGallery([...gallery, ...files])}
@@ -260,7 +266,7 @@ const AddPerfume = () => {
           {...register("slug", {
             required: "Slug is required",
             pattern: {
-              value:/^[a-zA-Z0-9-_ ]+$/,
+              value: /^[a-zA-Z0-9-_ ]+$/,
               message:
                 "Slug can only contain letters, numbers, hyphens, and underscores",
             },
@@ -280,7 +286,7 @@ const AddPerfume = () => {
           placeholder="Keywords (comma separated)"
         />
 
-        {brandsData &&<Controller
+        {brandsData && <Controller
           name="brand"
           control={control}
           rules={{ required: "Brand is required" }}
@@ -305,13 +311,13 @@ const AddPerfume = () => {
         <ProsConsTable control={control} />
 
         {noteData && (
-          <NotesSelect noteData = {noteData} control={control} name="topNote" label="Top Note" />
+          <NotesSelect noteData={noteData} control={control} name="topNote" label="Top Note" />
         )}
         {noteData && (
-          <NotesSelect noteData = {noteData} control={control} name="midNote" label="Mid Note" />
+          <NotesSelect noteData={noteData} control={control} name="midNote" label="Mid Note" />
         )}
         {noteData && (
-          <NotesSelect noteData = {noteData} control={control} name="baseNote" label="Base Note" />
+          <NotesSelect noteData={noteData} control={control} name="baseNote" label="Base Note" />
         )}
         <Controller
           name="description"

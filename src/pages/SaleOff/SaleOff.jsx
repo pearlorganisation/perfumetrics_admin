@@ -5,12 +5,15 @@ import { Link, useParams } from "react-router-dom";
 import { Toaster, toast } from "sonner";
 import ModalWrapper from "../../components/Modal/ModalWrapper";
 import AddSaleOff from "./AddSaleOff";
+import UpdateSaleOff from "./UpdateSaleOff";
 
 const SaleOff = () => {
     const { perfumeId } = useParams()
     const [perfumeData, setPerfumeData] = useState(null);
+    const [singlePerfumeData, setSinglePerfumeData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isShowing, setIsShowing] = useState(false)
+    const [isUpdateShowing, setIsUpdateShowing] = useState(false)
 
     const getRelatedFragram = (perfumeId) => {
         axios
@@ -100,14 +103,18 @@ const SaleOff = () => {
                                         <td className="px-6 py-4">{item?.title}</td>
 
 
-                                        {/* <td className="px-6 py-4">
-                                            <Link
-                                                to={`/perfume/update/${item?._id}`}
+                                        <td className="px-6 py-4">
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setSinglePerfumeData(item)
+                                                    setIsUpdateShowing(true)
+                                                }}
                                                 className="font-medium text-blue-600  hover:underline"
                                             >
                                                 View/edit
-                                            </Link>
-                                        </td> */}
+                                            </button>
+                                        </td>
                                         <td className="px-6 py-4">
                                             <button
                                                 className="font-medium text-red-600  hover:underline"
@@ -127,6 +134,7 @@ const SaleOff = () => {
             </div>
 
             {isShowing && <ModalWrapper isShowing={isShowing} setIsShowing={setIsShowing}> <AddSaleOff setIsShowing={setIsShowing} /> </ModalWrapper>}
+            {isUpdateShowing && <ModalWrapper isShowing={isUpdateShowing} setIsShowing={setIsUpdateShowing}> <UpdateSaleOff data={singlePerfumeData} setIsShowing={setIsUpdateShowing} /> </ModalWrapper>}
         </div>
     );
 };

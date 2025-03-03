@@ -336,8 +336,9 @@ const UpdatePerfume = () => {
     let tempAccords = [...accords];
     let totalPercentage = 0;
 
-    tempAccords.forEach((e) => (totalPercentage += e.percentage));
-    if (totalPercentage !== 100) {
+    const total = tempAccords.reduce((acc, item) => acc + item?.percentage, 0)
+    alert(total);
+    if (total < 100) {
       toast.error("Total Accords percentage must be equal to 100", {
         style: {
           background: "red",
@@ -696,7 +697,7 @@ const UpdatePerfume = () => {
                                   setAccords((prev) => {
                                     let tempArr = [...prev];
                                     let idx = tempArr.findIndex((ele) => {
-                                      return ele.id === item.id;
+                                      return ele._id === item._id;
                                     });
 
                                     let row = tempArr[idx];
@@ -721,7 +722,7 @@ const UpdatePerfume = () => {
                                   setAccords((prev) => {
                                     let tempArr = [...prev];
                                     let idx = tempArr.findIndex((ele) => {
-                                      return ele.id === item.id;
+                                      return ele._id === item._id;
                                     });
 
                                     let row = tempArr[idx];
@@ -744,7 +745,7 @@ const UpdatePerfume = () => {
                                   setAccords((prev) => {
                                     let tempArr = [...prev];
                                     let idx = tempArr.findIndex((ele) => {
-                                      return ele.id === item.id;
+                                      return ele._id === item._id;
                                     });
 
                                     let row = tempArr[idx];

@@ -147,9 +147,7 @@ const UpdateNews = () => {
                             </div>
                         )}
                         <div className="relative w-full space-y-1">
-                            <label htmlFor="input" className="font-medium ">
-                                Banner
-                            </label>
+                            <label className="font-medium">Banner Image (Recommended size: 750x400px)</label>
                             <div className="items-center justify-center  mx-auto">
                                 <label
                                     className="flex justify-center w-full h-32 px-4 transition bg-white border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-gray-400 focus:outline-none"
@@ -195,7 +193,17 @@ const UpdateNews = () => {
                             )}
                         </div>
                     </div>
-
+                    {/* Thumbnail Upload */}
+                    <div className="space-y-2 w-full">
+                        <label className="font-medium">Thumbnail Image (Recommended size: 175x192px)</label>
+                        <input
+                            type="file"
+                            {...register("thumbnail", { required: "Thumbnail is required" })}
+                            accept="image/png,image/jpeg,image/webp"
+                            className="w-full"
+                        />
+                        {errors.thumbnail && <span className="text-red-500">{errors.thumbnail.message}</span>}
+                    </div>
                     <div>
                         <label className="font-medium">Content</label>
                         <Controller

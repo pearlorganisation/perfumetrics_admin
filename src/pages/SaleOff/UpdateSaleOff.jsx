@@ -8,7 +8,8 @@ import { useParams } from 'react-router-dom';
 import { IoClose } from "react-icons/io5";
 import { toast } from 'sonner';
 
-const AddSaleOff = ({ setIsShowing }) => {
+const UpdateSaleOff = ({ setIsShowing, data }) => {
+    console.log(data, "data")
     const dispatch = useDispatch()
     const { perfumeId } = useParams()
     const [brandsData, setBrandsData] = useState([])
@@ -16,7 +17,17 @@ const AddSaleOff = ({ setIsShowing }) => {
     const { brands, isDeleted, isUpdated } = useSelector(state => state.brand)
 
 
-    const { register, handleSubmit, control, formState: { errors } } = useForm();
+    const { register, handleSubmit, control, formState: { errors } } = useForm({
+        defaultValues: {
+            title: data?.title, rating: data?.rating,
+            links: data?.mapOfLinks
+                ? Object.entries(data?.mapOfLinks).map(([country, { link, price } = obj]) => {
+                    console.log(country, link, price)
+                    return ({ country, link, price })
+                })
+                : [{ link: '', country: '' }],
+        }
+    });
     const [imagePreview, setImagePreview] = useState(null); // State to store the image preview URL
     const { fields, append, remove } = useFieldArray({
         control,
@@ -88,13 +99,13 @@ const AddSaleOff = ({ setIsShowing }) => {
         formData.append("rating", data?.rating)
         formData.append("banner", data?.banner[0])
 
-        postRelatedFragram(formData)
+        // postRelatedFragram(formData)
 
         console.log(data, "data"); // Handle form submission
     };
     return (
         <div className="w-full text-center space-y-5  bg-white  shadow overflow-hidden sm:rounded-md">
-            <h1 className="text-3xl">Add  Sale Off </h1>
+            <h1 className="text-3xl">Update  Sale Off </h1>
 
             <form onSubmit={handleSubmit(onSubmit)}>
                 {/* Perfume Title */}
@@ -217,7 +228,7 @@ const AddSaleOff = ({ setIsShowing }) => {
                                                     options={countryISOData} // Assuming `countryISOData` is your options array for countries
                                                     getOptionLabel={(e) => e.label} // Use this to get the label for display in Select
                                                     getOptionValue={(e) => e.value} // Use this to get the value for the selected option
-                                                    value={countryISOData.find((option) => option.value === field.value) || null} // Ensure the correct option object is selected
+                                                    value={countryISOData?.find((option) => option.value === field.value) || null} // Ensure the correct option object is selected
                                                     onChange={(selectedOption) => {
                                                         field.onChange(selectedOption?.value || null); // Update form value with selected option's value
                                                     }}
@@ -286,9 +297,9 @@ const AddSaleOff = ({ setIsShowing }) => {
                         {errors.banner && <p className="text-red-500">{errors.banner.message}</p>}
                     </div>
 
-                    {imagePreview && (
+                    {imagePreview || data?.banner && (
                         <div className="mb-4">
-                            <img src={imagePreview} alt="Selected" className="max-w-xs mx-auto rounded-md" />
+                            <img src={imagePreview || data?.banner} alt="Selected" className="max-w-xs mx-auto rounded-md" />
                             <p className="text-center mt-2 text-sm text-gray-600">Preview of the selected image</p>
                         </div>
                     )}
@@ -312,4 +323,5 @@ const AddSaleOff = ({ setIsShowing }) => {
 
 
 
-export default AddSaleOff
+
+export default UpdateSaleOff

@@ -212,6 +212,17 @@ const Sidebar = () => {
               </span>
             </Link>
           </li>
+          <li>
+            <Link
+              to="/newsLetter"
+              className="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100  group"
+            >
+              <CategoryIcon />
+              <span className="flex-1 ms-3 whitespace-nowrap">
+                News Letter
+              </span>
+            </Link>
+          </li>
 
 
 

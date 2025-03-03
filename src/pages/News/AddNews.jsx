@@ -52,8 +52,9 @@ const AddNews = () => {
         console.log(data, "data");
 
         const formData = new FormData();
-        const { banner } = data;
+        const { banner, thumbnail } = data;
         formData.append("image", banner[0]);
+        formData.append("thumbnail", thumbnail[0]);
         formData.append("description", data.content);
         formData.append("title", data.title);
         formData.append("user", data.user);
@@ -180,9 +181,7 @@ const AddNews = () => {
                     {/* Banner */}
                     <div className="flex flex-col gap-6 items-center mx-auto mb-3 space-y-4 sm:flex sm:space-y-0">
                         <div className="relative w-full space-y-1">
-                            <label htmlFor="input" className="font-medium ">
-                                Banner
-                            </label>
+                            <label className="font-medium">Banner Image (Recommended size: 750x400px)</label>
                             <div className="items-center justify-center  mx-auto">
                                 <label
                                     className="flex justify-center w-full h-32 px-4 transition bg-white border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-gray-400 focus:outline-none"
@@ -246,6 +245,19 @@ const AddNews = () => {
                             }
 
                         </div>
+                        {/* Thumbnail Upload */}
+                        <div className="space-y-2 w-full">
+                            <label className="font-medium">Thumbnail Image (Recommended size: 175x192px)</label>
+                            <input
+                                type="file"
+                                {...register("thumbnail", { required: "Thumbnail is required" })}
+                                accept="image/png,image/jpeg,image/webp"
+                                className="w-full"
+                            />
+                            {errors.thumbnail && <span className="text-red-500">{errors.thumbnail.message}</span>}
+                        </div>
+
+
                     </div>
 
                     {/* Content */}

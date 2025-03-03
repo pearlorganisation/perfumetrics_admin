@@ -64,8 +64,9 @@ import ContactUserDetail from "./pages/ContactUs/ContactUserDetail";
 import ContactUserDataView from "./pages/ContactUs/ContactUserDataView";
 import BrandImagesLinkPage from "./pages/BrandImagesLinkPage/BrandImagesLinkPage";
 import AddBrandLinkPage from "./pages/BrandImagesLinkPage/AddBrandLinkPage";
-import AddTempPerfume  from "./pages/Perfumes/TempPerfume/AddPerfume";
-import AddPerfume  from "./pages/Perfumes/AddPerfume";
+import AddTempPerfume from "./pages/Perfumes/TempPerfume/AddPerfume";
+import AddPerfume from "./pages/Perfumes/AddPerfume";
+import NewsletterSubscribers from "./pages/newsLetter/NewsletterSubscribers";
 
 
 const isUserLoggedIn = localStorage.getItem("isusrlgd");
@@ -317,16 +318,20 @@ const App = () => {
           element: <ContactUserDetail />,
         },
         {
-          path:"/contact-us/view/:id",
-          element:<ContactUserDataView/>
+          path: "/contact-us/view/:id",
+          element: <ContactUserDataView />
         },
         {
-          path:"/brandImageLink",
-          element:<BrandImagesLinkPage/>
+          path: "/brandImageLink",
+          element: <BrandImagesLinkPage />
         },
         {
-          path:"/addbrandImageLink",
-          element:<AddBrandLinkPage/>
+          path: "/addbrandImageLink",
+          element: <AddBrandLinkPage />
+        },
+        {
+          path: "/newsLetter",
+          element: <NewsletterSubscribers />
         }
         // sale off
 
