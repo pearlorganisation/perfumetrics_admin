@@ -42,6 +42,7 @@ const AddPerfume = () => {
       .get(`${import.meta.env.VITE_API_URL}/countryISOcodes`)
       .then((res) => {
         // console.log(res);
+
         setCountryISOData(res?.data.data);
 
         // //setIsLoading(false);
@@ -115,14 +116,15 @@ const AddPerfume = () => {
 
 
     const formData = new FormData();
-    const modifiedPurchaseLinks = data?.purchaseLinks?.map(item => {
-      return {
-        ...item,
-        company: item?.company?.value,
-        country: item?.country?.value,
+    data?.purchaseLinks?.forEach(ele => {
+      ele.country = ele?.country.value;
+      ele.company = {
+        ...ele.company.value
       }
+
     })
-    formData.append("purchaseLinks", JSON.stringify(modifiedPurchaseLinks));
+
+    formData.append("purchaseLinks", JSON.stringify(data.purchaseLinks));
     formData.append("topNote", JSON.stringify(filteredTopNotes));
     formData.append("middleNote", JSON.stringify(filteredMidNotes));
     formData.append("baseNote", JSON.stringify(filteredBottomNotes));
@@ -172,7 +174,6 @@ const AddPerfume = () => {
     toast("saving");
     let tempAccords = [...data.accords];
     let totalPercentage = 0;
-    console.log("dattsdsad", data.accords);
     tempAccords.forEach((e) => (totalPercentage += parseInt(e.percentage)));
     if (totalPercentage !== 100) {
       toast.error("Total Accords percentage must be equal to 100", {

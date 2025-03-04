@@ -40,8 +40,10 @@ const PurchaseLinksTable = ({ control, countryISOData, brandLinkedImages }) => {
                     <Select
                       {...field}
                       options={brandLinkedImages.map((el) => ({
-                        label: el.brand,
-                        value: { imageUrl: el.imageUrl, companyName: el.brand },
+                        
+                          label: el.brand,
+                          value: { imageUrl: el.imageUrl, companyName: el.brand }
+                        
                       }))}
                       className="w-full"
                     />
