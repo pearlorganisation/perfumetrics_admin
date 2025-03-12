@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchBrands } from "../../features/actions/brandsAction";
 import ct from "countries-and-timezones";
 import TextEditor from "../../components/TextEditor/TextEditor";
+import AddGalleryModel, { DragNDropPhotos } from "./AddGalleryModel/AddGalleryModel";
 
 const AddPerfume = () => {
   const tmz = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -20,7 +21,7 @@ const AddPerfume = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [brandsData, setBrandsData] = useState([]);
-
+  const [galleryModal ,setGalleryModal] = useState(false);
   const [banner, setBanner] = useState(null);
   const [logo, setLogo] = useState(null);
   const [brandId, setBrandId] = useState(null);
@@ -471,7 +472,7 @@ const AddPerfume = () => {
                     accept=".jpg, .jpeg, .png, .webp"
                   />
                 </div>
-                {gallery && gallery?.length > 0 && (
+                {/* {gallery && gallery?.length > 0 && (
                   <div className="w-full flex flex-wrap gap-2 py-2">
                     {gallery?.map((item, idx) => (
                       <div key={`gallery${idx}`}>
@@ -496,7 +497,9 @@ const AddPerfume = () => {
                       </div>
                     ))}
                   </div>
-                )}
+                )} */}
+              {gallery && <DragNDropPhotos gallery={gallery} setGallery={setGallery}/>}
+                
               </div>
               <div className="sm:col-span-2">
                 <label
@@ -1367,6 +1370,7 @@ const AddPerfume = () => {
         </div>
       </section>
     </>
+
   );
 };
 

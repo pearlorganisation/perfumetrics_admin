@@ -9,6 +9,7 @@ import { fetchBrands } from "../../features/actions/brandsAction";
 import ct from "countries-and-timezones";
 import { v4 as uuidv4 } from 'uuid';
 import TextEditor from "../../components/TextEditor/TextEditor";
+import { DragNDropPhotos } from "./AddGalleryModel/AddGalleryModel";
 
 const UpdatePerfume = () => {
   const { state } = useLocation();
@@ -297,6 +298,7 @@ const UpdatePerfume = () => {
     formData.append("pros", JSON.stringify(filteredPros));
     formData.append("cons", JSON.stringify(filteredCons));
     formData.append("slug", data.slug);
+    formData.append("gallery",JSON.stringify(gallery));
     formData.append("keywords", JSON.stringify(data?.keywords?.split(",")));
 
     formData.append("banner", banner);
@@ -336,21 +338,14 @@ const UpdatePerfume = () => {
     if (isLoading) return;
 
     let tempAccords = [...accords];
-    let totalPercentage = 0;
-    let flag = false;
+    let flag =  false;
     let total = 0;
-    for (let j = 0; j < tempAccords.length; j++) {
-      // console.log(tempAccords[0])
-      // console.log(tempAccords[1])
-      // console.log(tempAccords[2])
-      // console.log(tempAccords[i].percentage)
-      // console.log(tempAccords)
-
-      // console.log(j);
-      if (tempAccords[j].percentage <= 0) {
-
-        flag = true
-        break;
+    for(let j = 0 ; j < tempAccords.length ; j++){
+    if(tempAccords[j].percentage <= 0)
+      {
+        
+         flag = true
+         break;
       }
       total += tempAccords[j]?.percentage
 
@@ -599,7 +594,7 @@ const UpdatePerfume = () => {
                     accept=".jpg, .jpeg, .png, .webp"
                   />
                 </div>
-                {gallery && gallery?.length > 0 ? <div className="w-full flex flex-wrap gap-2 py-2">
+                {/* {gallery && gallery?.length > 0 ? <div className="w-full flex flex-wrap gap-2 py-2">
                   {gallery?.map((item, idx) => (
                     <div key={`gallery${idx}`}>
                       <div className="h-[200px] border rounded-sm flex items-center justify-center box-border">
@@ -624,7 +619,9 @@ const UpdatePerfume = () => {
                       </button>
                     </div>
                   ))}
-                </div> : 'No Gallery'}
+                </div> : 'No Gallery'} */}
+                     {gallery && gallery?.length > 0 ? <DragNDropPhotos gallery={gallery} setGallery={setGallery}/>:'No Gallery'}
+
               </div>
               <div className="sm:col-span-2">
                 <label
@@ -1457,6 +1454,7 @@ const UpdatePerfume = () => {
         </div>
       </section>
     </>
+
   );
 };
 
