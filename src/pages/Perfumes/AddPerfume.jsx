@@ -21,7 +21,7 @@ const AddPerfume = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [brandsData, setBrandsData] = useState([]);
-  const [galleryModal ,setGalleryModal] = useState(false);
+  const [galleryModal, setGalleryModal] = useState(false);
   const [banner, setBanner] = useState(null);
   const [logo, setLogo] = useState(null);
   const [brandId, setBrandId] = useState(null);
@@ -208,9 +208,11 @@ const AddPerfume = () => {
       })
     );
 
-    for (let i = 0; i < gallery.length; i++) {
-      formData.append("gallery", gallery[i]);
-    }
+    // for (let i = 0; i < gallery.length; i++) {
+    //   formData.append("gallery", gallery[i]);
+    // }
+
+    formData.append("gallery", JSON.stringify(gallery));
     purchaseLinkImages.forEach((el) => {
       formData.append("companyImages", el);
     })
@@ -498,8 +500,8 @@ const AddPerfume = () => {
                     ))}
                   </div>
                 )} */}
-              {gallery && <DragNDropPhotos gallery={gallery} setGallery={setGallery}/>}
-                
+                {gallery && <DragNDropPhotos gallery={gallery} setGallery={setGallery} />}
+
               </div>
               <div className="sm:col-span-2">
                 <label

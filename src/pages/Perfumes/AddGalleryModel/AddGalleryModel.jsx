@@ -5,18 +5,18 @@ import { toast } from "sonner";
 import { BsArrowsMove } from "react-icons/bs";
 import { FaRegTrashCan } from "react-icons/fa6";
 export function DragNDropPhotos({ gallery, setGallery }) {
-
+  console.log(gallery, "first time")
 
   useEffect(() => {
     setGallery((prev) => {
       return prev?.map((item, idx) => {
         return {
           ...item,
-          position: idx,
-          src: item?.path,
-          id: `img${idx + 1}`,
-          alt: item?.alt || `Image ${idx + 1}`,
-        };
+          position: item.position ? item?.position : idx,
+          src: item.path,
+          id: item?.id || `img${idx + 1}`,
+          alt: item?.alt || `Image${idx + 1}`,
+        }
       });
     });
   }, []);
@@ -26,11 +26,13 @@ export function DragNDropPhotos({ gallery, setGallery }) {
   const [draggedItem, setDraggedItem] = useState(null);
   const [positionLog, setPositionLog] = useState([]);
   const draggedOverItemId = useRef(null);
-
+  console.log("gallery before sorted", gallery)
   // Sort images by position
   const sortedImages = [...gallery].sort((a, b) => a.position - b.position);
 
-  // Handle drag start
+  console.log("sortedImages", sortedImages)
+  console.log("gallery after sorted", gallery)
+
   const handleDragStart = (e, item) => {
     setDraggedItem(item);
     // Set the drag image to be the element itself
@@ -89,9 +91,8 @@ export function DragNDropPhotos({ gallery, setGallery }) {
     setGallery(updatedImages);
 
     // Log the position change
-    const logMessage = `Moved ${draggedItem.alt} from position ${
-      draggedItem.position + 1
-    } to position ${targetItem.position + 1}`;
+    const logMessage = `Moved ${draggedItem.alt} from position ${draggedItem.position + 1
+      } to position ${targetItem.position + 1}`;
     setPositionLog((prev) => [logMessage, ...prev]);
 
     // Reset drag state
@@ -138,11 +139,10 @@ export function DragNDropPhotos({ gallery, setGallery }) {
                 className={`
               relative  flex flex-col rounded-lg overflow-hidden cursor-move
               transition-all duration-200 hover:shadow-lg
-              ${
-                draggedOverItemId.current === image.id
-                  ? "border-primary"
-                  : "border-gray-200"
-              }
+              ${draggedOverItemId.current === image.id
+                    ? "border-primary"
+                    : "border-gray-200"
+                  }
               ${draggedItem?.id === image.id ? "ring-2 ring-primary" : ""}
             `}
                 draggable
@@ -176,21 +176,21 @@ export function DragNDropPhotos({ gallery, setGallery }) {
                 </div>
                 <div className="">
 
-                <button
-                  type="button"
-                  className="p-2 w-full h-full text-white font-sans bg-red-600 hover:bg-red-500 rounded-b-md"
-                  onClick={() => {
-                    setGallery((prev) => {
-                      const temp = prev.filter((ite) => ite?.id != image?.id);
-                      console.log("temp", temp);
-                      return [...temp];
-                    });
-                  }}
-                >
-                  Delete
-                </button>
+                  <button
+                    type="button"
+                    className="p-2 w-full h-full text-white font-sans bg-red-600 hover:bg-red-500 rounded-b-md"
+                    onClick={() => {
+                      setGallery((prev) => {
+                        const temp = prev.filter((ite) => ite?.id != image?.id);
+                        console.log("temp", temp);
+                        return [...temp];
+                      });
+                    }}
+                  >
+                    Delete
+                  </button>
                 </div>
-                
+
               </div>
             ))}
           </div>
@@ -246,8 +246,7 @@ const AddGalleryModel = ({
       try {
         setIsLoading(true);
         const res = await axios.post(
-          `https://api.cloudinary.com/v1_1/${
-            import.meta.env.VITE_ClOUDINARY_CLOUD_NAME
+          `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_ClOUDINARY_CLOUD_NAME
           }/image/upload`,
           formData,
           {
@@ -268,12 +267,12 @@ const AddGalleryModel = ({
             present.alt = altText?.current?.value || "Could Not Read";
             return [...presentArray];
           } else {
-            
+
             return [
               ...presentArray,
               {
                 position: prev.length,
-                id:`img ${prev.length}`,
+                id: `img${prev.length + 1}`,
                 alt: altText?.current?.value || "Could Not Read",
                 path: res.data.secure_url,
                 src: res.data.secure_url,
@@ -359,7 +358,7 @@ const AddGalleryModel = ({
               type="text"
               placeholder="Enter Alt Text"
               ref={altText}
-              //   onChange={(e) => setAltText(e.target.value)}/
+            //   onChange={(e) => setAltText(e.target.value)}/
             />
           </div>
 

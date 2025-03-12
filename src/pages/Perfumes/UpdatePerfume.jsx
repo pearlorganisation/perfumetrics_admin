@@ -298,7 +298,7 @@ const UpdatePerfume = () => {
     formData.append("pros", JSON.stringify(filteredPros));
     formData.append("cons", JSON.stringify(filteredCons));
     formData.append("slug", data.slug);
-    formData.append("gallery",JSON.stringify(gallery));
+    formData.append("gallery", JSON.stringify(gallery));
     formData.append("keywords", JSON.stringify(data?.keywords?.split(",")));
 
     formData.append("banner", banner);
@@ -338,14 +338,13 @@ const UpdatePerfume = () => {
     if (isLoading) return;
 
     let tempAccords = [...accords];
-    let flag =  false;
+    let flag = false;
     let total = 0;
-    for(let j = 0 ; j < tempAccords.length ; j++){
-    if(tempAccords[j].percentage <= 0)
-      {
-        
-         flag = true
-         break;
+    for (let j = 0; j < tempAccords.length; j++) {
+      if (tempAccords[j].percentage <= 0) {
+
+        flag = true
+        break;
       }
       total += tempAccords[j]?.percentage
 
@@ -620,7 +619,7 @@ const UpdatePerfume = () => {
                     </div>
                   ))}
                 </div> : 'No Gallery'} */}
-                     {gallery && gallery?.length > 0 ? <DragNDropPhotos gallery={gallery} setGallery={setGallery}/>:'No Gallery'}
+                {gallery && gallery?.length > 0 ? <DragNDropPhotos gallery={gallery} setGallery={setGallery} /> : 'No Gallery'}
 
               </div>
               <div className="sm:col-span-2">

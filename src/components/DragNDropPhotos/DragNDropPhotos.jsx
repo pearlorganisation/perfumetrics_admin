@@ -10,7 +10,7 @@ export default function DragNDropPhotos({ gallery }) {
     const [images, setImages] = useState(gallery?.map((item, idx) => {
         return {
             ...item,
-            position: idx,
+            position: item.position ?? idx,
             src: item?.path,
             id: `img${idx + 1}`,
             alt: `Image ${idx + 1}`
