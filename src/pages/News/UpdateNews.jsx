@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Toaster, toast } from "sonner";
 import { ClipLoader } from "react-spinners";
@@ -16,6 +16,7 @@ const UpdateNews = () => {
     const [newsData, setNewsData] = useState(null);
     const { newsId } = useParams()
     const navigate = useNavigate()
+    const thumbnailRef = useRef(null);
 
     const {
         register,
@@ -78,6 +79,9 @@ const UpdateNews = () => {
         const { banner } = data;
         if (selectedBanner) {
             formData.append("image", selectedBanner);
+        }
+        if (thumbnailRef.current?.files?.length > 0) {
+            formData.append("thumbnail", thumbnailRef.current.files[0]);
         }
         formData.append("content", data.content);
         formData.append("title", data.title);
@@ -198,7 +202,8 @@ const UpdateNews = () => {
                         <label className="font-medium">Thumbnail Image (Recommended size: 175x192px)</label>
                         <input
                             type="file"
-                            {...register("thumbnail", { required: "Thumbnail is required" })}
+                            ref={thumbnailRef}
+                            // {...register("thumbnail", { required: "Thumbnail is required" })}
                             accept="image/png,image/jpeg,image/webp"
                             className="w-full"
                         />

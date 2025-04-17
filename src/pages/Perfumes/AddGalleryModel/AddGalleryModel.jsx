@@ -5,18 +5,18 @@ import { toast } from "sonner";
 import { BsArrowsMove } from "react-icons/bs";
 import { FaRegTrashCan } from "react-icons/fa6";
 export function DragNDropPhotos({ gallery, setGallery }) {
-  console.log(gallery, "first time")
+
 
   useEffect(() => {
     setGallery((prev) => {
       return prev?.map((item, idx) => {
         return {
           ...item,
-          position: item.position ? item?.position : idx,
-          src: item.path,
-          id: item?.id || `img${idx + 1}`,
-          alt: item?.alt || `Image${idx + 1}`,
-        }
+          position: item?.position ?? idx,
+          src: item?.path,
+          id: `img${idx + 1}`,
+          alt: item?.alt || `Image ${idx + 1}`,
+        };
       });
     });
   }, []);
@@ -26,13 +26,11 @@ export function DragNDropPhotos({ gallery, setGallery }) {
   const [draggedItem, setDraggedItem] = useState(null);
   const [positionLog, setPositionLog] = useState([]);
   const draggedOverItemId = useRef(null);
-  console.log("gallery before sorted", gallery)
+
   // Sort images by position
   const sortedImages = [...gallery].sort((a, b) => a.position - b.position);
 
-  console.log("sortedImages", sortedImages)
-  console.log("gallery after sorted", gallery)
-
+  // Handle drag start
   const handleDragStart = (e, item) => {
     setDraggedItem(item);
     // Set the drag image to be the element itself
@@ -272,7 +270,7 @@ const AddGalleryModel = ({
               ...presentArray,
               {
                 position: prev.length,
-                id: `img${prev.length + 1}`,
+                id: `img ${prev.length}`,
                 alt: altText?.current?.value || "Could Not Read",
                 path: res.data.secure_url,
                 src: res.data.secure_url,

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBrands } from "../../features/actions/brandsAction";
@@ -15,6 +15,8 @@ const UpdateSaleOff = ({ setIsShowing, data }) => {
     const [brandsData, setBrandsData] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const { brands, isDeleted, isUpdated } = useSelector(state => state.brand)
+    const imageRef = useRef(null);
+
 
 
     const { register, handleSubmit, control, formState: { errors } } = useForm({
@@ -79,7 +81,7 @@ const UpdateSaleOff = ({ setIsShowing, data }) => {
 
         try {
             setIsLoading(true)
-            const result = await axios.post(`${import.meta.env.VITE_API_URL}/salesOff`, formData)
+            const result = await axios.patch(`${import.meta.env.VITE_API_URL}/salesOff/${data?._id}`, formData)
             setIsLoading(false)
             setIsShowing(false)
 
@@ -92,14 +94,14 @@ const UpdateSaleOff = ({ setIsShowing, data }) => {
 
     }
 
-    const onSubmit = (data) => {
+    const onSubmit = (data, id) => {
         const formData = new FormData()
         formData.append("title", data?.title)
         formData.append("links", JSON.stringify(data?.links))
         formData.append("rating", data?.rating)
-        formData.append("banner", data?.banner[0])
+        formData.append("banner", data.banner?.[0])
 
-        // postRelatedFragram(formData)
+        postRelatedFragram(formData, id);
 
         console.log(data, "data"); // Handle form submission
     };
@@ -189,27 +191,7 @@ const UpdateSaleOff = ({ setIsShowing, data }) => {
                                         )}
                                     </div>
 
-                                    {/* <div className='space-y-1'>
-                                        <label
-                                            htmlFor={`links.${index}.company`}
-                                            className="block text-sm font-medium text-gray-700"
-                                        >
-                                            Company Name
-                                        </label>
-                                        <input
-                                            type="text"
-                                            {...register(`links.${index}.company`, {
-                                                required: 'Company name is required',
-                                            })}
-                                            placeholder="Company Name"
-                                            className="w-full px-3 py-2 border rounded focus:ring focus:ring-blue-500"
-                                        />
-                                        {errors.links?.[index]?.company && (
-                                            <p className="text-red-500">
-                                                {errors.links[index].company.message}
-                                            </p>
-                                        )}
-                                    </div> */}
+
 
                                     <div className='space-y-1 col-span-2'>
                                         <label

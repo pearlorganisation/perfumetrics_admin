@@ -297,7 +297,7 @@ const UpdatePerfume = () => {
     formData.append("mainAccords", JSON.stringify(filteredAccords));
     formData.append("pros", JSON.stringify(filteredPros));
     formData.append("cons", JSON.stringify(filteredCons));
-    formData.append("slug", data.slug);
+    formData.append("slug", data.slug.trim().replace(/\s+/g, '-').toLowerCase());
     formData.append("gallery", JSON.stringify(gallery));
     formData.append("keywords", JSON.stringify(data?.keywords?.split(",")));
 
@@ -574,7 +574,7 @@ const UpdatePerfume = () => {
               </div>
               <div className="sm:col-span-2">
                 <div>
-                  <label
+                  {/* <label
                     className="block mb-2 text-sm font-medium text-gray-900 "
                     htmlFor="file_input"
                   >
@@ -591,7 +591,7 @@ const UpdatePerfume = () => {
                       });
                     }}
                     accept=".jpg, .jpeg, .png, .webp"
-                  />
+                  /> */}
                 </div>
                 {/* {gallery && gallery?.length > 0 ? <div className="w-full flex flex-wrap gap-2 py-2">
                   {gallery?.map((item, idx) => (
@@ -619,7 +619,7 @@ const UpdatePerfume = () => {
                     </div>
                   ))}
                 </div> : 'No Gallery'} */}
-                {gallery && gallery?.length > 0 ? <DragNDropPhotos gallery={gallery} setGallery={setGallery} /> : 'No Gallery'}
+                {<DragNDropPhotos gallery={gallery} setGallery={setGallery} />}
 
               </div>
               <div className="sm:col-span-2">

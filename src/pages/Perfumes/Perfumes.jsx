@@ -5,6 +5,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { Toaster, toast } from "sonner";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import Pagination from "../../components/Pagination/Pagination";
+import GlobalSearchBar from "../../components/GlobalSearchBar/GlobalSearchBar";
 
 const PerfumeNotes = () => {
   const [perfumeData, setPerfumeData] = useState(null);
@@ -66,18 +67,28 @@ const PerfumeNotes = () => {
       <div class="p-10 ">
         <div class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-8 bg-white ">
           <SearchBar />
+          <div className="relative" ref={dropdownRef}>
+            <GlobalSearchBar />
+            {globalPanel && <div style={{ boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px" }} className="absolute flex flex-col gap-4 top-12 z-50 p-1 rounded-md  w-full h-44 bg-white overflow-y-scroll">
+              {globalPerfumesData && globalPerfumesData.map((currPerfume, index) => {
+                return (<div onClick={() => handleGlobalSearch(currPerfume.perfume)} className="grid grid-cols-[30%_auto] gap-2 p-1 border-b-2 items-center " key={index}>
+                  <img src={currPerfume.banner} alt={currPerfume.slug} className="min-h-12 max-h-12 " />
+                  <p className="text-sm line-clamp-3 text-wrap text-slate-500 font-bold">
+                    {currPerfume.perfume}
+                  </p>
+                </div>)
+              })}
+
+            </div>
+            }
+          </div>
           <Link
             to="/perfume/add"
             className="bg-blue-600 rounded-md text-white px-3 py-1 font-semibold "
           >
             Add
           </Link>
-          <Link
-            to="/perfume/tempadd"
-            className="bg-blue-600 rounded-md text-white px-3 py-1 font-semibold "
-          >
-            Temp Add
-          </Link>
+
         </div>
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
           {isLoading && (

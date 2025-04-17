@@ -195,7 +195,7 @@ const AddPerfume = () => {
     formData.append("logo", logo);
     formData.append("brand", brandId);
     formData.append("video", video);
-    formData.append("slug", data.slug);
+    formData.append("slug", data.slug.trim().replace(/\s+/g, '-').toLowerCase());
     formData.append(
       "ratingFragrams",
       JSON.stringify({
@@ -454,7 +454,7 @@ const AddPerfume = () => {
                 />
               </div>
               <div className="sm:col-span-2">
-                <div>
+                {/* <div>
                   <label
                     className="block mb-2 text-sm font-medium text-gray-900 "
                     htmlFor="file_input"
@@ -473,7 +473,7 @@ const AddPerfume = () => {
                     }}
                     accept=".jpg, .jpeg, .png, .webp"
                   />
-                </div>
+                </div> */}
                 {/* {gallery && gallery?.length > 0 && (
                   <div className="w-full flex flex-wrap gap-2 py-2">
                     {gallery?.map((item, idx) => (
