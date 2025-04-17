@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import { BsArrowsMove } from "react-icons/bs";
-import { FaRegTrashCan } from "react-icons/fa6";
 export function DragNDropPhotos({ gallery, setGallery }) {
 
 
@@ -12,10 +11,10 @@ export function DragNDropPhotos({ gallery, setGallery }) {
       return prev?.map((item, idx) => {
         return {
           ...item,
-          position: idx,
+          position: item?.position??idx,
           src: item?.path,
-          id: `img${idx + 1}`,
-          alt: item?.alt || `Image ${idx + 1}`,
+          id: item?.id||`img${idx + 1}`,
+          alt: item?.alt || `Image${idx + 1}`,
         };
       });
     });
@@ -26,7 +25,7 @@ export function DragNDropPhotos({ gallery, setGallery }) {
   const [draggedItem, setDraggedItem] = useState(null);
   const [positionLog, setPositionLog] = useState([]);
   const draggedOverItemId = useRef(null);
-
+   
   // Sort images by position
   const sortedImages = [...gallery].sort((a, b) => a.position - b.position);
 

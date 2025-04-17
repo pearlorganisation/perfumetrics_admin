@@ -1,17 +1,23 @@
 import { Skeleton } from "@mui/material";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Toaster, toast } from "sonner";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import Pagination from "../../components/Pagination/Pagination";
+import GlobalSearchBar from "../../components/GlobalSearch/GlobalSearchBar";
 
 const PerfumeNotes = () => {
   const [perfumeData, setPerfumeData] = useState(null);
+  const [globalPerfumesData,setGlobalPerfumeData] = useState(null);
   let [searchParams, setSearchParams] = useSearchParams();
+  const [globalPanel,setGlobalPanel] = useState(false);
+  const dropdownRef = useRef(null);
+
   const [isLoading, setIsLoading] = useState(true);
   const page = searchParams.get('page');
   const search = searchParams.get('search');
+  const query = searchParams.get('query');
   const getPerfumes = () => {
     axios
       .get(`${import.meta.env.VITE_API_URL}/perfume/?Page=${page}&Search=${search || ''}`)
@@ -25,9 +31,54 @@ const PerfumeNotes = () => {
         setIsLoading(false);
       });
   }
+  
+  const getGlobalPerfumes = (globalSearch) => {
+    axios
+      .get(`${import.meta.env.VITE_API_URL}/global-search?query=${globalSearch}`)
+      .then((res) => {
+        console.log(res)
+        setGlobalPerfumeData(res?.data?.globalData||null);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
+  }
+
+  // document.addEventListener('mousedown', ()=>setGlobalPanel(false));
+
   useEffect(() => {
     getPerfumes()
   }, [search, page]);
+
+  useEffect(()=>{
+     if(query)
+     {
+      getGlobalPerfumes(query);
+      setGlobalPanel(true);
+     }
+     else{
+      setGlobalPanel(false);
+      setGlobalPerfumeData(null)
+     }
+
+     function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setGlobalPanel(false);
+      }
+    }
+// Add event listener on mount
+document.addEventListener('mousedown', handleClickOutside);
+
+// Cleanup on unmount
+return () => {
+  document.removeEventListener('mousedown', handleClickOutside);
+
+};
+
+
+  },[query,page])
 
   const deleteItem = (item) => {
     if (window.confirm(`Are you sure you want to delete perfume:- ${item.perfume}`)) {
@@ -54,30 +105,44 @@ const PerfumeNotes = () => {
     }
   }
 
+  function handleGlobalSearch(perfumeName)
+  {
+    searchParams.set('search',perfumeName);
+    setSearchParams(searchParams);
+    
+  }
 
-  useEffect(() => {
-    console.log("perfumeData", perfumeData);
-  }, [perfumeData])
+
 
   return (
     <div>
       <Toaster />
 
-      <div class="p-10 ">
-        <div class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-8 bg-white ">
+      <div class="p-10 " >
+        <div  class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-8 bg-white ">
           <SearchBar />
+          <div className="relative" ref={dropdownRef}>
+          <GlobalSearchBar/>
+         {globalPanel&& <div  style={{boxShadow:"rgba(0, 0, 0, 0.35) 0px 5px 15px"}} className="absolute flex flex-col gap-4 top-12 z-50 p-1 rounded-md  w-full h-44 bg-white overflow-y-scroll">
+          {globalPerfumesData  && globalPerfumesData.map((currPerfume,index)=>{
+             return (<div   onClick={()=>handleGlobalSearch(currPerfume.perfume)} className="grid grid-cols-[30%_auto] gap-2 p-1 border-b-2 items-center " key={index}>
+                 <img src={currPerfume.banner} alt={currPerfume.slug} className="min-h-12 max-h-12 " />
+                 <p className="text-sm line-clamp-3 text-wrap text-slate-500 font-bold">
+                  {currPerfume.perfume}
+                 </p>
+             </div>)
+          })}
+          
+          </div>
+}
+          </div>
           <Link
             to="/perfume/add"
             className="bg-blue-600 rounded-md text-white px-3 py-1 font-semibold "
           >
             Add
           </Link>
-          <Link
-            to="/perfume/tempadd"
-            className="bg-blue-600 rounded-md text-white px-3 py-1 font-semibold "
-          >
-            Temp Add
-          </Link>
+          
         </div>
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
           {isLoading && (
